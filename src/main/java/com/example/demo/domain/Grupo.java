@@ -5,17 +5,17 @@ import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Table(name = "grupo_usuario")
-public class GrupoUsuario implements Serializable {
+@Table(name = "grupo")
+public class Grupo implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_grupo_usuario", nullable = false)
+    @Column(name = "id_grupo", nullable = false)
     private Long id;
-/*
-    @OneToMany(mappedBy = "grupoUsuario", fetch = FetchType.EAGER)
+
+    @OneToMany(mappedBy = "grupo", fetch = FetchType.EAGER)
     private List<Usuario> usuario;
-*/
+
     @Column(name = "nombre")
     private String nombre;
 
