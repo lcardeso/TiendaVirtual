@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "usuario_table")
+@Table(name = "usuario")
 public class Usuario implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -74,17 +73,18 @@ public class UsuarioService {
     }
 
     // Buscar usuario por nombre
-    /** Cuando paso un parametro correcto, me retorna bien. el problema esta cuando introduzco un parametro que tiene varios resultados ***javax.persistence.NonUniqueResultException: query did not return a unique result: 2 **/
-    public Optional<Usuario> BuscarUsuario(String nombre) {
-        Optional<Usuario> usu = usuarioRepository.findByNombre(nombre);
-        if (!usu.isPresent())
+
+    /**
+     * Cuando paso un parametro correcto, me retorna bien. el problema esta cuando introduzco un parametro que tiene varios resultados ***javax.persistence.NonUniqueResultException: query did not return a unique result: 2
+     **/
+    public List<Usuario> BuscarUsuario(String nombre) {
+        List<Usuario> usu = usuarioRepository.findByNombre(nombre);
+        if (usu.isEmpty())
             System.out.println("No existe ningun usuario");
-        else
-            usu.get();
         return usu;
     }
 
-     //Adicionar un usuario
+    //Adicionar un usuario
     public Usuario adicionar(Usuario usu) {
         Usuario u = new Usuario();
         Direccion d = new Direccion();
@@ -95,10 +95,11 @@ public class UsuarioService {
         u.setSexo(usu.getSexo());
         u.setFechNac(usu.getFechNac());
         u.setEdad(usu.getEdad());
-        //u.setDireccion(usu.getDireccion());
+        u.setDireccion(usu.getDireccion());
 
-        d.setId(usu.getId());
-        usu.setDireccion(d);
+        d.setId(u.getId());
+        d.setCalle(u.getDireccion().getCalle());
+
         return usuarioRepository.save(usu);
     }
 

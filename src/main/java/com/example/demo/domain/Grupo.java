@@ -56,7 +56,7 @@ public class Grupo implements Serializable {
 */
     @Override
     public String toString() {
-        return "GrupoUsuario{" +
+        return "Grupo{" +
                 "id=" + id +
             //    ", usuario=" + usuario +
                 ", nombre='" + nombre + '\'' +
