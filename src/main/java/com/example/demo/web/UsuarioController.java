@@ -1,5 +1,6 @@
 package com.example.demo.web;
 
+import com.example.demo.DTO.UsuarioDTO;
 import com.example.demo.domain.Usuario;
 import com.example.demo.sevice.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,16 +15,15 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/ose")
+@RequestMapping("/estudio")
 
 public class UsuarioController {
-    //  private final Logger log = LoggerFactory.getLogger(UsuarioController.class);
+
     @Autowired
     private UsuarioService usuarioService;
 
     @GetMapping("/obtenerTodos")
     public List<Usuario> obtenerTodos() {
-        //  log.debug("RESTobtenertodos request to get all Usuarios");
         return usuarioService.getAllUsuario();
     }
 
@@ -68,12 +68,11 @@ public class UsuarioController {
     }
 
 
-    @PostMapping("/adicionarUsuarios/")
-    public ResponseEntity<Usuario> addUsuarioList(@Valid @RequestBody Usuario addusuario) throws URISyntaxException {
-        Usuario addusu = usuarioService.adicionar(addusuario);
-        return ResponseEntity.created(new URI("/usuario/adicionarUsuarios/" + addusu.getId())).body(addusu);
+    @PostMapping("/usuario/adicionar")
+    public ResponseEntity<Usuario> adicionar(@Valid @RequestBody UsuarioDTO usuarioDTO) throws URISyntaxException {
+        Usuario addusu = usuarioService.adicionar(usuarioDTO);
+        return ResponseEntity.ok().body(addusu);
     }
-
 }
 
 

@@ -1,37 +1,54 @@
 package com.example.demo.DTO;
 
-import javax.persistence.Column;
-import javax.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 
 public class UsuarioDTO implements Serializable {
 
-    // private String nombreCompleto;
-    private String nombre;
-    private String primApellido;
-    private String segApellido;
-    private String sexo;
-    private LocalDateTime fechNac;
-    private Long edad;
     private Long id;
+    private Integer edad;
+    private String nombre;
+    @JsonProperty("primApellido")
+    private String primerApellido;
+    @JsonProperty("segApellido")
+    private String segundoApellido;
+    private String sexo;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
+    private LocalDateTime fechNac;
+    private Long direccionId;
 
+    public UsuarioDTO() {
+    }
 
-    public Long getEdad() {
+    public UsuarioDTO(Long id, Integer edad, String nombre, String primerApellido, String segundoApellido, String sexo, LocalDateTime fechNac, Long direccionId) {
+        this.id = id;
+        this.edad = edad;
+        this.nombre = nombre;
+        this.primerApellido = primerApellido;
+        this.segundoApellido = segundoApellido;
+        this.sexo = sexo;
+        this.fechNac = fechNac;
+        this.direccionId = direccionId;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Integer getEdad() {
         return edad;
     }
 
-    public void setEdad(Long edad) {
+    public void setEdad(Integer edad) {
         this.edad = edad;
-    }
-
-    public String getSexo() {
-        return sexo;
-    }
-
-    public void setSexo(String sexo) {
-        this.sexo = sexo;
     }
 
     public String getNombre() {
@@ -42,20 +59,32 @@ public class UsuarioDTO implements Serializable {
         this.nombre = nombre;
     }
 
-    public String getPrimApellido() {
-        return primApellido;
+    @JsonProperty("primApellido")
+    public String getPrimerApellido() {
+        return primerApellido;
     }
 
-    public void setPrimApellido(String primApellido) {
-        this.primApellido = primApellido;
+    @JsonProperty("primApellido")
+    public void setPrimerApellido(String primerApellido) {
+        this.primerApellido = primerApellido;
     }
 
-    public String getSegApellido() {
-        return segApellido;
+    @JsonProperty("segApellido")
+    public String getSegundoApellido() {
+        return segundoApellido;
     }
 
-    public void setSegApellido(String segApellido) {
-        this.segApellido = segApellido;
+    @JsonProperty("segApellido")
+    public void setSegundoApellido(String segundoApellido) {
+        this.segundoApellido = segundoApellido;
+    }
+
+    public String getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(String sexo) {
+        this.sexo = sexo;
     }
 
     public LocalDateTime getFechNac() {
@@ -66,19 +95,25 @@ public class UsuarioDTO implements Serializable {
         this.fechNac = fechNac;
     }
 
-    public Long getId() {
-        return id;
+    public Long getDireccionId() {
+        return direccionId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setDireccionId(Long direccionId) {
+        this.direccionId = direccionId;
+    }
+
+    @Override
+    public String toString() {
+        return "UsuarioDTO{" +
+                "id=" + id +
+                ", edad=" + edad +
+                ", nombre='" + nombre + '\'' +
+                ", primerApellido='" + primerApellido + '\'' +
+                ", segundoApellido='" + segundoApellido + '\'' +
+                ", sexo='" + sexo + '\'' +
+                ", fechNac=" + fechNac +
+                ", direccionId=" + direccionId +
+                '}';
     }
 }
-
-    /*public String getNombreCompleto() {
-        return nombreCompleto;
-    }
-
-    public void setNombreCompleto(String nombreCompleto) {
-        this.nombreCompleto = nombreCompleto;
-    }*/

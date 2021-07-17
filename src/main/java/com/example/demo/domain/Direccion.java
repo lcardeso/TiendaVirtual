@@ -5,7 +5,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "direccion")
+@Table(name = "direccion", schema = "estudio")
 public class Direccion implements Serializable {
 
     @Id
@@ -16,6 +16,10 @@ public class Direccion implements Serializable {
     @Column(name = "calle")
     @NotNull
     private String calle;
+
+    @Column(name = "numero_apto")
+    @NotNull
+    private String numeroApto;
 
     @Column(name = "codigo_postal")
     @NotNull
@@ -31,6 +35,14 @@ public class Direccion implements Serializable {
 
     public String getCalle() {
         return calle;
+    }
+
+    public String getNumeroApto() {
+        return numeroApto;
+    }
+
+    public void setNumeroApto(String numeroApto) {
+        this.numeroApto = numeroApto;
     }
 
     public void setCalle(String calle) {
@@ -50,7 +62,30 @@ public class Direccion implements Serializable {
         return "Direccion{" +
                 "id=" + id +
                 ", calle='" + calle + '\'' +
+                ", numeroApto='" + numeroApto + '\'' +
                 ", codigoPostal='" + codigoPostal + '\'' +
                 '}';
+    }
+
+
+    public Direccion id(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public Direccion calle(String calle) {
+        this.calle = calle;
+        return this;
+    }
+
+
+    public Direccion codigoPostal(String codigoPostal) {
+        this.codigoPostal = codigoPostal;
+        return this;
+    }
+
+    public Direccion numeroApto(String numeroApto) {
+        this.numeroApto = numeroApto;
+        return this;
     }
 }

@@ -15,6 +15,7 @@
     <description>Devuelve Datos Usuarios</description>
     <properties>
         <java.version>11</java.version>
+        <dependency.dozer.version>6.5.0</dependency.dozer.version>
     </properties>
     <dependencies>
         <dependency>
@@ -32,6 +33,22 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- DOZER -->
+        <dependency>
+            <groupId>com.github.dozermapper</groupId>
+            <artifactId>dozer-core</artifactId>
+            <version>${dependency.dozer.version}</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.dozermapper</groupId>
+            <artifactId>dozer-spring4</artifactId>
+            <version>${dependency.dozer.version}</version>
+            <type>jar</type>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>

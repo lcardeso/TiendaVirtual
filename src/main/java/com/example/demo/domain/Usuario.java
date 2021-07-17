@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "usuario")
+@Table(name = "usuario", schema = "estudio")
 public class Usuario implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +19,8 @@ public class Usuario implements Serializable {
     private Grupo grupo;
 
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne
+    @NotNull
     @JoinColumn(name = "id_direccion_FK", referencedColumnName = "id_direccion")
     private Direccion direccion;
 
@@ -41,10 +42,10 @@ public class Usuario implements Serializable {
 
     @NotNull
     @Column(name = "edad")
-    private Long edad;
+    private Integer edad;
 
     @NotNull
-    @Column(name = "sexo")
+    @Column(name = "sexo" , length = '1')
     private String sexo;
 
     public Long getId() {
@@ -87,11 +88,11 @@ public class Usuario implements Serializable {
         this.fechNac = fechNac;
     }
 
-    public Long getEdad() {
+    public Integer getEdad() {
         return edad;
     }
 
-    public void setEdad(Long edad) {
+    public void setEdad(Integer edad) {
         this.edad = edad;
     }
 
@@ -131,5 +132,51 @@ public class Usuario implements Serializable {
                 ", edad=" + edad +
                 ", sexo='" + sexo + '\'' +
                 '}';
+    }
+
+
+    public Usuario id(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public Usuario grupo(Grupo grupo) {
+        this.grupo = grupo;
+        return this;
+    }
+
+    public Usuario direccion(Direccion direccion) {
+        this.direccion = direccion;
+        return this;
+    }
+
+    public Usuario nombre(String nombre) {
+        this.nombre = nombre;
+        return this;
+    }
+
+    public Usuario primApellido(String primApellido) {
+        this.primApellido = primApellido;
+        return this;
+    }
+
+    public Usuario segApellido(String segApellido) {
+        this.segApellido = segApellido;
+        return this;
+    }
+
+    public Usuario fechNac(LocalDateTime fechNac) {
+        this.fechNac = fechNac;
+        return this;
+    }
+
+    public Usuario edad(Integer edad) {
+        this.edad = edad;
+        return this;
+    }
+
+    public Usuario sexo(String sexo) {
+        this.sexo = sexo;
+        return this;
     }
 }

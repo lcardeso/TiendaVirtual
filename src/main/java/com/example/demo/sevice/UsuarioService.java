@@ -1,5 +1,6 @@
 package com.example.demo.sevice;
 
+import com.example.demo.DTO.UsuarioDTO;
 import com.example.demo.domain.Direccion;
 import com.example.demo.domain.Usuario;
 import com.example.demo.repository.UsuarioRepository;
@@ -85,22 +86,19 @@ public class UsuarioService {
     }
 
     //Adicionar un usuario
-    public Usuario adicionar(Usuario usu) {
-        Usuario u = new Usuario();
-        Direccion d = new Direccion();
-
-        u.setNombre(usu.getNombre());
-        u.setPrimApellido(usu.getPrimApellido());
-        u.setSegApellido(usu.getSegApellido());
-        u.setSexo(usu.getSexo());
-        u.setFechNac(usu.getFechNac());
-        u.setEdad(usu.getEdad());
-        u.setDireccion(usu.getDireccion());
-
-        d.setId(u.getId());
-        d.setCalle(u.getDireccion().getCalle());
-
-        return usuarioRepository.save(usu);
+    public Usuario adicionar(UsuarioDTO usu) {
+        Direccion d =
+                new Direccion().id(usu.getDireccionId());
+        Usuario u =
+                new Usuario()
+                        .nombre(usu.getNombre())
+                        .primApellido(usu.getPrimerApellido())
+                        .segApellido(usu.getSegundoApellido())
+                        .edad(usu.getEdad())
+                        .sexo(usu.getSexo())
+                        .fechNac(usu.getFechNac())
+                        .direccion(d);
+        return usuarioRepository.save(u);
     }
 
     /**No encuetro solucion */
