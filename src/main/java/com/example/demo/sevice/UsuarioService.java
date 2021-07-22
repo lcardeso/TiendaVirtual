@@ -1,24 +1,38 @@
 package com.example.demo.sevice;
 
+import com.example.demo.DTO.ActualizarGrupoDto;
+import com.example.demo.DTO.ResponseDto;
 import com.example.demo.DTO.UsuarioDTO;
 import com.example.demo.domain.Direccion;
+import com.example.demo.domain.Grupo;
 import com.example.demo.domain.Usuario;
+import com.example.demo.repository.GrupoRepository;
 import com.example.demo.repository.UsuarioRepository;
+import com.example.demo.utils.MapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.text.Normalizer;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.Optional;
+
+import static com.example.demo.Constantes.Constante.MAPPER_ID_UNIDAD;
 
 @Service
 @Transactional
 public class UsuarioService {
 
     @Autowired
+    public MapperUtils mapperUtils;
+
+    @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private GrupoRepository grupoRepository;
 
     //Listado de todos los usuarios
     public List<Usuario> getAllUsuario() {
@@ -79,26 +93,32 @@ public class UsuarioService {
      * Cuando paso un parametro correcto, me retorna bien. el problema esta cuando introduzco un parametro que tiene varios resultados ***javax.persistence.NonUniqueResultException: query did not return a unique result: 2
      **/
     public List<Usuario> BuscarUsuario(String nombre) {
-        List<Usuario> usu = usuarioRepository.findByNombre(nombre);
+        String nombreNormalizado = Normalizer.normalize(nombre, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "").toUpperCase();
+        List<Usuario> usu = usuarioRepository.findByNombre(nombreNormalizado);
         if (usu.isEmpty())
             System.out.println("No existe ningun usuario");
         return usu;
     }
 
     //Adicionar un usuario
-    public Usuario adicionar(UsuarioDTO usu) {
-        Direccion d =
-                new Direccion().id(usu.getDireccionId());
-        Usuario u =
-                new Usuario()
-                        .nombre(usu.getNombre())
-                        .primApellido(usu.getPrimerApellido())
-                        .segApellido(usu.getSegundoApellido())
-                        .edad(usu.getEdad())
-                        .sexo(usu.getSexo())
-                        .fechNac(usu.getFechNac())
-                        .direccion(d);
-        return usuarioRepository.save(u);
+    public ResponseDto adicionar(UsuarioDTO usu) {
+        Direccion d = new Direccion().id(usu.getDireccionId());
+        Usuario usuarioEntity = mapperUtils.mapeoObjetoObjeto(usu, Usuario.class, MAPPER_ID_UNIDAD);
+        usuarioEntity.direccion(d);
+        usuarioRepository.save(usuarioEntity);
+        return new ResponseDto().status("200").message("El usuario fue creada exitosamente");
+    }
+
+    //Adicionar un usuario
+    public ResponseDto actualizarGrupo(ActualizarGrupoDto usu) {
+        Optional<Usuario> usuarioEntity = usuarioRepository.findById(usu.getIdUsuario());
+        if (usuarioEntity.isPresent()) {
+            Grupo grupoEntity = new Grupo().id(usu.getIdGrupo());
+            usuarioEntity.get().grupo(grupoEntity);
+            usuarioRepository.save(usuarioEntity.get());
+            return new ResponseDto().status("200").message("El grupo fue actualizado al usuario : " + usuarioEntity.get().getNombre());
+        }
+        return new ResponseDto().status("200").message("El usuario con id : " + usu.getIdUsuario() + "no existe.");
     }
 
     /**No encuetro solucion */

@@ -1,5 +1,7 @@
 package com.example.demo.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -13,11 +15,10 @@ public class Usuario implements Serializable {
     @Column(name = "id_usuario", nullable = false)
     private Long id;
 
-
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "id_grupo_fk", referencedColumnName = "id_grupo")
     private Grupo grupo;
-
 
     @OneToOne
     @NotNull
@@ -54,6 +55,22 @@ public class Usuario implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Grupo getGrupo() {
+        return grupo;
+    }
+
+    public void setGrupo(Grupo grupo) {
+        this.grupo = grupo;
+    }
+
+    public Direccion getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(Direccion direccion) {
+        this.direccion = direccion;
     }
 
     public String getNombre() {
@@ -102,22 +119,6 @@ public class Usuario implements Serializable {
 
     public void setSexo(String sexo) {
         this.sexo = sexo;
-    }
-
-/*    public GrupoUsuario getGrupoUsuario() {
-        return grupoUsuario;
-    }
-
-    public void setGrupoUsuario(GrupoUsuario grupoUsuario) {
-        this.grupoUsuario = grupoUsuario;
-    }
-*/
-    public Direccion getDireccion() {
-        return direccion;
-    }
-
-    public void setDireccion(Direccion direccion) {
-        this.direccion = direccion;
     }
 
     @Override

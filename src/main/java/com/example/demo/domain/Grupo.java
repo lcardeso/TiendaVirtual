@@ -1,5 +1,7 @@
 package com.example.demo.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -30,6 +32,14 @@ public class Grupo implements Serializable {
         this.id = id;
     }
 
+    public List<Usuario> getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(List<Usuario> usuario) {
+        this.usuario = usuario;
+    }
+
     public String getNombre() {
         return nombre;
     }
@@ -45,22 +55,34 @@ public class Grupo implements Serializable {
     public void setCategoria(String categoria) {
         this.categoria = categoria;
     }
-/*
-    public List<Usuario> getUsuario() {
-        return usuario;
-    }
 
-    public void setUsuario(List<Usuario> usuario) {
-        this.usuario = usuario;
-    }
-*/
     @Override
     public String toString() {
         return "Grupo{" +
                 "id=" + id +
-            //    ", usuario=" + usuario +
                 ", nombre='" + nombre + '\'' +
                 ", categoria='" + categoria + '\'' +
                 '}';
+    }
+
+
+    public Grupo id(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public Grupo usuario(List<Usuario> usuario) {
+        this.usuario = usuario;
+        return this;
+    }
+
+    public Grupo nombre(String nombre) {
+        this.nombre = nombre;
+        return this;
+    }
+
+    public Grupo categoria(String categoria) {
+        this.categoria = categoria;
+        return this;
     }
 }

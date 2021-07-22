@@ -1,5 +1,8 @@
 package com.example.demo.web;
 
+import com.example.demo.DTO.ActualizarGrupoDto;
+import com.example.demo.DTO.BusquedaLikeUsuario;
+import com.example.demo.DTO.ResponseDto;
 import com.example.demo.DTO.UsuarioDTO;
 import com.example.demo.domain.Usuario;
 import com.example.demo.sevice.UsuarioService;
@@ -62,16 +65,20 @@ public class UsuarioController {
      * Busca un Usuario por nombre
      */
 
-    @PostMapping(value = "/usuarioXNombre", params = "nombre")
-    public ResponseEntity<List<Usuario>> usuarioXNombre(@RequestParam("nombre") String nombre) {
-        return ResponseEntity.ok().body(usuarioService.BuscarUsuario(nombre));
+    @PostMapping(value = "/usuario/buscar/Like/nombre")
+    public ResponseEntity<List<Usuario>> usuarioXNombre(@Valid @RequestBody BusquedaLikeUsuario busquedaLikeUsuario) {
+        return ResponseEntity.ok().body(usuarioService.BuscarUsuario(busquedaLikeUsuario.getNombre()));
     }
 
 
     @PostMapping("/usuario/adicionar")
-    public ResponseEntity<Usuario> adicionar(@Valid @RequestBody UsuarioDTO usuarioDTO) throws URISyntaxException {
-        Usuario addusu = usuarioService.adicionar(usuarioDTO);
-        return ResponseEntity.ok().body(addusu);
+    public ResponseEntity<ResponseDto> adicionar(@Valid @RequestBody UsuarioDTO usuarioDTO) {
+        return ResponseEntity.ok().body(usuarioService.adicionar(usuarioDTO));
+    }
+
+    @PostMapping("/usuario/actualizar/grupo")
+    public ResponseEntity<ResponseDto> actualizar(@Valid @RequestBody ActualizarGrupoDto actualizarGrupoDto) {
+        return ResponseEntity.ok().body(usuarioService.actualizarGrupo(actualizarGrupoDto));
     }
 }
 
