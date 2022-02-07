@@ -73,7 +73,7 @@ public class UsuarioController {
 
     @PostMapping("/usuario/adicionar")
     public ResponseEntity<ResponseDto> adicionar(@Valid @RequestBody UsuarioDTO usuarioDTO) {
-        return ResponseEntity.ok().body(usuarioService.adicionar(usuarioDTO));
+        return ResponseEntity.ok().body(usuarioService.validarUsuario(usuarioDTO));
     }
 
     @PostMapping("/usuario/actualizar/grupo")

@@ -21,7 +21,6 @@ public class Usuario implements Serializable {
     private Grupo grupo;
 
     @OneToOne
-    @NotNull
     @JoinColumn(name = "id_direccion_FK", referencedColumnName = "id_direccion")
     private Direccion direccion;
 
@@ -46,7 +45,7 @@ public class Usuario implements Serializable {
     private Integer edad;
 
     @NotNull
-    @Column(name = "sexo" , length = '1')
+    @Column(name = "sexo", length = '1')
     private String sexo;
 
     public Long getId() {

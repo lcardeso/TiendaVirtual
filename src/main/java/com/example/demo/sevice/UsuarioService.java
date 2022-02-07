@@ -1,6 +1,7 @@
 package com.example.demo.sevice;
 
 import com.example.demo.DTO.ActualizarGrupoDto;
+import com.example.demo.DTO.DireccionDto;
 import com.example.demo.DTO.ResponseDto;
 import com.example.demo.DTO.UsuarioDTO;
 import com.example.demo.domain.Direccion;
@@ -101,11 +102,33 @@ public class UsuarioService {
     }
 
     //Adicionar un usuario
+
+    public ResponseDto validarUsuario(UsuarioDTO user) {
+        ResponseDto response = new ResponseDto();
+        if (user.getNombre().isEmpty()) {
+            return response.status("400").message("El parámetro nombre no puede ser null.");
+        } else if (user.getPrimerApellido().isEmpty()) {
+            return response.status("400").message("El parámetro primer apellido no puede ser null.");
+        } else if (user.getSexo().isEmpty()) {
+            return response.status("400").message("El parámetro sexo no puede ser null.");
+        } else if (user.getEdad() == null) {
+            return response.status("400").message("El parámetro edad no puede ser null.");
+        } else if (user.getFechNac() == null) {
+            return response.status("400").message("El parámetro fecha de nacimiento no puede ser null.");
+        } else if (usuarioRepository.findByNombreAndPrimApellido(user.getNombre(), user.getPrimerApellido()).isPresent()) {
+            return response.status("400").message("La usuario ya existe");
+        } else {
+            return adicionar(user);
+        }
+    }
+
     public ResponseDto adicionar(UsuarioDTO usu) {
-        Direccion d = new Direccion().id(usu.getDireccionId());
         Usuario usuarioEntity = mapperUtils.mapeoObjetoObjeto(usu, Usuario.class, MAPPER_ID_UNIDAD);
-        usuarioEntity.direccion(d);
-        usuarioRepository.save(usuarioEntity);
+        if (usu.getDireccionId() != null) {
+            Direccion d = new Direccion().id(usu.getDireccionId());
+            usuarioEntity.direccion(d);
+        }
+            usuarioRepository.save(usuarioEntity);
         return new ResponseDto().status("200").message("El usuario fue creada exitosamente");
     }
 
