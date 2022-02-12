@@ -1,9 +1,6 @@
 package com.example.demo.sevice;
 
-import com.example.demo.DTO.ActualizarGrupoDto;
-import com.example.demo.DTO.DireccionDto;
-import com.example.demo.DTO.ResponseDto;
-import com.example.demo.DTO.UsuarioDTO;
+import com.example.demo.DTO.*;
 import com.example.demo.domain.Direccion;
 import com.example.demo.domain.Grupo;
 import com.example.demo.domain.Usuario;
@@ -47,52 +44,23 @@ public class UsuarioService {
     //Eliminar usuario a partir de un id establecido
     public void eliminar(long delusuario) {
         Optional<Usuario> deleteusuario = usuarioRepository.findById(delusuario);
-        usuarioRepository.delete(deleteusuario.get());
+        if (deleteusuario.isPresent()){
+            usuarioRepository.delete(deleteusuario.get());
+        }
+        System.out.println("No existe nungun usuario para eliminar");
     }
 
     //Mostrar usuario a partir de un sexo establecido
     public List<Usuario> usuariosPorSexo(String sexo) throws Exception {
-        if (sexo.equals("F") || sexo.equals("M"))
-            return usuarioRepository.findBySexo(sexo);
-        else
-            throw new Exception("El sexo es incorrecto");
+        return usuarioRepository.findBySexo(sexo);
     }
 
-    //Obtener usuarios mayor de una edad determinada a partir de la fecha de nacimiento
-    public List<Usuario> mayoresDeterminadaEdad(Long edad) throws Exception {
-        if (edad <= 0 || edad > 100)
-            throw new Exception("El valor de la edad es incorrecto");
-        else
-            return mayoresEdadX(edad);
-    }
-
-    public List<Usuario> mayoresEdadX(Long edad) {
-        List<Usuario> usuariolist = usuarioRepository.findAll();
-        List<Usuario> mayoresCiertaEdad = new ArrayList<>();
-        usuariolist.forEach(usuario -> {
-            Long edadusuario = ChronoUnit.YEARS.between(usuario.getFechNac(), LocalDateTime.now());
-            if (edadusuario >= edad) {
-                mayoresCiertaEdad.add(usuario);
-            }
-        });
-        return mayoresCiertaEdad;
-    }
-
-    //Obtener usuarios mayor de una edad determinada a partir de la edad
-    public List<Usuario> edadX(Long edad) throws Exception {
-        if (edad <= 0 || edad > 100)
-            throw new Exception("El valor de la edad es incorrecto");
-        if (edad == null) /** 2021-04-23 17:52:05.001  WARN 9032 --- [nio-8106-exec-4] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Failed to convert value of type 'java.lang.String' to required type 'java.lang.Long'; nested exception is java.lang.NumberFormatException: For input string: "null"] **/
-            throw new NumberFormatException("El valor de la edad no puede ser null");
-        else
-            return usuarioRepository.findByEdad(edad);
+    //Obtener usuarios de una edad determinada
+    public List<Usuario> edadX(Integer edad) throws Exception {
+        return usuarioRepository.findByEdad(edad);
     }
 
     // Buscar usuario por nombre
-
-    /**
-     * Cuando paso un parametro correcto, me retorna bien. el problema esta cuando introduzco un parametro que tiene varios resultados ***javax.persistence.NonUniqueResultException: query did not return a unique result: 2
-     **/
     public List<Usuario> BuscarUsuario(String nombre) {
         String nombreNormalizado = Normalizer.normalize(nombre, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "").toUpperCase();
         List<Usuario> usu = usuarioRepository.findByNombre(nombreNormalizado);
@@ -101,8 +69,7 @@ public class UsuarioService {
         return usu;
     }
 
-    //Adicionar un usuario
-
+    //validar un usuario
     public ResponseDto validarUsuario(UsuarioDTO user) {
         ResponseDto response = new ResponseDto();
         if (user.getNombre().isEmpty()) {
@@ -122,17 +89,18 @@ public class UsuarioService {
         }
     }
 
+    //validar un usuario
     public ResponseDto adicionar(UsuarioDTO usu) {
         Usuario usuarioEntity = mapperUtils.mapeoObjetoObjeto(usu, Usuario.class, MAPPER_ID_UNIDAD);
         if (usu.getDireccionId() != null) {
             Direccion d = new Direccion().id(usu.getDireccionId());
             usuarioEntity.direccion(d);
         }
-            usuarioRepository.save(usuarioEntity);
+        usuarioRepository.save(usuarioEntity);
         return new ResponseDto().status("200").message("El usuario fue creada exitosamente");
     }
 
-    //Adicionar un usuario
+    //Actualizar el grupo a un usuario
     public ResponseDto actualizarGrupo(ActualizarGrupoDto usu) {
         Optional<Usuario> usuarioEntity = usuarioRepository.findById(usu.getIdUsuario());
         if (usuarioEntity.isPresent()) {
@@ -144,50 +112,48 @@ public class UsuarioService {
         return new ResponseDto().status("200").message("El usuario con id : " + usu.getIdUsuario() + "no existe.");
     }
 
-    /**No encuetro solucion */
-      /*  @PathParam("{usuarioId}")
-    private Response findUsuario(@PathParam(usuarioId) Long usuarioId) {
-        Usuario usuario = UsuarioDTO.findUsuarioById(usuarioId);
-        Direccion direccion = UsuarioDTO.findDireccionByUsuario(usuarioId);
-        UsuarioDTO dto = new UsuarioDTO();
-        dto.setNombreCompleto(usuario.getNombre() + "" + usuario.getPrimApellido() + "" + usuario.getSegApellido());
-        dto.setSexo(usuario.getSexo());
-        dto.setFechNac(usuario.getFechNac());
-        dto.setEdad(usuario.getEdad());
-        dto.setId(direccion.id());
-        dto.setId(usuario.getId());
-
-        return Response.ok(dto).build();
-    }*/
-
-
-    //Update usuario
-   /* public void update(Usuario updusuario) {
-        List<Usuario> usuariolist = usuarioRepository.findAllById(updusuario.getId());
-        usuariolist.;
-        usuarioRepository.save(updusuario);
-    }*/
-
-
-    //Eliminar usuario
- /*   public void eliminar(Usuario delusuario) {
-        Usuario deleteusu = usuarioRepository.getOne(delusuario.getId());
-        usuarioRepository.delete(deleteusu);
+    //Actualizar la direccion a un usuario
+    public ResponseDto actualizarDireccion(ActualizarDireccionDto dirusuario) {
+        Optional<Usuario> usuarioEntity = usuarioRepository.findById(dirusuario.getIdUsuario());
+        if (usuarioEntity.isPresent()) {
+            Direccion direccionEntity = new Direccion().id(dirusuario.getIdDireccion());
+            usuarioEntity.get().direccion(direccionEntity);
+            usuarioRepository.save(usuarioEntity.get());
+            return new ResponseDto().status("200").message("La dirección fue actualizado al usuario : " + usuarioEntity.get().getNombre());
+        }
+        return new ResponseDto().status("200").message("El usuario con id : " + dirusuario.getIdUsuario() + " no existe.");
     }
 
-  */
+    /** //Obtener usuarios mayor de una edad determinada a partir de la fecha de nacimiento
+     public List<Usuario> mayoresDeterminadaEdad(Integer edad) throws Exception {
 
-    /** Codigos de ejemplo */
-/*    ****** Mostrar mujeres hay ********
-    public List<Usuario> mujeres() {
-        List<Usuario> mejeres = new ArrayList<>();
-        List<Usuario> usuarioslist = usuarioRepository.findAll();
-        usuarioslist.stream().filter(usuario -> usuario.getSexo().equalsIgnoreCase("F")).forEach(mujer -> {
-            mejeres.add(mujer);
-        });
-        return mejeres;
-    }
-*/
+
+
+
+     if (edad <= 0 || edad > 100)
+     throw new Exception("El valor de la edad es incorrecto");
+     else
+     return mayoresEdadX(edad);
+     }
+
+     public List<Usuario> mayoresEdadX(Long edad) {
+     //  List<Usuario> usuariolist = usuarioRepository.findAll();
+     long fechaSegunEdad = LocalDateTime.now().getYear() - edad;
+
+
+
+     //   long edadusuario = ChronoUnit.YEARS.between(usuario.getFechNac(), LocalDateTime.now());
+
+
+     List<Usuario> mayoresCiertaEdad = new ArrayList<>();
+     usuariolist.forEach(usuario -> {
+
+     if (edadusuario >= edad) {
+     mayoresCiertaEdad.add(usuario);
+     }
+     });
+     return mayoresCiertaEdad;
+     }*/
 
 }
 

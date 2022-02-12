@@ -3,6 +3,7 @@ package com.example.demo.sevice;
 import com.example.demo.DTO.DireccionDto;
 import com.example.demo.DTO.ResponseDto;
 import com.example.demo.domain.Direccion;
+import com.example.demo.domain.Usuario;
 import com.example.demo.repository.DireccionRepository;
 import com.example.demo.utils.MapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional
@@ -41,5 +43,18 @@ public class DireccionService {
         Direccion d = mapperUtils.mapeoObjetoObjeto(dir, Direccion.class);
         direccionRepository.save(d);
         return new ResponseDto().status("200").message("La dirección fue creada exitosamente");
+    }
+
+
+    public List<Direccion> getAllDireccion() {
+        List<Direccion> direccionlist = direccionRepository.findAll();
+        if (direccionlist.isEmpty()) {
+            System.out.println("No hay direcciones para mostrar");
+        }
+        return direccionlist;
+
+
+
+
     }
 }

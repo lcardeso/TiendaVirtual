@@ -1,9 +1,6 @@
 package com.example.demo.web;
 
-import com.example.demo.DTO.ActualizarGrupoDto;
-import com.example.demo.DTO.BusquedaLikeUsuario;
-import com.example.demo.DTO.ResponseDto;
-import com.example.demo.DTO.UsuarioDTO;
+import com.example.demo.DTO.*;
 import com.example.demo.domain.Usuario;
 import com.example.demo.sevice.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,51 +22,35 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-    @GetMapping("/obtenerTodos")
+    @GetMapping("/usuario/obtenerTodos")
     public List<Usuario> obtenerTodos() {
         return usuarioService.getAllUsuario();
     }
 
-    @DeleteMapping("/eliminarUsuario")
+    @DeleteMapping("/usuario/eliminar")
     public void deleteUsuario(long delusuario) {
         usuarioService.eliminar(delusuario);
     }
 
 
-    @PostMapping(value = "/mostarUsuarioPorSexo", params = "sexo")
-    public ResponseEntity<List<Usuario>> motrarUsuarioPorSexo(@RequestParam("sexo") String sexo) throws Exception {
-        return ResponseEntity.ok().body(usuarioService.usuariosPorSexo(sexo));
+    @PostMapping(value = "/mostarUsuarioPorSexo")
+    public ResponseEntity<List<Usuario>> motrarUsuarioPorSexo(@RequestBody BusquedaUsuarioSexoDTO busquedaUsuarioSexoDTO) throws Exception {
+        return ResponseEntity.ok().body(usuarioService.usuariosPorSexo(busquedaUsuarioSexoDTO.getSexo()));
     }
 
 
-    /**
-     * Muestra Usuarios Mayores de una edad determinada a traves del metodo POST
-     */
-    /**
-     * Error al enviar los datos por POST ****2021-04-23 04:44:34.572  WARN 6772 --- [nio-8106-exec-5] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.bind.UnsatisfiedServletRequestParameterException: Parameter conditions "edad" not met for actual request parameters: ]
-     **/
-    @PostMapping(value = "/mayoresDeterminadaEdad", params = "edad")
-    public ResponseEntity<List<Usuario>> mayoresDeterminadaEdad(@Valid @RequestBody @RequestParam("edad") Long edad) throws Exception {
-        return ResponseEntity.ok().body(usuarioService.mayoresDeterminadaEdad(edad));
-    }
-
-    /**
-     * Muestra Usuarios de una eterminada edad a traves del metodo POST
-     */
-    @PostMapping(value = "/edadX", params = "edad")
-    public ResponseEntity<List<Usuario>> edadX(@RequestParam("edad") Long edad) throws Exception {
-        return ResponseEntity.ok().body(usuarioService.edadX(edad));
+    @PostMapping(value = "/edadX")
+    public ResponseEntity<List<Usuario>> edadX(@RequestBody BusquedaUsuarioEdadDTO busquedaUsuarioEdadDTO) throws Exception {
+        return ResponseEntity.ok().body(usuarioService.edadX(busquedaUsuarioEdadDTO.getEdad()));
     }
 
     /**
      * Busca un Usuario por nombre
      */
-
     @PostMapping(value = "/usuario/buscar/Like/nombre")
     public ResponseEntity<List<Usuario>> usuarioXNombre(@Valid @RequestBody BusquedaLikeUsuario busquedaLikeUsuario) {
         return ResponseEntity.ok().body(usuarioService.BuscarUsuario(busquedaLikeUsuario.getNombre()));
     }
-
 
     @PostMapping("/usuario/adicionar")
     public ResponseEntity<ResponseDto> adicionar(@Valid @RequestBody UsuarioDTO usuarioDTO) {
@@ -77,9 +58,23 @@ public class UsuarioController {
     }
 
     @PostMapping("/usuario/actualizar/grupo")
-    public ResponseEntity<ResponseDto> actualizar(@Valid @RequestBody ActualizarGrupoDto actualizarGrupoDto) {
+    public ResponseEntity<ResponseDto> actualizarGrupoUsuario(@Valid @RequestBody ActualizarGrupoDto actualizarGrupoDto) {
         return ResponseEntity.ok().body(usuarioService.actualizarGrupo(actualizarGrupoDto));
+    }
+
+    @PostMapping("/usuario/actualizar/direccion")
+    public ResponseEntity<ResponseDto> actualizarDireccionUsuario(@Valid @RequestBody ActualizarDireccionDto actualizarDireccionDto) {
+        return ResponseEntity.ok().body(usuarioService.actualizarDireccion(actualizarDireccionDto));
     }
 }
 
+
+
+/**
+ * Muestra Usuarios Mayores de una edad determinada a traves del metodo POST
+
+ @PostMapping(value = "/mayoresDeterminadaEdad")
+ public ResponseEntity<List<Usuario>> mayoresDeterminadaEdad(@Valid @RequestBody BusquedaUsuarioEdadDTO busquedaUsuarioEdadDTO) throws Exception {
+ return ResponseEntity.ok().body(usuarioService.mayoresDeterminadaEdad(busquedaUsuarioEdadDTO.getEdad()));
+ }*/
 

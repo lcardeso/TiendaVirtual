@@ -21,7 +21,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     List<Usuario> findBySexo(String sexo);
 
-    List<Usuario> findByEdad(long edad);
+    List<Usuario> findByEdad(Integer edad);
 
     Optional<Usuario> findByNombreAndPrimApellido(String nombre, String primApellido);
 

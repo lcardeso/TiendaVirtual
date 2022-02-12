@@ -13,7 +13,7 @@ public class Usuario implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_usuario", nullable = false)
-    private Long id;
+    private long id;
 
     @ManyToOne
     @JsonIgnore
@@ -171,8 +171,7 @@ public class Usuario implements Serializable {
     }
 
     public Usuario edad(Integer edad) {
-        this.edad = edad;
-        return this;
+        this.edad = edad;        return this;
     }
 
     public Usuario sexo(String sexo) {
