@@ -1,6 +1,7 @@
 package com.example.demo.sevice;
 
 import com.example.demo.DTO.DireccionDto;
+import com.example.demo.DTO.GrupoDto;
 import com.example.demo.DTO.ResponseDto;
 import com.example.demo.domain.Direccion;
 import com.example.demo.domain.Usuario;
@@ -12,6 +13,7 @@ import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -37,24 +39,25 @@ public class DireccionService {
             return adicionar(dir);
         }
     }
-
-    //Adicionar dirección
+     //Adicionar dirección
     private ResponseDto adicionar(DireccionDto dir) {
         Direccion d = mapperUtils.mapeoObjetoObjeto(dir, Direccion.class);
         direccionRepository.save(d);
         return new ResponseDto().status("200").message("La dirección fue creada exitosamente");
     }
 
-
+    //Obtener Todos
     public List<Direccion> getAllDireccion() {
         List<Direccion> direccionlist = direccionRepository.findAll();
         if (direccionlist.isEmpty()) {
             System.out.println("No hay direcciones para mostrar");
         }
         return direccionlist;
+    }
 
-
-
-
+    //Eliminar a partir del id
+    public void eliminar(Long identdir) {
+        Optional<Direccion> deletedir = direccionRepository.findById(identdir);
+        direccionRepository.delete(deletedir.get());
     }
 }

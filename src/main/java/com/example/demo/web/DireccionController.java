@@ -28,6 +28,10 @@ public class DireccionController {
         return direccionService.getAllDireccion();
     }
 
+    @DeleteMapping("/direccion/eliminar")
+    public void deleteDireccion(Long identdir) {
+        direccionService.eliminar(identdir);
+    }
 
 }
 

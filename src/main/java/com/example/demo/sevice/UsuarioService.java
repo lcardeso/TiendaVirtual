@@ -42,12 +42,9 @@ public class UsuarioService {
     }
 
     //Eliminar usuario a partir de un id establecido
-    public void eliminar(long delusuario) {
+    public void eliminar(Long delusuario) {
         Optional<Usuario> deleteusuario = usuarioRepository.findById(delusuario);
-        if (deleteusuario.isPresent()){
-            usuarioRepository.delete(deleteusuario.get());
-        }
-        System.out.println("No existe nungun usuario para eliminar");
+        usuarioRepository.delete(deleteusuario.get());
     }
 
     //Mostrar usuario a partir de un sexo establecido
@@ -103,57 +100,30 @@ public class UsuarioService {
     //Actualizar el grupo a un usuario
     public ResponseDto actualizarGrupo(ActualizarGrupoDto usu) {
         Optional<Usuario> usuarioEntity = usuarioRepository.findById(usu.getIdUsuario());
-        if (usuarioEntity.isPresent()) {
+        if (usuarioEntity.get().getGrupo().getId().equals(usu.getIdGrupo())) {
+            return new ResponseDto().status("400").message("El usuario ya pertenece al grupo " + usuarioEntity.get().getGrupo().getNombre());
+        } else if (usuarioEntity.isPresent()) {
             Grupo grupoEntity = new Grupo().id(usu.getIdGrupo());
             usuarioEntity.get().grupo(grupoEntity);
             usuarioRepository.save(usuarioEntity.get());
             return new ResponseDto().status("200").message("El grupo fue actualizado al usuario : " + usuarioEntity.get().getNombre());
         }
-        return new ResponseDto().status("200").message("El usuario con id : " + usu.getIdUsuario() + "no existe.");
+        return new ResponseDto().status("404").message("El usuario con id : " + usu.getIdUsuario() + "no existe.");
     }
 
     //Actualizar la direccion a un usuario
     public ResponseDto actualizarDireccion(ActualizarDireccionDto dirusuario) {
         Optional<Usuario> usuarioEntity = usuarioRepository.findById(dirusuario.getIdUsuario());
-        if (usuarioEntity.isPresent()) {
+        if (usuarioEntity.get().getDireccion().getId().equals(dirusuario.getIdDireccion())) {
+            return new ResponseDto().status("400").message("El usuario ya vive en calle:" + usuarioEntity.get().getDireccion().getCalle() + ", numeroApto:" + usuarioEntity.get().getDireccion().getNumeroApto() + ", codigoPostal:" + usuarioEntity.get().getDireccion().getCodigoPostal());
+        } else if (usuarioEntity.isPresent()) {
             Direccion direccionEntity = new Direccion().id(dirusuario.getIdDireccion());
             usuarioEntity.get().direccion(direccionEntity);
             usuarioRepository.save(usuarioEntity.get());
             return new ResponseDto().status("200").message("La dirección fue actualizado al usuario : " + usuarioEntity.get().getNombre());
         }
-        return new ResponseDto().status("200").message("El usuario con id : " + dirusuario.getIdUsuario() + " no existe.");
+        return new ResponseDto().status("404").message("El usuario con id : " + dirusuario.getIdUsuario() + " no existe.");
     }
-
-    /** //Obtener usuarios mayor de una edad determinada a partir de la fecha de nacimiento
-     public List<Usuario> mayoresDeterminadaEdad(Integer edad) throws Exception {
-
-
-
-
-     if (edad <= 0 || edad > 100)
-     throw new Exception("El valor de la edad es incorrecto");
-     else
-     return mayoresEdadX(edad);
-     }
-
-     public List<Usuario> mayoresEdadX(Long edad) {
-     //  List<Usuario> usuariolist = usuarioRepository.findAll();
-     long fechaSegunEdad = LocalDateTime.now().getYear() - edad;
-
-
-
-     //   long edadusuario = ChronoUnit.YEARS.between(usuario.getFechNac(), LocalDateTime.now());
-
-
-     List<Usuario> mayoresCiertaEdad = new ArrayList<>();
-     usuariolist.forEach(usuario -> {
-
-     if (edadusuario >= edad) {
-     mayoresCiertaEdad.add(usuario);
-     }
-     });
-     return mayoresCiertaEdad;
-     }*/
 
 }
 

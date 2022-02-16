@@ -11,9 +11,10 @@ import java.time.LocalDateTime;
 @Table(name = "usuario", schema = "estudio")
 public class Usuario implements Serializable {
     @Id
+    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_usuario", nullable = false)
-    private long id;
+    private Long id;
 
     @ManyToOne
     @JsonIgnore

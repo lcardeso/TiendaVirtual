@@ -28,7 +28,7 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/usuario/eliminar")
-    public void deleteUsuario(long delusuario) {
+    public void deleteUsuario(Long delusuario) {
         usuarioService.eliminar(delusuario);
     }
 
@@ -44,9 +44,7 @@ public class UsuarioController {
         return ResponseEntity.ok().body(usuarioService.edadX(busquedaUsuarioEdadDTO.getEdad()));
     }
 
-    /**
-     * Busca un Usuario por nombre
-     */
+    // Busca un Usuario por nombre
     @PostMapping(value = "/usuario/buscar/Like/nombre")
     public ResponseEntity<List<Usuario>> usuarioXNombre(@Valid @RequestBody BusquedaLikeUsuario busquedaLikeUsuario) {
         return ResponseEntity.ok().body(usuarioService.BuscarUsuario(busquedaLikeUsuario.getNombre()));

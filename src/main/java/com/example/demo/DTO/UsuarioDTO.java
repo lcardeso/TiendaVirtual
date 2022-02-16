@@ -20,11 +20,12 @@ public class UsuarioDTO implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime fechNac;
     private Long direccionId;
+    private Long grupoId;
 
     public UsuarioDTO() {
     }
 
-    public UsuarioDTO(Long id, Integer edad, String nombre, String primerApellido, String segundoApellido, String sexo, LocalDateTime fechNac, Long direccionId) {
+    public UsuarioDTO(Long id, Integer edad, String nombre, String primerApellido, String segundoApellido, String sexo, LocalDateTime fechNac, Long direccionId, Long grupoId) {
         this.id = id;
         this.edad = edad;
         this.nombre = nombre;
@@ -33,6 +34,7 @@ public class UsuarioDTO implements Serializable {
         this.sexo = sexo;
         this.fechNac = fechNac;
         this.direccionId = direccionId;
+        this.grupoId = grupoId;
     }
 
     public Long getId() {
@@ -101,6 +103,14 @@ public class UsuarioDTO implements Serializable {
 
     public void setDireccionId(Long direccionId) {
         this.direccionId = direccionId;
+    }
+
+    public Long getGrupoId() {
+        return grupoId;
+    }
+
+    public void setGrupoId(Long grupoId) {
+        this.grupoId = grupoId;
     }
 
     @Override

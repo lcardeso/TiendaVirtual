@@ -2,12 +2,6 @@ package com.example.demo.DTO;
 
 import java.io.Serializable;
 
-/**
- * @Author Alberto Miguel Chirino <alberto.chirino@atos.net>
- * @link http://www.atos.net/
- * @Date 22/7/2021
- * @Version 1.0.0
- */
 public class BusquedaLikeUsuario implements Serializable {
 
     private String nombre;
