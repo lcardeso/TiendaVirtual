@@ -9,15 +9,15 @@ import java.time.LocalDateTime;
 
 public class UsuarioDTO implements Serializable {
 
-    private Long id;
     private Integer edad;
+    private String dni;
     private String nombre;
     @JsonProperty("primApellido")
     private String primerApellido;
     @JsonProperty("segApellido")
     private String segundoApellido;
     private String sexo;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime fechNac;
     private Long direccionId;
     private Long grupoId;
@@ -25,9 +25,9 @@ public class UsuarioDTO implements Serializable {
     public UsuarioDTO() {
     }
 
-    public UsuarioDTO(Long id, Integer edad, String nombre, String primerApellido, String segundoApellido, String sexo, LocalDateTime fechNac, Long direccionId, Long grupoId) {
-        this.id = id;
+    public UsuarioDTO(Integer edad, String dni, String nombre, String primerApellido, String segundoApellido, String sexo, LocalDateTime fechNac, Long direccionId, Long grupoId) {
         this.edad = edad;
+        this.dni = dni;
         this.nombre = nombre;
         this.primerApellido = primerApellido;
         this.segundoApellido = segundoApellido;
@@ -37,20 +37,20 @@ public class UsuarioDTO implements Serializable {
         this.grupoId = grupoId;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Integer getEdad() {
         return edad;
     }
 
     public void setEdad(Integer edad) {
         this.edad = edad;
+    }
+
+    public String getDni() {
+        return dni;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
     }
 
     public String getNombre() {
@@ -116,14 +116,15 @@ public class UsuarioDTO implements Serializable {
     @Override
     public String toString() {
         return "UsuarioDTO{" +
-                "id=" + id +
-                ", edad=" + edad +
+                "edad=" + edad +
+                ", dni='" + dni + '\'' +
                 ", nombre='" + nombre + '\'' +
                 ", primerApellido='" + primerApellido + '\'' +
                 ", segundoApellido='" + segundoApellido + '\'' +
                 ", sexo='" + sexo + '\'' +
                 ", fechNac=" + fechNac +
                 ", direccionId=" + direccionId +
+                ", grupoId=" + grupoId +
                 '}';
     }
 }

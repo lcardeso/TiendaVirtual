@@ -15,8 +15,8 @@ public class Grupo implements Serializable {
     @Column(name = "id_grupo", nullable = false)
     private Long id;
 
-    @OneToMany(mappedBy = "grupo", fetch = FetchType.EAGER)
-    private List<Usuario> usuario;
+    @OneToMany(mappedBy = "grupo", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<Usuario> usuarios;
 
     @Column(name = "nombre")
     private String nombre;
@@ -32,12 +32,12 @@ public class Grupo implements Serializable {
         this.id = id;
     }
 
-    public List<Usuario> getUsuario() {
-        return usuario;
+    public List<Usuario> getUsuarios() {
+        return usuarios;
     }
 
-    public void setUsuario(List<Usuario> usuario) {
-        this.usuario = usuario;
+    public void setUsuarios(List<Usuario> usuarios) {
+        this.usuarios = usuarios;
     }
 
     public String getNombre() {
@@ -71,8 +71,8 @@ public class Grupo implements Serializable {
         return this;
     }
 
-    public Grupo usuario(List<Usuario> usuario) {
-        this.usuario = usuario;
+    public Grupo usuarios(List<Usuario> usuarios) {
+        this.usuarios = usuarios;
         return this;
     }
 

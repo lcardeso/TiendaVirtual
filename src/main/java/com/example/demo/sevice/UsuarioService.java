@@ -4,6 +4,7 @@ import com.example.demo.DTO.*;
 import com.example.demo.domain.Direccion;
 import com.example.demo.domain.Grupo;
 import com.example.demo.domain.Usuario;
+import com.example.demo.repository.DireccionRepository;
 import com.example.demo.repository.GrupoRepository;
 import com.example.demo.repository.UsuarioRepository;
 import com.example.demo.utils.MapperUtils;
@@ -30,6 +31,9 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
+    private DireccionRepository direccionRepository;
+
+    @Autowired
     private GrupoRepository grupoRepository;
 
     //Listado de todos los usuarios
@@ -42,9 +46,14 @@ public class UsuarioService {
     }
 
     //Eliminar usuario a partir de un id establecido
-    public void eliminar(Long delusuario) {
+    public ResponseDto eliminar(Long delusuario) {
         Optional<Usuario> deleteusuario = usuarioRepository.findById(delusuario);
-        usuarioRepository.delete(deleteusuario.get());
+        if (deleteusuario.isPresent()) {
+            usuarioRepository.delete(deleteusuario.get());
+            return new ResponseDto().status("200").message("El usuario ha sido eliminado con exito");
+        } else {
+            return new ResponseDto().status("400").message("El usuario no existe");
+        }
     }
 
     //Mostrar usuario a partir de un sexo establecido
@@ -58,7 +67,7 @@ public class UsuarioService {
     }
 
     // Buscar usuario por nombre
-    public List<Usuario> BuscarUsuario(String nombre) {
+    public List<Usuario> buscarUsuario(String nombre) {
         String nombreNormalizado = Normalizer.normalize(nombre, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "").toUpperCase();
         List<Usuario> usu = usuarioRepository.findByNombre(nombreNormalizado);
         if (usu.isEmpty())
@@ -114,13 +123,18 @@ public class UsuarioService {
     //Actualizar la direccion a un usuario
     public ResponseDto actualizarDireccion(ActualizarDireccionDto dirusuario) {
         Optional<Usuario> usuarioEntity = usuarioRepository.findById(dirusuario.getIdUsuario());
-        if (usuarioEntity.get().getDireccion().getId().equals(dirusuario.getIdDireccion())) {
-            return new ResponseDto().status("400").message("El usuario ya vive en calle:" + usuarioEntity.get().getDireccion().getCalle() + ", numeroApto:" + usuarioEntity.get().getDireccion().getNumeroApto() + ", codigoPostal:" + usuarioEntity.get().getDireccion().getCodigoPostal());
-        } else if (usuarioEntity.isPresent()) {
-            Direccion direccionEntity = new Direccion().id(dirusuario.getIdDireccion());
-            usuarioEntity.get().direccion(direccionEntity);
-            usuarioRepository.save(usuarioEntity.get());
-            return new ResponseDto().status("200").message("La dirección fue actualizado al usuario : " + usuarioEntity.get().getNombre());
+        if (usuarioEntity.isPresent()) {
+            if (usuarioEntity.get().getDireccion().getId().equals(dirusuario.getIdDireccion())) {
+                return new ResponseDto().status("400").message("El usuario ya vive en calle:" + usuarioEntity.get().getDireccion().getCalle() + ", numeroApto:" + usuarioEntity.get().getDireccion().getNumeroApto() + ", codigoPostal:" + usuarioEntity.get().getDireccion().getCodigoPostal());
+            } else {
+                Optional<Direccion> direccionEntity = direccionRepository.findById(dirusuario.getIdDireccion());
+                if (direccionEntity.isEmpty()) {
+                    return new ResponseDto().status("404").message("la direccion con id : " + dirusuario.getIdDireccion() + " no existe.");
+                }
+                usuarioEntity.get().direccion(direccionEntity.get());
+                usuarioRepository.save(usuarioEntity.get());
+                return new ResponseDto().status("200").message("La dirección fue actualizado al usuario : " + usuarioEntity.get().getNombre());
+            }
         }
         return new ResponseDto().status("404").message("El usuario con id : " + dirusuario.getIdUsuario() + " no existe.");
     }

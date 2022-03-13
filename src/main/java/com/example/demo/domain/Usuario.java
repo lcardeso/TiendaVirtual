@@ -11,19 +11,22 @@ import java.time.LocalDateTime;
 @Table(name = "usuario", schema = "estudio")
 public class Usuario implements Serializable {
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_usuario", nullable = false)
+    @Column(name = "id_usuario")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JsonIgnore
     @JoinColumn(name = "id_grupo_fk", referencedColumnName = "id_grupo")
     private Grupo grupo;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_direccion_FK", referencedColumnName = "id_direccion")
     private Direccion direccion;
+
+    @NotNull
+    @Column(name = "dni")
+    private String dni;
 
     @NotNull
     @Column(name = "nombre")
@@ -71,6 +74,14 @@ public class Usuario implements Serializable {
 
     public void setDireccion(Direccion direccion) {
         this.direccion = direccion;
+    }
+
+    public String getDni() {
+        return dni;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
     }
 
     public String getNombre() {
@@ -125,7 +136,9 @@ public class Usuario implements Serializable {
     public String toString() {
         return "Usuario{" +
                 "id=" + id +
+                ", grupo=" + grupo +
                 ", direccion=" + direccion +
+                ", dni='" + dni + '\'' +
                 ", nombre='" + nombre + '\'' +
                 ", primApellido='" + primApellido + '\'' +
                 ", segApellido='" + segApellido + '\'' +
@@ -150,6 +163,7 @@ public class Usuario implements Serializable {
         this.direccion = direccion;
         return this;
     }
+
 
     public Usuario nombre(String nombre) {
         this.nombre = nombre;
@@ -176,6 +190,56 @@ public class Usuario implements Serializable {
     }
 
     public Usuario sexo(String sexo) {
+        this.sexo = sexo;
+        return this;
+    }
+
+    public Usuario withId(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public Usuario withGrupo(Grupo grupo) {
+        this.grupo = grupo;
+        return this;
+    }
+
+    public Usuario withDireccion(Direccion direccion) {
+        this.direccion = direccion;
+        return this;
+    }
+
+    public Usuario withDni(String dni) {
+        this.dni = dni;
+        return this;
+    }
+
+    public Usuario withNombre(String nombre) {
+        this.nombre = nombre;
+        return this;
+    }
+
+    public Usuario withPrimApellido(String primApellido) {
+        this.primApellido = primApellido;
+        return this;
+    }
+
+    public Usuario withSegApellido(String segApellido) {
+        this.segApellido = segApellido;
+        return this;
+    }
+
+    public Usuario withFechNac(LocalDateTime fechNac) {
+        this.fechNac = fechNac;
+        return this;
+    }
+
+    public Usuario withEdad(Integer edad) {
+        this.edad = edad;
+        return this;
+    }
+
+    public Usuario withSexo(String sexo) {
         this.sexo = sexo;
         return this;
     }

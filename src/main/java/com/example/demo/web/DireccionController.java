@@ -1,5 +1,7 @@
 package com.example.demo.web;
 
+import com.example.demo.DTO.BusquedaLikeDireccionCP;
+import com.example.demo.DTO.BusquedaLikeUsuario;
 import com.example.demo.DTO.DireccionDto;
 import com.example.demo.DTO.ResponseDto;
 import com.example.demo.domain.Direccion;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -29,8 +32,13 @@ public class DireccionController {
     }
 
     @DeleteMapping("/direccion/eliminar")
-    public void deleteDireccion(Long identdir) {
-        direccionService.eliminar(identdir);
+    public ResponseEntity<ResponseDto> deleteDireccion(@RequestParam Long identdir) {
+        return ResponseEntity.ok().body(direccionService.eliminar(identdir));
+    }
+
+    @PostMapping(value = "/direccion/buscar/Like/codigoP")
+    public ResponseEntity<List<Direccion>> direccionXCodigoP(@Valid @RequestBody BusquedaLikeDireccionCP busquedaLikeDireccion) {
+        return ResponseEntity.ok().body(direccionService.buscarDireccion(busquedaLikeDireccion.getCodigoPostal()));
     }
 
 }

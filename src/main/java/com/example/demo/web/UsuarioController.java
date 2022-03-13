@@ -28,8 +28,8 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/usuario/eliminar")
-    public void deleteUsuario(Long delusuario) {
-        usuarioService.eliminar(delusuario);
+    public ResponseEntity<ResponseDto> deleteUsuario(@RequestParam Long idUsuario) {
+        return ResponseEntity.ok().body(usuarioService.eliminar(idUsuario));
     }
 
 
@@ -47,7 +47,7 @@ public class UsuarioController {
     // Busca un Usuario por nombre
     @PostMapping(value = "/usuario/buscar/Like/nombre")
     public ResponseEntity<List<Usuario>> usuarioXNombre(@Valid @RequestBody BusquedaLikeUsuario busquedaLikeUsuario) {
-        return ResponseEntity.ok().body(usuarioService.BuscarUsuario(busquedaLikeUsuario.getNombre()));
+        return ResponseEntity.ok().body(usuarioService.buscarUsuario(busquedaLikeUsuario.getNombre()));
     }
 
     @PostMapping("/usuario/adicionar")
@@ -67,12 +67,12 @@ public class UsuarioController {
 }
 
 
-
 /**
  * Muestra Usuarios Mayores de una edad determinada a traves del metodo POST
-
- @PostMapping(value = "/mayoresDeterminadaEdad")
- public ResponseEntity<List<Usuario>> mayoresDeterminadaEdad(@Valid @RequestBody BusquedaUsuarioEdadDTO busquedaUsuarioEdadDTO) throws Exception {
- return ResponseEntity.ok().body(usuarioService.mayoresDeterminadaEdad(busquedaUsuarioEdadDTO.getEdad()));
- }*/
+ *
+ * @PostMapping(value = "/mayoresDeterminadaEdad")
+ * public ResponseEntity<List<Usuario>> mayoresDeterminadaEdad(@Valid @RequestBody BusquedaUsuarioEdadDTO busquedaUsuarioEdadDTO) throws Exception {
+ * return ResponseEntity.ok().body(usuarioService.mayoresDeterminadaEdad(busquedaUsuarioEdadDTO.getEdad()));
+ * }
+ */
 

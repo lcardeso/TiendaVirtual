@@ -1,6 +1,7 @@
 package com.example.demo.sevice;
 
 import com.example.demo.DTO.GrupoDto;
+import com.example.demo.DTO.NombreGrupoDto;
 import com.example.demo.DTO.ResponseDto;
 import com.example.demo.DTO.UsuarioDTO;
 import com.example.demo.domain.Direccion;
@@ -49,24 +50,24 @@ public class GrupoService {
     }
 
     //Obtener Todos
-    public List<Grupo> getAllGrupo() {
+    public List<NombreGrupoDto> getAllGrupo() {
         List<Grupo> grupolist = grupoRepository.findAll();
-      /* List<String> temp;
-        grupolist.forEach(x -> {
-            temp = x.getNombre();
-            temp = x.getCategoria();
-        System.out.println(temp);
-        });*/
+        List<NombreGrupoDto> g = mapperUtils.mapeoListaObjetoObjeto(grupolist, NombreGrupoDto.class);
         if (grupolist.isEmpty()) {
             System.out.println("No hay grupos para mostrar");
         }
-        return grupolist;
+        return g;
     }
 
     //Eliminar grupo
-    public void eliminar(String nombregrup) {
+    public ResponseDto eliminar(String nombregrup) {
         Optional<Grupo> deletegrupo = grupoRepository.findByNombre(nombregrup);
-        grupoRepository.delete(deletegrupo.get());
+        if (deletegrupo.isPresent()) {
+            grupoRepository.delete(deletegrupo.get());
+            return new ResponseDto().status("200").message("El grupo ha sido eliminado con exito");
+        } else {
+            return new ResponseDto().status("400").message("El grupo no existe");
+        }
     }
 
 }

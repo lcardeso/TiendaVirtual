@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
+import java.text.Normalizer;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +40,8 @@ public class DireccionService {
             return adicionar(dir);
         }
     }
-     //Adicionar dirección
+
+    //Adicionar dirección
     private ResponseDto adicionar(DireccionDto dir) {
         Direccion d = mapperUtils.mapeoObjetoObjeto(dir, Direccion.class);
         direccionRepository.save(d);
@@ -56,8 +58,21 @@ public class DireccionService {
     }
 
     //Eliminar a partir del id
-    public void eliminar(Long identdir) {
+    public ResponseDto eliminar(Long identdir) {
         Optional<Direccion> deletedir = direccionRepository.findById(identdir);
-        direccionRepository.delete(deletedir.get());
+        if (deletedir.isPresent()) {
+            direccionRepository.delete(deletedir.get());
+            return new ResponseDto().status("200").message("La direccion ha sido eliminado con exito");
+        } else {
+            return new ResponseDto().status("400").message("la direccion no existe");
+        }
+    }
+
+    public List<Direccion> buscarDireccion(String codigoPostal) {
+        String nombreNormalizado = Normalizer.normalize(codigoPostal, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "").toUpperCase();
+        List<Direccion> direccion = direccionRepository.findByCodigoPostal(nombreNormalizado);
+        if (direccion.isEmpty())
+            System.out.println("No existe ningun usuario");
+        return direccion;
     }
 }

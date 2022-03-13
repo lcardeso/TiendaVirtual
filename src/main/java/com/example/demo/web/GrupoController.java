@@ -2,6 +2,7 @@ package com.example.demo.web;
 
 import com.example.demo.DTO.DireccionDto;
 import com.example.demo.DTO.GrupoDto;
+import com.example.demo.DTO.NombreGrupoDto;
 import com.example.demo.DTO.ResponseDto;
 import com.example.demo.domain.Grupo;
 import com.example.demo.domain.Usuario;
@@ -26,14 +27,16 @@ public class GrupoController {
     }
 
     @GetMapping("/grupo/obtenerTodos")
-    public List<Grupo> obtenerTodos() {
+    public List<NombreGrupoDto> obtenerTodos() {
         return grupoService.getAllGrupo();
     }
 
     @DeleteMapping("/grupo/eliminar")
-    public void deleteGrupo(String nombregrup) {
-        grupoService.eliminar(nombregrup);
+    public ResponseEntity<ResponseDto> deleteGrupo(@RequestParam String nombregrup) {
+        return ResponseEntity.ok().body(grupoService.eliminar(nombregrup));
     }
+
+
 }
 
 

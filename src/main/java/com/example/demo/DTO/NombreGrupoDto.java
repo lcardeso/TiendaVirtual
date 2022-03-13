@@ -1,25 +1,22 @@
 package com.example.demo.DTO;
 
 import com.example.demo.domain.Usuario;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class GrupoDto implements Serializable {
+public class NombreGrupoDto implements Serializable {
 
     private String nombre;
     private String categoria;
-      private List<Usuario> usuarios;
 
 
-    public GrupoDto() {
+    public NombreGrupoDto() {
     }
 
-    public GrupoDto(String nombre, String categoria, List<Usuario> usuarios) {
+    public NombreGrupoDto(String nombre, String categoria) {
         this.nombre = nombre;
         this.categoria = categoria;
-        this.usuarios = usuarios;
     }
 
     public String getNombre() {
@@ -38,13 +35,6 @@ public class GrupoDto implements Serializable {
         this.categoria = categoria;
     }
 
-    public List<Usuario> getusuarios() {
-        return usuarios;
-    }
-
-    public void setusuarios(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
-    }
 
     @Override
     public String toString() {
@@ -55,12 +45,12 @@ public class GrupoDto implements Serializable {
     }
 
 
-    public GrupoDto nombre(String nombre) {
+    public NombreGrupoDto nombre(String nombre) {
         this.nombre = nombre;
         return this;
     }
 
-    public GrupoDto categoria(String categoria) {
+    public NombreGrupoDto categoria(String categoria) {
         this.categoria = categoria;
         return this;
     }
