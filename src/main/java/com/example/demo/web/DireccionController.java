@@ -1,11 +1,10 @@
 package com.example.demo.web;
 
+import com.example.demo.DTO.AlumnoDTO;
 import com.example.demo.DTO.BusquedaLikeDireccionCP;
-import com.example.demo.DTO.BusquedaLikeUsuario;
 import com.example.demo.DTO.DireccionDto;
 import com.example.demo.DTO.ResponseDto;
 import com.example.demo.domain.Direccion;
-import com.example.demo.domain.Usuario;
 import com.example.demo.sevice.DireccionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,19 +27,23 @@ public class DireccionController {
 
     @GetMapping("/direccion/obtenerTodos")
     public List<Direccion> obtenerTodos() {
-        return direccionService.getAllDireccion();
+        return direccionService.obtenerTodos();
     }
 
     @DeleteMapping("/direccion/eliminar")
-    public ResponseEntity<ResponseDto> deleteDireccion(@RequestParam Long identdir) {
-        return ResponseEntity.ok().body(direccionService.eliminar(identdir));
+    public ResponseEntity<ResponseDto> eliminar(@RequestParam Long idDireccion) {
+        return ResponseEntity.ok().body(direccionService.eliminar(idDireccion));
     }
 
     @PostMapping(value = "/direccion/buscar/Like/codigoP")
     public ResponseEntity<List<Direccion>> direccionXCodigoP(@Valid @RequestBody BusquedaLikeDireccionCP busquedaLikeDireccion) {
-        return ResponseEntity.ok().body(direccionService.buscarDireccion(busquedaLikeDireccion.getCodigoPostal()));
+        return ResponseEntity.ok().body(direccionService.buscar(busquedaLikeDireccion.getCodigoPostal()));
     }
 
+    @PostMapping("/direccion/modificar")
+    public ResponseEntity<ResponseDto> modificar(@Valid @RequestBody DireccionDto direccionDto) {
+        return ResponseEntity.ok().body(direccionService.modificar(direccionDto));
+    }
 }
 
 

@@ -1,17 +1,16 @@
 package com.example.demo.web;
 
-import com.example.demo.DTO.DireccionDto;
+import com.example.demo.DTO.AlumnoDTO;
 import com.example.demo.DTO.GrupoDto;
 import com.example.demo.DTO.NombreGrupoDto;
 import com.example.demo.DTO.ResponseDto;
 import com.example.demo.domain.Grupo;
-import com.example.demo.domain.Usuario;
-import com.example.demo.sevice.DireccionService;
 import com.example.demo.sevice.GrupoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -27,15 +26,19 @@ public class GrupoController {
     }
 
     @GetMapping("/grupo/obtenerTodos")
-    public List<NombreGrupoDto> obtenerTodos() {
-        return grupoService.getAllGrupo();
+    public List<Grupo> obtenerTodos() {
+        return grupoService.obtenerTodos();
     }
 
     @DeleteMapping("/grupo/eliminar")
-    public ResponseEntity<ResponseDto> deleteGrupo(@RequestParam String nombregrup) {
-        return ResponseEntity.ok().body(grupoService.eliminar(nombregrup));
+    public ResponseEntity<ResponseDto> eliminar(@RequestParam Long idGrupo) {
+        return ResponseEntity.ok().body(grupoService.eliminar(idGrupo));
     }
 
+    @PostMapping("/grupo/modificar")
+    public ResponseEntity<ResponseDto> modificar(@Valid @RequestBody GrupoDto grupoDto) {
+        return ResponseEntity.ok().body(grupoService.modificar(grupoDto));
+    }
 
 }
 

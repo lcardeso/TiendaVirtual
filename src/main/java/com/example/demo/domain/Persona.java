@@ -4,18 +4,19 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "personas_tipo")
 @Table(name = "usuario", schema = "estudio")
-public class Usuario implements Serializable {
+public abstract class Persona {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_usuario")
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "id_grupo_fk", referencedColumnName = "id_grupo")
     private Grupo grupo;
@@ -27,6 +28,7 @@ public class Usuario implements Serializable {
     @NotNull
     @Column(name = "dni")
     private String dni;
+
 
     @NotNull
     @Column(name = "nombre")
@@ -134,7 +136,7 @@ public class Usuario implements Serializable {
 
     @Override
     public String toString() {
-        return "Usuario{" +
+        return "Persona{" +
                 "id=" + id +
                 ", grupo=" + grupo +
                 ", direccion=" + direccion +
@@ -148,98 +150,51 @@ public class Usuario implements Serializable {
                 '}';
     }
 
-
-    public Usuario id(Long id) {
+    public Persona id(Long id) {
         this.id = id;
         return this;
     }
 
-    public Usuario grupo(Grupo grupo) {
+    public Persona grupo(Grupo grupo) {
         this.grupo = grupo;
         return this;
     }
 
-    public Usuario direccion(Direccion direccion) {
+    public Persona direccion(Direccion direccion) {
         this.direccion = direccion;
         return this;
     }
 
-
-    public Usuario nombre(String nombre) {
-        this.nombre = nombre;
-        return this;
-    }
-
-    public Usuario primApellido(String primApellido) {
-        this.primApellido = primApellido;
-        return this;
-    }
-
-    public Usuario segApellido(String segApellido) {
-        this.segApellido = segApellido;
-        return this;
-    }
-
-    public Usuario fechNac(LocalDateTime fechNac) {
-        this.fechNac = fechNac;
-        return this;
-    }
-
-    public Usuario edad(Integer edad) {
-        this.edad = edad;        return this;
-    }
-
-    public Usuario sexo(String sexo) {
-        this.sexo = sexo;
-        return this;
-    }
-
-    public Usuario withId(Long id) {
-        this.id = id;
-        return this;
-    }
-
-    public Usuario withGrupo(Grupo grupo) {
-        this.grupo = grupo;
-        return this;
-    }
-
-    public Usuario withDireccion(Direccion direccion) {
-        this.direccion = direccion;
-        return this;
-    }
-
-    public Usuario withDni(String dni) {
+    public Persona dni(String dni) {
         this.dni = dni;
         return this;
     }
-
-    public Usuario withNombre(String nombre) {
+    public Persona nombre(String nombre) {
         this.nombre = nombre;
         return this;
     }
 
-    public Usuario withPrimApellido(String primApellido) {
+    public Persona primApellido(String primApellido) {
         this.primApellido = primApellido;
         return this;
     }
 
-    public Usuario withSegApellido(String segApellido) {
+    public Persona segApellido(String segApellido) {
         this.segApellido = segApellido;
         return this;
     }
 
-    public Usuario withFechNac(LocalDateTime fechNac) {
+    public Persona fechNac(LocalDateTime fechNac) {
         this.fechNac = fechNac;
         return this;
     }
 
-    public Usuario withEdad(Integer edad) {
+    public Persona edad(Integer edad) {
         this.edad = edad;
         return this;
     }
 
-    public Usuario withSexo(String sexo) {
+    public Persona sexo(String sexo) {
         this.sexo = sexo;
         return this;
     }

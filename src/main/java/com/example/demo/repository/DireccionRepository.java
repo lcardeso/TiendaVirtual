@@ -12,4 +12,6 @@ public interface DireccionRepository extends JpaRepository<Direccion, Long> {
     Optional<Direccion> findByCalleAndNumeroApto(String calle, String numeroApto);
 
     List<Direccion> findByCodigoPostal(String codigoPostal);
+
+    Optional<Direccion> findByCalle(String calle);
 }

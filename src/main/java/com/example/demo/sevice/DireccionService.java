@@ -1,15 +1,16 @@
 package com.example.demo.sevice;
 
+import com.example.demo.DTO.AlumnoDTO;
 import com.example.demo.DTO.DireccionDto;
-import com.example.demo.DTO.GrupoDto;
 import com.example.demo.DTO.ResponseDto;
+import com.example.demo.domain.Alumno;
 import com.example.demo.domain.Direccion;
-import com.example.demo.domain.Usuario;
+import com.example.demo.domain.Persona;
 import com.example.demo.repository.DireccionRepository;
+import com.example.demo.repository.PersonaRepository;
 import com.example.demo.utils.MapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
 import java.text.Normalizer;
@@ -26,53 +27,71 @@ public class DireccionService {
     @Autowired
     private DireccionRepository direccionRepository;
 
-    public ResponseDto validarDireccion(DireccionDto dir) {
-        ResponseDto response = new ResponseDto();
-        if (dir.getCalle().isEmpty()) {
-            return response.status("400").message("El parámetro calle no puede ser null.");
-        } else if (dir.getNumeroApto().isEmpty()) {
-            return response.status("400").message("El parámetro número Apto no puede ser null.");
-        } else if (dir.getCodigoPostal().isEmpty()) {
-            return response.status("400").message("El parámetro código postal no puede ser null.");
-        } else if (direccionRepository.findByCalleAndNumeroApto(dir.getCalle(), dir.getNumeroApto()).isPresent()) {
-            return response.status("400").message("La dirección ya existe");
+    @Autowired
+    private PersonaRepository personaRepository;
+
+    public ResponseDto validarDireccion(DireccionDto direccion) {
+        ResponseDto respuesta = new ResponseDto();
+        if (direccion.getCalle().isEmpty()) {
+            return respuesta.status("400").message("El parámetro calle no es válido.");
+        } else if (direccion.getNumeroApto().isEmpty()) {
+            return respuesta.status("400").message("El parámetro número de apartamento no es válido.");
+        } else if (direccion.getCodigoPostal().isEmpty()) {
+            return respuesta.status("400").message("El parámetro código postal no es válido.");
+        } else if (direccionRepository.findByCalleAndNumeroApto(direccion.getCalle(), direccion.getNumeroApto()).isPresent()) {
+            return respuesta.status("400").message("La dirección ya existe");
         } else {
-            return adicionar(dir);
+            return adicionar(direccion);
         }
     }
 
     //Adicionar dirección
-    private ResponseDto adicionar(DireccionDto dir) {
-        Direccion d = mapperUtils.mapeoObjetoObjeto(dir, Direccion.class);
-        direccionRepository.save(d);
+    private ResponseDto adicionar(DireccionDto direccion) {
+        Direccion dirMapeada = mapperUtils.mapeoObjetoObjeto(direccion, Direccion.class);
+        direccionRepository.save(dirMapeada);
         return new ResponseDto().status("200").message("La dirección fue creada exitosamente");
     }
 
     //Obtener Todos
-    public List<Direccion> getAllDireccion() {
-        List<Direccion> direccionlist = direccionRepository.findAll();
-        if (direccionlist.isEmpty()) {
+    public List<Direccion> obtenerTodos() {
+        List<Direccion> direccionList = direccionRepository.findAll();
+        if (direccionList.isEmpty()) {
             System.out.println("No hay direcciones para mostrar");
         }
-        return direccionlist;
+        return direccionList;
     }
 
-    //Eliminar a partir del id
-    public ResponseDto eliminar(Long identdir) {
-        Optional<Direccion> deletedir = direccionRepository.findById(identdir);
-        if (deletedir.isPresent()) {
-            direccionRepository.delete(deletedir.get());
-            return new ResponseDto().status("200").message("La direccion ha sido eliminado con exito");
-        } else {
-            return new ResponseDto().status("400").message("la direccion no existe");
-        }
+
+    // Eliminar a partir del id
+    public ResponseDto eliminar(Long idDireccion) {
+        ResponseDto respuesta = new ResponseDto();
+        direccionRepository.delete(new Direccion().id(idDireccion));
+        return respuesta.status("200").message("La dirección ha sido eliminada con éxito");
     }
 
-    public List<Direccion> buscarDireccion(String codigoPostal) {
+
+    //Buscar direccion por código postal
+    public List<Direccion> buscar(String codigoPostal) {
         String nombreNormalizado = Normalizer.normalize(codigoPostal, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "").toUpperCase();
         List<Direccion> direccion = direccionRepository.findByCodigoPostal(nombreNormalizado);
         if (direccion.isEmpty())
-            System.out.println("No existe ningun usuario");
+            System.out.println("No existe la dirección.");
         return direccion;
     }
+
+    //Modificar direccion
+    public ResponseDto modificar(DireccionDto direccionDto) {
+        Optional<Direccion> direccionOpt = direccionRepository.findById(direccionDto.getId());
+        if (direccionOpt.isPresent()) {
+            Direccion direccion = direccionOpt.get();
+            direccion.calle(direccionDto.getCalle()).
+                    numeroApto(direccionDto.getNumeroApto()).
+                    codigoPostal(direccionDto.getCodigoPostal());
+            direccionRepository.save(direccion);
+            return new ResponseDto().status("200").message("La dirección ha sido modificada.");
+        }
+        return new ResponseDto().status("400").message("Dirección no encontrada");
+    }
+
+
 }

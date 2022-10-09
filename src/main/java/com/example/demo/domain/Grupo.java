@@ -1,7 +1,5 @@
 package com.example.demo.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -15,8 +13,8 @@ public class Grupo implements Serializable {
     @Column(name = "id_grupo", nullable = false)
     private Long id;
 
-    @OneToMany(mappedBy = "grupo", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<Usuario> usuarios;
+    @OneToMany(mappedBy = "grupo")
+    private List<Persona> usuarios;
 
     @Column(name = "nombre")
     private String nombre;
@@ -32,11 +30,11 @@ public class Grupo implements Serializable {
         this.id = id;
     }
 
-    public List<Usuario> getUsuarios() {
+    public List<Persona> getUsuarios() {
         return usuarios;
     }
 
-    public void setUsuarios(List<Usuario> usuarios) {
+    public void setUsuarios(List<Persona> usuarios) {
         this.usuarios = usuarios;
     }
 
@@ -71,7 +69,7 @@ public class Grupo implements Serializable {
         return this;
     }
 
-    public Grupo usuarios(List<Usuario> usuarios) {
+    public Grupo usuarios(List<Persona> usuarios) {
         this.usuarios = usuarios;
         return this;
     }

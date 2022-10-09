@@ -1,20 +1,16 @@
 package com.example.demo.DTO;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 
-public class BusquedaUsuarioEdadDTO implements Serializable {
+public class BusquedaPersonaEdadDTO implements Serializable {
 
     private Integer edad;
 
-    public BusquedaUsuarioEdadDTO() {
+    public BusquedaPersonaEdadDTO() {
     }
 
-    public BusquedaUsuarioEdadDTO(Integer edad) {
+    public BusquedaPersonaEdadDTO(Integer edad) {
         this.edad = edad;
     }
 

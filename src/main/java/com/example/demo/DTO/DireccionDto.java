@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class DireccionDto implements Serializable {
 
+    private Long id;
     private String calle;
     private String numeroApto;
     private String codigoPostal;
@@ -11,10 +12,19 @@ public class DireccionDto implements Serializable {
     public DireccionDto() {
     }
 
-    public DireccionDto(String calle, String numeroApto, String codigoPostal) {
+    public DireccionDto(Long id, String calle, String numeroApto, String codigoPostal) {
+        this.id = id;
         this.calle = calle;
         this.numeroApto = numeroApto;
         this.codigoPostal = codigoPostal;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getCalle() {
@@ -44,7 +54,8 @@ public class DireccionDto implements Serializable {
     @Override
     public String toString() {
         return "DireccionDto{" +
-                "calle='" + calle + '\'' +
+                "id=" + id +
+                ", calle='" + calle + '\'' +
                 ", numeroApto='" + numeroApto + '\'' +
                 ", codigoPostal='" + codigoPostal + '\'' +
                 '}';

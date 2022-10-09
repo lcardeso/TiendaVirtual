@@ -1,6 +1,6 @@
 package com.example.demo.DTO;
 
-import com.example.demo.domain.Usuario;
+import com.example.demo.domain.Persona;
 
 import java.io.Serializable;
 import java.util.List;
@@ -9,14 +9,16 @@ public class NombreGrupoDto implements Serializable {
 
     private String nombre;
     private String categoria;
+    private List<Persona> usuarios;
 
 
     public NombreGrupoDto() {
     }
 
-    public NombreGrupoDto(String nombre, String categoria) {
+    public NombreGrupoDto(String nombre, String categoria, List<Persona> usuarios) {
         this.nombre = nombre;
         this.categoria = categoria;
+        this.usuarios = usuarios;
     }
 
     public String getNombre() {
@@ -35,15 +37,22 @@ public class NombreGrupoDto implements Serializable {
         this.categoria = categoria;
     }
 
+    public List<Persona> getUsuarios() {
+        return usuarios;
+    }
+
+    public void setUsuarios(List<Persona> users) {
+        this.usuarios = users;
+    }
 
     @Override
     public String toString() {
-        return "GrupoDto{" +
+        return "NombreGrupoDto{" +
                 "nombre='" + nombre + '\'' +
                 ", categoria='" + categoria + '\'' +
+                ", usuarios=" + usuarios +
                 '}';
     }
-
 
     public NombreGrupoDto nombre(String nombre) {
         this.nombre = nombre;
@@ -55,4 +64,19 @@ public class NombreGrupoDto implements Serializable {
         return this;
     }
 
+
+    public NombreGrupoDto withNombre(String nombre) {
+        this.nombre = nombre;
+        return this;
+    }
+
+    public NombreGrupoDto withCategoria(String categoria) {
+        this.categoria = categoria;
+        return this;
+    }
+
+    public NombreGrupoDto withUsers(List<Persona> users) {
+        this.usuarios = usuarios;
+        return this;
+    }
 }

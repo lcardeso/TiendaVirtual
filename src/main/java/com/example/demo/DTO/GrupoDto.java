@@ -1,25 +1,35 @@
 package com.example.demo.DTO;
 
-import com.example.demo.domain.Usuario;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.example.demo.domain.Persona;
 
 import java.io.Serializable;
 import java.util.List;
 
 public class GrupoDto implements Serializable {
 
+    private Long id;
     private String nombre;
     private String categoria;
-      private List<Usuario> usuarios;
+    private List<Persona> personas;
+
 
 
     public GrupoDto() {
     }
 
-    public GrupoDto(String nombre, String categoria, List<Usuario> usuarios) {
+    public GrupoDto(Long id, String nombre, String categoria, List<Persona> personas) {
+        this.id = id;
         this.nombre = nombre;
         this.categoria = categoria;
-        this.usuarios = usuarios;
+        this.personas = personas;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getNombre() {
@@ -38,22 +48,23 @@ public class GrupoDto implements Serializable {
         this.categoria = categoria;
     }
 
-    public List<Usuario> getusuarios() {
-        return usuarios;
+    public List<Persona> getPersonas() {
+        return personas;
     }
 
-    public void setusuarios(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
+    public void setPersonas(List<Persona> personas) {
+        this.personas = personas;
     }
 
     @Override
     public String toString() {
         return "GrupoDto{" +
-                "nombre='" + nombre + '\'' +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
                 ", categoria='" + categoria + '\'' +
+                ", personas=" + personas +
                 '}';
     }
-
 
     public GrupoDto nombre(String nombre) {
         this.nombre = nombre;
@@ -65,4 +76,14 @@ public class GrupoDto implements Serializable {
         return this;
     }
 
+
+    public GrupoDto id(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public GrupoDto personas(List<Persona> personas) {
+        this.personas = personas;
+        return this;
+    }
 }

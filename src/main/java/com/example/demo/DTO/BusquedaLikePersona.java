@@ -2,14 +2,14 @@ package com.example.demo.DTO;
 
 import java.io.Serializable;
 
-public class BusquedaLikeUsuario implements Serializable {
+public class BusquedaLikePersona implements Serializable {
 
     private String nombre;
 
-    public BusquedaLikeUsuario() {
+    public BusquedaLikePersona() {
     }
 
-    public BusquedaLikeUsuario(String nombre) {
+    public BusquedaLikePersona(String nombre) {
         this.nombre = nombre;
     }
 
