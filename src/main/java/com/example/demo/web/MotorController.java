@@ -1,27 +1,14 @@
 package com.example.demo.web;
 
-import com.example.demo.DTO.AlumnoDTO;
-import com.example.demo.DTO.BusquedaLikePersona;
-import com.example.demo.DTO.ProfesorDTO;
-import com.example.demo.DTO.ResponseDto;
-import com.example.demo.domain.Alumno;
-import com.example.demo.domain.Profesor;
-import com.example.demo.sevice.AlumnoService;
-import com.example.demo.sevice.ProfesorService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.util.List;
-
 @RestController
-@RequestMapping("/estudio")
+@RequestMapping("/concesionario")
 
-public class ProfesorController {
-
+public class MotorController {
+/*
     @Autowired
-    private ProfesorService profesorService;
+    private PersonaService profesorService;
 
     // Busca un profesor por nombre
     @PostMapping("/profesor/buscar/Like/nombre")
@@ -43,5 +30,7 @@ public class ProfesorController {
     public ResponseEntity<ResponseDto> modificar(@Valid @RequestBody ProfesorDTO profesorDTO) {
         return ResponseEntity.ok().body(profesorService.modificar(profesorDTO));
     }
+
+ */
 }
 

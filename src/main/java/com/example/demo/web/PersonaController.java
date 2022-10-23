@@ -1,8 +1,7 @@
 package com.example.demo.web;
 
 import com.example.demo.DTO.*;
-import com.example.demo.domain.Alumno;
-import com.example.demo.domain.Persona;
+import com.example.demo.sevice.AutomovilService;
 import com.example.demo.sevice.PersonaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,15 +11,47 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/estudio")
+@RequestMapping("/concesionario")
 
 public class PersonaController {
 
     @Autowired
     private PersonaService personaService;
 
+    @GetMapping("/persona/listar")
+    public ResponseEntity<List<PersonaDTO>> obtener(){
+        return ResponseEntity.ok().body(personaService.obtener());
+    }
+
+    @PostMapping("/persona/adicionar")
+    public ResponseEntity<ResponseDto> adicionar(@Valid @RequestBody PersonaDTO personaDTO) {
+        return ResponseEntity.ok().body(personaService.adicionar(personaDTO));
+    }
+
+    @PostMapping("/persona/modificar")
+    public ResponseEntity<ResponseDto> modificar(@Valid @RequestBody PersonaDTO personaDTO) {
+        return ResponseEntity.ok().body(personaService.modificar(personaDTO));
+    }
+
+    @DeleteMapping("/persona/eliminar")
+    public ResponseEntity<ResponseDto> delete(@RequestParam Long idPersona) {
+        return ResponseEntity.ok().body(personaService.eliminar(idPersona));
+    }
+
+    @PostMapping("/persona/buscarPorCedula")
+    public ResponseEntity<PersonaDTO> buscarCedula( @RequestParam String cedula) {
+        return ResponseEntity.ok().body(personaService.buscarPorCedula(cedula));
+    }
+
+
+
+
+/*
+    @Autowired
+    private MotorService personaService;
+
     @GetMapping("/persona/obtenerTodos")
-    public List<Persona> obtenerTodos() {
+    public List<Color> obtenerTodos() {
         return personaService.obtenerTodos();
     }
 

@@ -1,25 +1,13 @@
 package com.example.demo.sevice;
 
-import com.example.demo.DTO.AlumnoDTO;
-import com.example.demo.DTO.GrupoDto;
-import com.example.demo.DTO.NombreGrupoDto;
-import com.example.demo.DTO.ResponseDto;
-import com.example.demo.domain.Alumno;
-import com.example.demo.domain.Grupo;
-import com.example.demo.domain.Persona;
-import com.example.demo.repository.GrupoRepository;
-import com.example.demo.utils.MapperUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
-public class GrupoService {
-
+public class MarcaService {
+/*
     @Autowired
     public MapperUtils mapperUtils;
 
@@ -42,28 +30,28 @@ public class GrupoService {
 
     //Adicionar grupo
     public ResponseDto adicionar(GrupoDto grupoDto) {
-        Grupo g = mapperUtils.mapeoObjetoObjeto(grupoDto, Grupo.class);
+        Motor g = mapperUtils.mapeoObjetoObjeto(grupoDto, Motor.class);
         grupoRepository.save(g);
         return new ResponseDto().status("200").message("El grupo fue creado exitosamente");
     }
 
     //Obtener Todos
-    public List<Grupo> obtenerTodos() {
-        List<Grupo> grupoLista = grupoRepository.findAll();
+    public List<Motor> obtenerTodos() {
+        List<Motor> grupoLista = grupoRepository.findAll();
         return grupoLista;
     }
 
     //Eliminar grupo a partir del nombre
     public ResponseDto eliminar(Long id) {
-        grupoRepository.delete(new Grupo().id(id));
+        grupoRepository.delete(new Motor().id(id));
         return new ResponseDto().status("200").message("El grupo ha sido eliminado con éxito");
     }
 
     //Modificar grupo
     public ResponseDto modificar(GrupoDto grupoDto) {
-        Optional<Grupo> grupoOpt = grupoRepository.findById(grupoDto.getId());
+        Optional<Motor> grupoOpt = grupoRepository.findById(grupoDto.getId());
         if (grupoOpt.isPresent()) {
-            Grupo grupo = grupoOpt.get();
+            Motor grupo = grupoOpt.get();
             grupo.nombre(grupo.getNombre()).
                     categoria(grupo.getCategoria());
             grupoRepository.save(grupo);
@@ -72,5 +60,6 @@ public class GrupoService {
         return new ResponseDto().status("400").message("Grupo no encontrado");
 
     }
-}
 
+ */
+}

@@ -1,152 +1,65 @@
 package com.example.demo.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
-
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+@Data
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "personas_tipo")
-@Table(name = "usuario", schema = "estudio")
-public abstract class Persona {
+@Table(name = "persona", schema = "concesionario")
+public class Persona implements Serializable {
+
+    @OneToMany(mappedBy = "persona")
+    private List<Venta> ventas;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_usuario")
+    @Column(name = "id_persona")
     private Long id;
 
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "id_grupo_fk", referencedColumnName = "id_grupo")
-    private Grupo grupo;
-
-    @OneToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "id_direccion_FK", referencedColumnName = "id_direccion")
-    private Direccion direccion;
-
     @NotNull
-    @Column(name = "dni")
-    private String dni;
-
+    @Column(name = "cedula", unique = true, length = 7)
+    private String cedula;
 
     @NotNull
     @Column(name = "nombre")
     private String nombre;
 
     @NotNull
-    @Column(name = "primer_apellido")
-    private String primApellido;
+    @Column(name = "apellido")
+    private String apellido;
 
     @NotNull
-    @Column(name = "segundo_apellido")
-    private String segApellido;
+    @Column(name = "telefono", length = 9)
+    private Integer telefono;
 
     @NotNull
-    @Column(name = "fecha_nacimiento")
-    private LocalDateTime fechNac;
-
-    @NotNull
-    @Column(name = "edad")
-    private Integer edad;
-
-    @NotNull
-    @Column(name = "sexo", length = '1')
+    @Column(name = "sexo", length = 1)
     private String sexo;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Grupo getGrupo() {
-        return grupo;
-    }
-
-    public void setGrupo(Grupo grupo) {
-        this.grupo = grupo;
-    }
-
-    public Direccion getDireccion() {
-        return direccion;
-    }
-
-    public void setDireccion(Direccion direccion) {
-        this.direccion = direccion;
-    }
-
-    public String getDni() {
-        return dni;
-    }
-
-    public void setDni(String dni) {
-        this.dni = dni;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getPrimApellido() {
-        return primApellido;
-    }
-
-    public void setPrimApellido(String primApellido) {
-        this.primApellido = primApellido;
-    }
-
-    public String getSegApellido() {
-        return segApellido;
-    }
-
-    public void setSegApellido(String segApellido) {
-        this.segApellido = segApellido;
-    }
-
-    public LocalDateTime getFechNac() {
-        return fechNac;
-    }
-
-    public void setFechNac(LocalDateTime fechNac) {
-        this.fechNac = fechNac;
-    }
-
-    public Integer getEdad() {
-        return edad;
-    }
-
-    public void setEdad(Integer edad) {
-        this.edad = edad;
-    }
-
-    public String getSexo() {
-        return sexo;
-    }
-
-    public void setSexo(String sexo) {
-        this.sexo = sexo;
-    }
+    @NotNull
+    @Column(name = "direccion")
+    private String direccion;
 
     @Override
     public String toString() {
         return "Persona{" +
                 "id=" + id +
-                ", grupo=" + grupo +
-                ", direccion=" + direccion +
-                ", dni='" + dni + '\'' +
+                ", cedula='" + cedula + '\'' +
                 ", nombre='" + nombre + '\'' +
-                ", primApellido='" + primApellido + '\'' +
-                ", segApellido='" + segApellido + '\'' +
-                ", fechNac=" + fechNac +
-                ", edad=" + edad +
+                ", apellido='" + apellido + '\'' +
+                ", telefono=" + telefono +
                 ", sexo='" + sexo + '\'' +
+                ", direccion='" + direccion + '\'' +
                 '}';
     }
 
@@ -155,47 +68,33 @@ public abstract class Persona {
         return this;
     }
 
-    public Persona grupo(Grupo grupo) {
-        this.grupo = grupo;
+    public Persona cedula(String cedula) {
+        this.cedula = cedula;
         return this;
     }
 
-    public Persona direccion(Direccion direccion) {
-        this.direccion = direccion;
-        return this;
-    }
-
-    public Persona dni(String dni) {
-        this.dni = dni;
-        return this;
-    }
     public Persona nombre(String nombre) {
         this.nombre = nombre;
         return this;
     }
 
-    public Persona primApellido(String primApellido) {
-        this.primApellido = primApellido;
+    public Persona apellido(String apellido) {
+        this.apellido = apellido;
         return this;
     }
 
-    public Persona segApellido(String segApellido) {
-        this.segApellido = segApellido;
-        return this;
-    }
-
-    public Persona fechNac(LocalDateTime fechNac) {
-        this.fechNac = fechNac;
-        return this;
-    }
-
-    public Persona edad(Integer edad) {
-        this.edad = edad;
+    public Persona telefono(Integer telefono) {
+        this.telefono = telefono;
         return this;
     }
 
     public Persona sexo(String sexo) {
         this.sexo = sexo;
+        return this;
+    }
+
+    public Persona direccion(String direccion) {
+        this.direccion = direccion;
         return this;
     }
 }

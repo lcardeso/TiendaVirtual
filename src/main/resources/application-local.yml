@@ -27,9 +27,9 @@ spring:
 
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://localhost:3382/estudio?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC
-    username: estudio
-    password: estudio123
+    url: jdbc:mysql://localhost:3382/concesionario?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: concesionario
+    password: concesionario123
     hikari:
       poolName: Hikari
       auto-commit: false

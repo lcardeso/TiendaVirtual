@@ -1,7 +1,6 @@
 package com.example.demo.DTO;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -13,13 +12,11 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-public class PersonaDTO implements Serializable {
-    private String cedula;
-    private String nombre;
-    private String apellido;
-    private Integer telefono;
-    private String sexo;
-    private String direccion;
+public class EstadoDTO implements Serializable {
+
+    private Long id;
+    private String codigo;
+    private String descripcion;
 
 
 }
