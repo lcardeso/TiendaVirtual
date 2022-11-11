@@ -1,8 +1,7 @@
 package com.example.demo.web;
 
 import com.example.demo.DTO.*;
-import com.example.demo.sevice.AutomovilService;
-import com.example.demo.sevice.PersonaService;
+import com.example.demo.service.PersonaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +40,11 @@ public class PersonaController {
     @PostMapping("/persona/buscarPorCedula")
     public ResponseEntity<PersonaDTO> buscarCedula( @RequestParam String cedula) {
         return ResponseEntity.ok().body(personaService.buscarPorCedula(cedula));
+    }
+
+    @GetMapping("/persona/buscarPorCedulaLike")
+    public ResponseEntity<List<String>> buscarCedulaLike( @RequestParam String cedula) {
+        return ResponseEntity.ok().body(personaService.buscarPorCedulaLike(cedula));
     }
 
 

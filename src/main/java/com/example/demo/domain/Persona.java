@@ -10,6 +10,7 @@ import org.hibernate.validator.constraints.UniqueElements;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -50,6 +51,10 @@ public class Persona implements Serializable {
     @Column(name = "direccion")
     private String direccion;
 
+    @NotNull
+    @Column(name = "fecha_nacimiento")
+    private LocalDateTime fechaNacimiento;
+
     @Override
     public String toString() {
         return "Persona{" +
@@ -60,8 +65,10 @@ public class Persona implements Serializable {
                 ", telefono=" + telefono +
                 ", sexo='" + sexo + '\'' +
                 ", direccion='" + direccion + '\'' +
+                ", fechaNacimiento=" + fechaNacimiento +
                 '}';
     }
+
 
     public Persona id(Long id) {
         this.id = id;
@@ -95,6 +102,11 @@ public class Persona implements Serializable {
 
     public Persona direccion(String direccion) {
         this.direccion = direccion;
+        return this;
+    }
+
+    public Persona fechaNacimiento(LocalDateTime fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
         return this;
     }
 }

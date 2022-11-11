@@ -1,4 +1,4 @@
-package com.example.demo.sevice;
+package com.example.demo.service;
 
 import com.example.demo.DTO.AutomovilDTO;
 import com.example.demo.DTO.ResponseDto;
@@ -11,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.text.Normalizer;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -154,15 +152,15 @@ public class AutomovilService {
         try {
             Optional<Automovil> auto = automovilRepository.findByMatricula(matricula);
             if (auto.isPresent()) {
-                return mapperUtils.mapeoObjetoObjeto(auto.get(), AutomovilDTO.class,MAPPER_AUTOMOVIL);
+                return mapperUtils.mapeoObjetoObjeto(auto.get(), AutomovilDTO.class, MAPPER_AUTOMOVIL);
             }
+            return null;
         } catch (Exception e) {
             return null;
         }
-        return null;
     }
 
-    //Buscar Automovil por Matricula
+    //Buscar Automovil por Matricula LIKE
     public List<String> buscarAutomovilMatriculaLike(String matricula) {
         try {
             return automovilRepository.findByMatriculaLike(matricula);
@@ -170,6 +168,7 @@ public class AutomovilService {
             return null;
         }
     }
+
 
 
 }

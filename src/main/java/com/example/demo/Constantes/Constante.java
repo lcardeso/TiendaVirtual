@@ -5,5 +5,6 @@ public class Constante {
 
     public static final String MAPPER_TIPO_PAGO_VENTA = "com.example.demo.MapperVentaToDTO";
 
+    //public static final String MAPPER_TIPO_FINANCIACION = "com.example.demo.MapperPagoFinanciadoToVentaDTO";
 
 }

@@ -1,22 +1,12 @@
 package com.example.demo.domain;
 
-import com.github.dozermapper.core.converters.DateConverter;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.validator.constraints.URL;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.io.File;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Entity

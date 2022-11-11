@@ -20,6 +20,7 @@ public class PersonaDTO implements Serializable {
     private Integer telefono;
     private String sexo;
     private String direccion;
-
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime fechaNacimiento;
 
 }

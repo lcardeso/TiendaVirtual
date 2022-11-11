@@ -1,4 +1,4 @@
-package com.example.demo.sevice;
+package com.example.demo.service;
 
 import com.example.demo.DTO.*;
 import com.example.demo.domain.*;
@@ -8,12 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.text.Normalizer;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
-import static com.example.demo.Constantes.Constante.MAPPER_AUTOMOVIL;
 
 @Service
 @Transactional
@@ -23,9 +20,7 @@ public class PersonaService {
     @Autowired
     private PersonaRepository personaRepository;
 
-    /**
-     * ERROR
-     **/
+
     //Listar Personas
     public List<PersonaDTO> obtener() {
         List<Persona> listaPersonas = personaRepository.findAll();
@@ -37,18 +32,38 @@ public class PersonaService {
     public ResponseDto validarPersona(PersonaDTO personaDTO) {
         try {
             ResponseDto respuesta = new ResponseDto();
-            if (personaDTO.getCedula().isEmpty() || personaDTO.getCedula().length() > 9) {
+            if (personaDTO.getCedula().isEmpty()) {
                 return respuesta.status("400").message("La cédula no es válida.");
             } else if (personaDTO.getNombre().isEmpty()) {
                 return respuesta.status("400").message("El nombre no es válido.");
             } else if (personaDTO.getApellido().isEmpty()) {
                 return respuesta.status("400").message("El apellido no es válido.");
-            } else if (personaDTO.getTelefono() == null || personaDTO.getTelefono() > 9) {
+            } else if (personaDTO.getTelefono() == null) {
                 return respuesta.status("400").message("El teléfono no es válido.");
             } else if (personaDTO.getSexo().isEmpty()) {
                 return respuesta.status("400").message("El sexo no es válido.");
             } else if (personaDTO.getDireccion().isEmpty()) {
                 return respuesta.status("400").message("La dirección no es válida.");
+            } else if (personaDTO.getFechaNacimiento() == null) {
+                return respuesta.status("400").message("La fecha de nacimiento no es válida.");
+            } else {
+                return respuesta.status("200").message("La persona ha sido validada correctamente");
+            }
+        } catch (Exception e) {
+            return new ResponseDto().status("500").message("Algo salió mal" + e.getMessage());
+        }
+    }
+
+    //Validar Personas Logica
+    public ResponseDto validarLogicaPersona(PersonaDTO personaDTO) {
+        try {
+            ResponseDto respuesta = new ResponseDto();
+            if (personaDTO.getCedula().length() != 9) {
+                return respuesta.status("400").message("La cédula no es válida, debe contener 9 caracteres.");
+            } else if (String.valueOf(personaDTO.getTelefono()).length() != 9) {
+                return respuesta.status("400").message("El teléfono no es válido, debe contener 9 caracteres.");
+            } else if (personaDTO.getFechaNacimiento().isAfter(LocalDateTime.now())) {
+                return respuesta.status("400").message("La fecha de nacimiento no es válida.");
             } else {
                 return respuesta.status("200").message("La persona ha sido validada correctamente");
             }
@@ -59,40 +74,50 @@ public class PersonaService {
 
     //Adicionar Persona
     public ResponseDto adicionar(PersonaDTO personaDTO) {
+        ResponseDto res;
         try {
-            ResponseDto personaValidada = validarPersona(personaDTO);
-            if (!personaValidada.getStatus().equals("200")) {
-                return personaValidada;
-            } else if (personaRepository.findByCedula(personaDTO.getCedula()).isPresent()) {
+            res = validarPersona(personaDTO);
+            if (!res.getStatus().equals("200")) {
+                return res;
+            } else {
+                res = validarLogicaPersona(personaDTO);
+                if (!res.getStatus().equals("200")) {
+                    return res;
+                }
+            } if (personaRepository.findByCedula(personaDTO.getCedula()).isPresent()) {
                 return new ResponseDto().status("400").message("La persona ya existe.");
             }
             Persona persona = mapperUtils.mapeoObjetoObjeto(personaDTO, Persona.class);
             personaRepository.save(persona);
-            return new ResponseDto().status("200").message("la persona fue creada exitosamente");
+            return new ResponseDto().status("200").message("La persona fue creada exitosamente");
         } catch (Exception e) {
             return new ResponseDto().status("500").message("Algo salió mal" + e.getMessage());
         }
     }
 
+
     //Modificar Persona
     public ResponseDto modificar(PersonaDTO personaDTO) {
         try {
             Optional<Persona> personaO = personaRepository.findByCedula(personaDTO.getCedula());
-            ResponseDto personaValidada = validarPersona(personaDTO);
-            if (!personaValidada.getStatus().equals("200")) {
-                return personaValidada;
+            ResponseDto res;
+            res = validarPersona(personaDTO);
+            if (!res.getStatus().equals("200")) {
+                return res;
+            } else {
+                res = validarLogicaPersona(personaDTO);
+                if (res.getStatus().equals("200")) {
+                    Persona persona = personaO.get();
+                    persona.nombre(personaDTO.getNombre()).
+                            apellido(personaDTO.getApellido()).
+                            telefono(personaDTO.getTelefono()).
+                            sexo(personaDTO.getSexo()).
+                            direccion(personaDTO.getDireccion());
+                    personaRepository.save(persona);
+                    return new ResponseDto().status("200").message("La persona ha sido modificada.");
+                }
             }
-            if (personaO.isPresent()) {
-                Persona persona = personaO.get();
-                persona.nombre(personaDTO.getNombre()).
-                        apellido(personaDTO.getApellido()).
-                        telefono(personaDTO.getTelefono()).
-                        sexo(personaDTO.getSexo()).
-                        direccion(personaDTO.getDireccion());
-                personaRepository.save(persona);
-                return new ResponseDto().status("200").message("La persona ha sido modificada.");
-            }
-            return new ResponseDto().status("400").message("Persona no encontrado");
+            return res;
         } catch (Exception e) {
             return new ResponseDto().status("500").message("Algo salió mal" + e.getMessage());
         }
@@ -103,12 +128,15 @@ public class PersonaService {
         try {
             personaRepository.delete(new Persona().id(idPersona));
             return new ResponseDto().status("200").message("Persona eliminada correctamente");
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             return new ResponseDto().status("500").message("Algo salió mal" + e.getMessage());
         }
 
     }
+
+    /**
+     * ERROR
+     **/
 
     //Buscar Persona por Cedula
     public PersonaDTO buscarPorCedula(String cedula) {
@@ -123,6 +151,24 @@ public class PersonaService {
         return null;
     }
 
+    //Buscar Persona por Cedula LIKE
+    public List<String> buscarPorCedulaLike(String cedula) {
+        try {
+            return personaRepository.findByCedulaLike(cedula);
+        } catch (
+                Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * ERROR
+     **/
+    //Validar edad a partir de la fecha de nacimiento
+    public LocalDateTime edadPersona(PersonaDTO personaDTO) {
+        return null;
+
+    }
 
 
 

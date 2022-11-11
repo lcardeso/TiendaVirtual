@@ -1,6 +1,7 @@
 package com.example.demo.repository;
 
 import com.example.demo.domain.MetodoDePago;
+import com.example.demo.domain.PagoFinanciado;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,8 +9,8 @@ import java.util.Optional;
 
 @Repository
 
-public interface MetodoDePagoRepository extends JpaRepository<MetodoDePago, Long> {
-    Optional<MetodoDePago> findByTipoPago(String tipo);
+public interface PagoFInanciadoRepository extends JpaRepository<PagoFinanciado, Long> {
+    Optional<PagoFinanciado> findByTipoFinanciacion(String tipo);
 
 
 

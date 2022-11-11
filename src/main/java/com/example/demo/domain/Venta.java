@@ -47,14 +47,43 @@ public class Venta implements Serializable {
     @Column(name = "fecha_venta")
     private LocalDateTime fechaVenta;
 
+    @NotNull
+    @Column(name = "estado_venta")
+    private String estadoVenta;
 
-    @Override
-    public String toString() {
-        return "Venta{" +
-                "id=" + id +
-                ", metodoPago=" + metodoPago +
-                ", precioVenta='" + precioVenta + '\'' +
-                ", fechaVenta=" + fechaVenta +
-                '}';
+
+    public Venta id(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public Venta automovil(Automovil automovil) {
+        this.automovil = automovil;
+        return this;
+    }
+
+    public Venta persona(Persona persona) {
+        this.persona = persona;
+        return this;
+    }
+
+    public Venta metodoPago(MetodoDePago metodoPago) {
+        this.metodoPago = metodoPago;
+        return this;
+    }
+
+    public Venta precioVenta(String precioVenta) {
+        this.precioVenta = precioVenta;
+        return this;
+    }
+
+    public Venta fechaVenta(LocalDateTime fechaVenta) {
+        this.fechaVenta = fechaVenta;
+        return this;
+    }
+
+    public Venta estadoVenta(String estadoVenta) {
+        this.estadoVenta = estadoVenta;
+        return this;
     }
 }

@@ -9,7 +9,11 @@ public class VentaDTO implements Serializable {
     private Long idAutomovil;
     private Long idPersona;
     private Long idMetodoPago;
-    private String precioVenta;
+    private String metodoPago;
+    private Long precioVenta;
+    private String estadoVenta;
+    private Long plazoFinanciacion;
+    private Long cuotaInicial;
 
 
 }

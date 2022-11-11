@@ -1,9 +1,7 @@
 package com.example.demo.web;
 
 import com.example.demo.DTO.*;
-import com.example.demo.domain.Venta;
-import com.example.demo.sevice.AutomovilService;
-import com.example.demo.sevice.VentaService;
+import com.example.demo.service.VentaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,10 +21,25 @@ public class VentaController {
         return ResponseEntity.ok().body(ventaService.obtener());
     }
 
+    @GetMapping("/venta/listarVentaPorEstado")
+    public ResponseEntity<List<ObtenerVentaDTO>> obtenerVentaPorEstado(@RequestParam String codigo){
+        return ResponseEntity.ok().body(ventaService.obtenerVentaPorEstado(codigo));
+    }
+
     @PostMapping("/venta/adicionar")
     public ResponseEntity<ResponseDto> adicionar(@Valid @RequestBody VentaDTO ventaDTO) {
         return ResponseEntity.ok().body(ventaService.adicionar(ventaDTO));
     }
+
+    @PostMapping("/venta/cancelarVenta")
+    public ResponseEntity<ResponseDto> cancelarVenta(@RequestParam Long id) {
+        return ResponseEntity.ok().body(ventaService.cancelarVenta(id));
+    }
+
+
+
+
+
 
   /*  @PostMapping("/venta/modificar")
     public ResponseEntity<ResponseDto> modificar(@Valid @RequestBody VentaDTO ventaDTO) {

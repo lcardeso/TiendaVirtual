@@ -1,17 +1,8 @@
-package com.example.demo.sevice;
+package com.example.demo.service;
 
-import com.example.demo.DTO.ObtenerVentaDTO;
-import com.example.demo.DTO.PersonaDTO;
-import com.example.demo.DTO.ResponseDto;
-import com.example.demo.DTO.VentaDTO;
-import com.example.demo.domain.Automovil;
-import com.example.demo.domain.MetodoDePago;
-import com.example.demo.domain.Persona;
-import com.example.demo.domain.Venta;
-import com.example.demo.repository.AutomovilRepository;
-import com.example.demo.repository.MetodoDePagoRepository;
-import com.example.demo.repository.PersonaRepository;
-import com.example.demo.repository.VentaRepository;
+import com.example.demo.DTO.*;
+import com.example.demo.domain.*;
+import com.example.demo.repository.*;
 import com.example.demo.utils.MapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +11,6 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
 import static com.example.demo.Constantes.Constante.MAPPER_TIPO_PAGO_VENTA;
 
 @Service
@@ -37,12 +27,19 @@ public class VentaService {
     private VentaRepository ventaRepository;
     @Autowired
     private MetodoDePagoRepository metodoDePagoRepository;
-
+    @Autowired
+    private EstadoRepository estadoRepository;
 
     //Listar Todas Las Ventas
     public List<ObtenerVentaDTO> obtener() {
         List<Venta> lista = ventaRepository.findAll();
         return mapperUtils.mapeoListaObjetoObjeto(lista, ObtenerVentaDTO.class, MAPPER_TIPO_PAGO_VENTA);
+    }
+
+    //Listar las ventas por estado (R-C)
+    public List<ObtenerVentaDTO> obtenerVentaPorEstado(String codigo) {
+        List<Venta> ventasRealizadas = ventaRepository.findByEstadoVenta(codigo);
+        return mapperUtils.mapeoListaObjetoObjeto(ventasRealizadas, ObtenerVentaDTO.class, MAPPER_TIPO_PAGO_VENTA);
     }
 
     //Validar Venta
@@ -82,6 +79,9 @@ public class VentaService {
         }
     }
 
+    /**
+     * SUGERENCIA
+     **/
     //Adicionar Venta
     public ResponseDto adicionar(VentaDTO ventaDTO) {
         ResponseDto res;
@@ -110,10 +110,13 @@ public class VentaService {
                 return new ResponseDto().status("400").message("El método de pago no existe.");
             }
             Venta venta = mapperUtils.mapeoObjetoObjeto(ventaDTO, Venta.class);
-            venta.setAutomovil(automovil.get());
-            venta.setPersona(persona.get());
-            venta.setMetodoPago(metodoPago.get());
-            venta.setFechaVenta(LocalDateTime.now());
+            venta.automovil(automovil.get()).
+                    estadoVenta("R").
+                    persona(persona.get()).
+                    metodoPago(metodoPago.get()).
+                    fechaVenta(LocalDateTime.now());
+            //  automovil.get().estado(new Estado().codigo("V"));
+            //estadoRepository.save(new Estado().codigo("V"));
             ventaRepository.save(venta);
             return new ResponseDto().status("200").message("La venta fue realizada exitosamente");
         } catch (Exception e) {
@@ -121,7 +124,22 @@ public class VentaService {
         }
     }
 
+    //Automoviles vendidos por mes
+    public List<AutomovilDTO> autosVendidosPorMes(String mes) {
+        // Optional<Automovil> autos = automovilRepository.findByMatricula();
 
+        return null;
+    }
+
+    /**
+     * ERROR
+     **/
+    //Cancelar venta
+    public ResponseDto cancelarVenta(Long id) {
+        Optional<Venta> venta = ventaRepository.findById(id);
+        venta.get().estadoVenta("C");
+        return new ResponseDto().status("200").message("La venta ha sido cancelada");
+    }
 }
 
 

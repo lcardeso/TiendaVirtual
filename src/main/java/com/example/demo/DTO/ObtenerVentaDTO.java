@@ -17,4 +17,5 @@ public class ObtenerVentaDTO implements Serializable {
     private LocalDateTime fechaVenta;
 
 
+
 }

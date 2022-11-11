@@ -17,8 +17,6 @@ public interface AutomovilRepository extends JpaRepository<Automovil, Long> {
 
     List<Automovil> findByEstado(Estado id);
 
-
-
     @Query("Select u.matricula" +
             " FROM Automovil u where UPPER(REPLACE(u.matricula,'ÁáÉéÍíÓóÚú','AaEeIiOoUu' )) like CONCAT( '%' ,:matricula, '%') "
     )

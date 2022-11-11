@@ -1,18 +1,48 @@
-package com.example.demo.sevice;
+package com.example.demo.service;
 
-import com.example.demo.DTO.*;
-import com.example.demo.domain.*;
-import com.example.demo.repository.AutomovilRepository;
-import com.example.demo.utils.MapperUtils;
+import com.example.demo.DTO.VentaDTO;
+import com.example.demo.repository.MetodoDePagoRepository;
+import com.example.demo.repository.PagoFInanciadoRepository;
+import com.example.demo.repository.VentaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.*;
 
 @Service
 @Transactional
-public class MotorService {
+public class PagoFinanciadoService {
+    @Autowired
+    public PagoFInanciadoRepository pagoFInanciadoRepository;
+    @Autowired
+    public VentaRepository ventaRepository;
+    @Autowired
+    public MetodoDePagoRepository metodoDePagoRepository;
+
+
+    /**ERROR**/
+    public Long cuotaMensual(VentaDTO ventaDTO) {
+        Double interesFijo = 0.2;
+     /*   metodoDePagoRepository.findByTipoPago("Financiado").ifPresent(metodoDePago -> {
+          ((ventaDTO.getPrecioVenta() - ventaDTO.getCuotaInicial()) / ventaDTO.getPlazoFinanciacion()) * interesFijo;
+        };
+
+*/
+        // pagoFInanciadoRepository.findByTipoFinanciacion("Financiado");
+
+        if (ventaDTO.getIdMetodoPago().equals()) {
+        }
+        return null;
+
+
+    }
+
+
+
+
+
+
+
 /*
     @Autowired
     public MapperUtils mapperUtils;
@@ -121,7 +151,7 @@ public class MotorService {
 
         // Buscar usuario por nombre
     public List<Persona> buscarUsuario(String nombre) {
-        String nombreNormalizado = Normalizer.normalize(nombre, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "").toUpperCase();
+
         List<Persona> usu = personaRepository.findByNombre(nombreNormalizado);
         if (usu.isEmpty()) System.out.println("No existe ningun usuario");
         return usu;
