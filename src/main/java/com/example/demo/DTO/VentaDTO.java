@@ -1,6 +1,7 @@
 package com.example.demo.DTO;
 
 import lombok.Data;
+
 import java.io.Serializable;
 
 @Data
@@ -9,11 +10,11 @@ public class VentaDTO implements Serializable {
     private Long idAutomovil;
     private Long idPersona;
     private Long idMetodoPago;
-    private String metodoPago;
-    private Long precioVenta;
+    private Double precioVenta;
     private String estadoVenta;
-    private Long plazoFinanciacion;
-    private Long cuotaInicial;
+    private Integer plazoFinanciacion;
+    private Double cuotaInicial;
+    private Boolean financiar;
 
 
 }

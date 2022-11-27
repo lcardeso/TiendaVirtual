@@ -19,15 +19,20 @@ public class PagoFinanciado implements Serializable {
 
     @NotNull
     @Column(name = "cuota_inicial")
-    private Long cuotaInicial;
+    private Double cuotaInicial;
 
     @NotNull
     @Column(name = "plazo_financiacion")
-    private Long plazoFinanciacion;
+    private Integer plazoFinanciacion;
 
     @NotNull
     @Column(name = "tipo_financiacion")
     private String tipoFinanciacion;
 
 
+    public PagoFinanciado(Double cuotaInicial, Integer plazoFinanciacion, String tipoFinanciacion) {
+        this.cuotaInicial = cuotaInicial;
+        this.plazoFinanciacion = plazoFinanciacion;
+        this.tipoFinanciacion = tipoFinanciacion;
+    }
 }

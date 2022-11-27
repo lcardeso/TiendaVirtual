@@ -39,9 +39,13 @@ public class Venta implements Serializable {
     @JoinColumn(name = "id_metodo_pago_FK", referencedColumnName = "id_metodo_pago")
     private MetodoDePago metodoPago;
 
+    @OneToOne
+    @JoinColumn(name = "id_pago_fin_FK", referencedColumnName = "id_pago_financiado")
+    private PagoFinanciado pagoFinanciado;
+
     @NotNull
     @Column(name = "precio_venta")
-    private String precioVenta;
+    private Double precioVenta;
 
     @NotNull
     @Column(name = "fecha_venta")
@@ -72,7 +76,12 @@ public class Venta implements Serializable {
         return this;
     }
 
-    public Venta precioVenta(String precioVenta) {
+    public Venta pagoFinanciado(PagoFinanciado pagoFinanciado) {
+        this.pagoFinanciado = pagoFinanciado;
+        return this;
+    }
+
+    public Venta precioVenta(Double precioVenta) {
         this.precioVenta = precioVenta;
         return this;
     }

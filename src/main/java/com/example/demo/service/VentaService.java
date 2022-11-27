@@ -8,9 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.List;
 import java.util.Optional;
+
+import static com.example.demo.Constantes.Constante.MAPPER_AUTOMOVIL;
 import static com.example.demo.Constantes.Constante.MAPPER_TIPO_PAGO_VENTA;
 
 @Service
@@ -29,6 +33,10 @@ public class VentaService {
     private MetodoDePagoRepository metodoDePagoRepository;
     @Autowired
     private EstadoRepository estadoRepository;
+    @Autowired
+    private ListaNegraPersonaService listaNegraPersonaService;
+    @Autowired
+    private PagoFinanciadoRepository pagoFinanciadoRepository;
 
     //Listar Todas Las Ventas
     public List<ObtenerVentaDTO> obtener() {
@@ -46,13 +54,13 @@ public class VentaService {
     private ResponseDto validarVenta(VentaDTO ventaDTO) {
         try {
             ResponseDto respuesta = new ResponseDto();
-            if (ventaDTO.getIdAutomovil() == null /**|| ventaRepository.findByIdAutomovil(ventaDTO.getIdAutomovil()).isPresent()**/) {
+            if (ventaDTO.getIdAutomovil() == null) {
                 return respuesta.status("400").message("Es necesario especificar el automóvil.");
-            } else if (ventaDTO.getIdPersona() == null /**|| !ventaRepository.findByIdPersona(ventaDTO.getIdPersona()).isPresent()**/) {
+            } else if (ventaDTO.getIdPersona() == null) {
                 return respuesta.status("400").message("Es necesario especificar la persona.");
-            } else if (ventaDTO.getIdMetodoPago() == null /**|| !ventaRepository.findByIdMetodoPago(ventaDTO.getIdMetodoPago()).isPresent()**/) {
+            } else if (ventaDTO.getIdMetodoPago() == null) {
                 return respuesta.status("400").message("Es necesario especificar el método de pago.");
-            } else if (ventaDTO.getPrecioVenta().isEmpty()) {
+            } else if (ventaDTO.getPrecioVenta() == null) {
                 return respuesta.status("400").message("El precio de venta no es válido.");
             } else {
                 return respuesta.status("200").message("La venta ha sido validada correctamente");
@@ -79,13 +87,14 @@ public class VentaService {
         }
     }
 
-    /**
-     * SUGERENCIA
-     **/
     //Adicionar Venta
     public ResponseDto adicionar(VentaDTO ventaDTO) {
         ResponseDto res;
+        Optional<Persona> persona = personaRepository.findById(ventaDTO.getIdPersona());
         try {
+            if (listaNegraPersonaService.perMorosa(persona.get().getCedula()).getMessage().equals("La persona es MOROSA")) {
+                return new ResponseDto().status("400").message("La persona es MOROSA");
+            }
             res = validarVenta(ventaDTO);
             if (!res.getStatus().equals("200")) {
                 return res;
@@ -101,7 +110,6 @@ public class VentaService {
             } else if (!automovil.get().getEstado().getCodigo().equals("D")) {
                 return new ResponseDto().status("400").message("El automóvil no está disponible.");
             }
-            Optional<Persona> persona = personaRepository.findById(ventaDTO.getIdPersona());
             if (persona.isEmpty()) {
                 return new ResponseDto().status("400").message("La persona no existe.");
             }
@@ -109,14 +117,16 @@ public class VentaService {
             if (metodoPago.isEmpty()) {
                 return new ResponseDto().status("400").message("El método de pago no existe.");
             }
+
             Venta venta = mapperUtils.mapeoObjetoObjeto(ventaDTO, Venta.class);
-            venta.automovil(automovil.get()).
-                    estadoVenta("R").
-                    persona(persona.get()).
-                    metodoPago(metodoPago.get()).
-                    fechaVenta(LocalDateTime.now());
-            //  automovil.get().estado(new Estado().codigo("V"));
-            //estadoRepository.save(new Estado().codigo("V"));
+            venta.automovil(automovil.get()).estadoVenta("R").persona(persona.get()).metodoPago(metodoPago.get()).fechaVenta(LocalDateTime.now());
+            if (ventaDTO.getFinanciar()) {
+                PagoFinanciado pagoFinanciado = new PagoFinanciado(ventaDTO.getCuotaInicial(), ventaDTO.getPlazoFinanciacion(), "Fija");
+                venta.pagoFinanciado(pagoFinanciado);
+            }
+            Optional<Estado> estadoVendido = estadoRepository.findByCodigo("V");
+            automovil.get().estado(estadoVendido.get());
+            automovilRepository.save(automovil.get());
             ventaRepository.save(venta);
             return new ResponseDto().status("200").message("La venta fue realizada exitosamente");
         } catch (Exception e) {
@@ -124,21 +134,77 @@ public class VentaService {
         }
     }
 
-    //Automoviles vendidos por mes
-    public List<AutomovilDTO> autosVendidosPorMes(String mes) {
-        // Optional<Automovil> autos = automovilRepository.findByMatricula();
+    /**
+     * ERROR
+     */
+ /*   //Modificar Venta
+    public ResponseDto modificar(VentaDTO ventaDTO) {
+        ResponseDto res;
+        try {
+            res = validarVenta(ventaDTO);
+            if (!res.getStatus().equals("200")) {
+                return res;
+            } else {
+                res = validarLogicaVenta(ventaDTO);
+                if (!res.getStatus().equals("200")) {
+                    return res;
+                }
+            }
+            Optional<Automovil> automovil = automovilRepository.findById(ventaDTO.getIdAutomovil());
+            Optional<PagoFinanciado> pago = pagoFinanciadoRepository.findById(ventaDTO.);
+            Optional<MetodoDePago> metodoPago = metodoDePagoRepository.findById(ventaDTO.getIdMetodoPago());
+            if (metodoPago.isEmpty()) {
+                return new ResponseDto().status("400").message("El método de pago no existe.");
+            } else if (pago.isEmpty()) {
+                return new ResponseDto().status("400").message("El tipo de financiación no está especificada.");
+            }
+            Venta venta = mapperUtils.mapeoObjetoObjeto(ventaDTO, Venta.class);
+            venta.automovil(automovil.get()).metodoPago(metodoPago.get());
+            automovilRepository.save(automovil.get());
+            ventaRepository.save(venta);
+            return new ResponseDto().status("200").message("La venta fue modificada exitosamente");
+        } catch (Exception e) {
+            return new ResponseDto().status("500").message("Algo salió mal" + e.getMessage());
+        }
+    }
+*/
+    /**
+     * ERROR
+     */
+    //Ventas por mes
+    public List<ObtenerVentaDTO> ventasPorMes() {
+        Integer mes = LocalDate.now().getMonthValue();
+        List<Venta> ventasPorMes = ventaRepository.findByMes(mes);
+        return mapperUtils.mapeoListaObjetoObjeto(ventasPorMes, ObtenerVentaDTO.class, MAPPER_TIPO_PAGO_VENTA);
+    }
 
-        return null;
+
+    //Cancelar venta
+    public ResponseDto cancelarVenta(Long id) {
+        Optional<Venta> venta = ventaRepository.findById(id);
+        if (venta.isPresent() && !venta.get().getEstadoVenta().equals("C")) {
+            venta.get().estadoVenta("C");
+            return new ResponseDto().status("200").message("La venta ha sido cancelada");
+        }
+
+        return new ResponseDto().status("200").message("La venta ya esta cancelada");
     }
 
     /**
      * ERROR
-     **/
-    //Cancelar venta
-    public ResponseDto cancelarVenta(Long id) {
-        Optional<Venta> venta = ventaRepository.findById(id);
-        venta.get().estadoVenta("C");
-        return new ResponseDto().status("200").message("La venta ha sido cancelada");
+     */
+    public AutoVendPorMesDTO buscarAutosVendPorFecha(LocalDate fecha) {
+        List<Automovil> autosVendidos = ventaRepository.findByAutosPorMes(fecha);
+        Integer cantidad = autosVendidos.size();
+        List<AutomovilDTO> listaMapper = mapperUtils.mapeoListaObjetoObjeto(autosVendidos, AutomovilDTO.class, MAPPER_AUTOMOVIL);
+        return new AutoVendPorMesDTO().total(cantidad).autos(listaMapper);
+    }
+
+
+    public Double cuotaMensual(CalculoCuotaDTO calculoCuotaDTO) {
+        Double interesFijo = 0.2;
+        return ((calculoCuotaDTO.getPrecioVenta() - calculoCuotaDTO.getCuotaInicial()) / calculoCuotaDTO.getPlazoFinanciacion()) * interesFijo;
+
     }
 }
 

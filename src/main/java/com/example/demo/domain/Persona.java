@@ -1,19 +1,13 @@
 package com.example.demo.domain;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+
 @Data
 @Entity
 @Table(name = "persona", schema = "concesionario")
@@ -70,6 +64,11 @@ public class Persona implements Serializable {
     }
 
 
+    public Persona ventas(List<Venta> ventas) {
+        this.ventas = ventas;
+        return this;
+    }
+
     public Persona id(Long id) {
         this.id = id;
         return this;
@@ -109,4 +108,5 @@ public class Persona implements Serializable {
         this.fechaNacimiento = fechaNacimiento;
         return this;
     }
+
 }

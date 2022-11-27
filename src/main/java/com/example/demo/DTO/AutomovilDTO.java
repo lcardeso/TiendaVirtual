@@ -11,6 +11,8 @@ import java.util.List;
 
 @Data
 public class AutomovilDTO implements Serializable {
+
+
     private String matricula;
     private String foto;
     private String modelo;

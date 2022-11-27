@@ -12,10 +12,6 @@ import java.io.Serializable;
 @Table(name = "metodo_pago", schema = "concesionario")
 public class MetodoDePago implements Serializable {
 
-    @OneToOne
-    @JoinColumn(name = "id_pago_fin_FK", referencedColumnName = "id_pago_financiado")
-    private PagoFinanciado pagoFinanciado;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_metodo_pago")

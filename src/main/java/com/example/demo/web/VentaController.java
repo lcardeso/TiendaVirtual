@@ -7,52 +7,58 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.List;
 
 @RestController
-@RequestMapping("/concesionario")
+@RequestMapping("/concesionario/venta")
 public class VentaController {
 
     @Autowired
     private VentaService ventaService;
 
-    @GetMapping("/venta/listar")
-    public ResponseEntity<List<ObtenerVentaDTO>> obtener(){
+    @GetMapping("/listar")
+    public ResponseEntity<List<ObtenerVentaDTO>> obtener() {
         return ResponseEntity.ok().body(ventaService.obtener());
     }
 
-    @GetMapping("/venta/listarVentaPorEstado")
-    public ResponseEntity<List<ObtenerVentaDTO>> obtenerVentaPorEstado(@RequestParam String codigo){
+    @GetMapping("/listarVentaPorEstado")
+    public ResponseEntity<List<ObtenerVentaDTO>> obtenerVentaPorEstado(@RequestParam String codigo) {
         return ResponseEntity.ok().body(ventaService.obtenerVentaPorEstado(codigo));
     }
 
-    @PostMapping("/venta/adicionar")
+    @PostMapping("/adicionar")
     public ResponseEntity<ResponseDto> adicionar(@Valid @RequestBody VentaDTO ventaDTO) {
         return ResponseEntity.ok().body(ventaService.adicionar(ventaDTO));
     }
 
-    @PostMapping("/venta/cancelarVenta")
+    @GetMapping("/cancelarVenta")
     public ResponseEntity<ResponseDto> cancelarVenta(@RequestParam Long id) {
         return ResponseEntity.ok().body(ventaService.cancelarVenta(id));
     }
 
+    @GetMapping("/ventasPorMes")
+    public ResponseEntity<List<ObtenerVentaDTO>> ventasPorMes() {
+        return ResponseEntity.ok().body(ventaService.ventasPorMes());
+    }
+
+    @PostMapping("/autosVendidosPorMes")
+    public ResponseEntity<AutoVendPorMesDTO> autosVendidosPorMes(@RequestBody FechaVentaDTO fechaVentaDTO) {
+        return ResponseEntity.ok().body(ventaService.buscarAutosVendPorFecha(fechaVentaDTO.getFecha()));
+    }
 
 
-
-
-
-  /*  @PostMapping("/venta/modificar")
+/*    @PostMapping("/modificar")
     public ResponseEntity<ResponseDto> modificar(@Valid @RequestBody VentaDTO ventaDTO) {
         return ResponseEntity.ok().body(ventaService.modificar(ventaDTO));
+    }*/
+
+    @PostMapping("/calcularCuota")
+    public ResponseEntity<Double> calcularCuota(@Valid @RequestBody CalculoCuotaDTO calculoCuotaDTO) {
+        return ResponseEntity.ok().body(ventaService.cuotaMensual(calculoCuotaDTO));
     }
-
-    @DeleteMapping("/venta/eliminar")
-    public ResponseEntity<ResponseDto> delete(@RequestParam Long idVenta) {
-        return ResponseEntity.ok().body(ventaService.eliminar(idVenta));
-    }
-*/
-
-
 
 
 

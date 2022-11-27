@@ -27,7 +27,6 @@ public class PersonaService {
         return mapperUtils.mapeoListaObjetoObjeto(listaPersonas, PersonaDTO.class);
     }
 
-
     //Validar Personas
     public ResponseDto validarPersona(PersonaDTO personaDTO) {
         try {
@@ -64,6 +63,8 @@ public class PersonaService {
                 return respuesta.status("400").message("El teléfono no es válido, debe contener 9 caracteres.");
             } else if (personaDTO.getFechaNacimiento().isAfter(LocalDateTime.now())) {
                 return respuesta.status("400").message("La fecha de nacimiento no es válida.");
+            } else if (edadPersona(personaDTO.getFechaNacimiento()) <= 18) {
+                return respuesta.status("400").message("La persona no tiene la mayoría de edad.");
             } else {
                 return respuesta.status("200").message("La persona ha sido validada correctamente");
             }
@@ -84,7 +85,8 @@ public class PersonaService {
                 if (!res.getStatus().equals("200")) {
                     return res;
                 }
-            } if (personaRepository.findByCedula(personaDTO.getCedula()).isPresent()) {
+            }
+            if (personaRepository.findByCedula(personaDTO.getCedula()).isPresent()) {
                 return new ResponseDto().status("400").message("La persona ya existe.");
             }
             Persona persona = mapperUtils.mapeoObjetoObjeto(personaDTO, Persona.class);
@@ -94,7 +96,6 @@ public class PersonaService {
             return new ResponseDto().status("500").message("Algo salió mal" + e.getMessage());
         }
     }
-
 
     //Modificar Persona
     public ResponseDto modificar(PersonaDTO personaDTO) {
@@ -134,10 +135,6 @@ public class PersonaService {
 
     }
 
-    /**
-     * ERROR
-     **/
-
     //Buscar Persona por Cedula
     public PersonaDTO buscarPorCedula(String cedula) {
         try {
@@ -161,88 +158,13 @@ public class PersonaService {
         }
     }
 
-    /**
-     * ERROR
-     **/
     //Validar edad a partir de la fecha de nacimiento
-    public LocalDateTime edadPersona(PersonaDTO personaDTO) {
-        return null;
+    public Integer edadPersona(LocalDateTime fechaNac) {
+        Integer edad = LocalDateTime.now().getYear() - fechaNac.getYear();
+        return edad;
+
 
     }
-
-
-
-
-
-
-/*
-
-
-
-    //adicionar un profesor
-    public ResponseDto adicionar(ProfesorDTO profesorDTO) {
-        try {
-            ResponseDto profesorValidado = validarProfesor(profesorDTO);
-            if (!profesorValidado.getStatus().equals("200")) {
-                return profesorValidado;
-            }
-            Optional<Motor> grupo = grupoRepository.findById(profesorDTO.getGrupoId());
-            if (grupo.isEmpty()) {
-                return new ResponseDto().status("400").message("El grupo no existe.");
-            }
-            Profesor profesor = mapperUtils.mapeoObjetoObjeto(profesorDTO, Profesor.class);
-            if (profesorDTO.getDireccionId() != null) {
-                Optional<Marca> direccion = direccionRepository.findById(profesorDTO.getDireccionId());
-                direccion.ifPresent(profesor::setDireccion);
-            }
-            profesor.setGrupo(grupo.get());
-            personaRepository.save(profesor);
-            return new ResponseDto().status("200").message("El profesor fue creado exitosamente");
-        } catch (Exception e) {
-            System.out.println("Excepcion " + e);
-            return null;
-        }
-    }
-
-    //Buscar alumno por nombre
-    public List<Profesor> buscar(BusquedaLikePersona nombre) {
-        String nombreNormalizado = Normalizer.normalize(nombre.getNombre(), Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "").toUpperCase();
-        List<Profesor> profesorList = profesorRepository.findByNombre(nombreNormalizado);
-        if (profesorList.isEmpty()) {
-            System.out.println("No hay profesores que mostrar");
-        }
-        return profesorList;
-    }
-
-    //Eliminar alumno a partir de un id establecido
-    public ResponseDto eliminar(Long id) {
-        Optional<Profesor> profesorO = profesorRepository.findById(id);
-        if (profesorO.isPresent()) {
-            profesorRepository.delete(profesorO.get());
-            return new ResponseDto().status("200").message("Profesor eliminado correctamente");
-        }
-        return new ResponseDto().status("400").message("Profesor no encontrado");
-    }
-
-    //Modificar profesor
-    public ResponseDto modificar(ProfesorDTO profesorDTO) {
-        Optional<Profesor> profesorOpt = profesorRepository.findByDni(profesorDTO.getDni());
-        if (profesorOpt.isPresent()) {
-            Profesor profesor = profesorOpt.get();
-            profesor.catDocente(profesorDTO.getCatDocente()).
-                    salario(profesorDTO.getSalario()).
-                    nombre(profesorDTO.getNombre()).
-                    primApellido(profesorDTO.getPrimApellido()).
-                    segApellido(profesorDTO.getSegApellido()).
-                    sexo(profesorDTO.getSexo()).
-                    fechNac(profesorDTO.getFechNac()).
-                    edad(profesor.getEdad());
-            profesorRepository.save(profesor);
-            return new ResponseDto().status("200").message("El profesor ha sido modificado.");
-        }
-        return new ResponseDto().status("400").message("Profesor no encontrado");
-    }
-*/
 
 
 }
