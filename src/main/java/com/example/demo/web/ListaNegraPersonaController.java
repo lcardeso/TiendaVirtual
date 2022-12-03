@@ -19,7 +19,7 @@ public class ListaNegraPersonaController {
     private ListaNegraPersonaService listaNegraPersonaService;
 
     @GetMapping("/listaNegra")
-    public ResponseEntity<ResponseDto> listaNegra(String cedula){
+    public ResponseEntity<ResponseDto> listaNegra(@RequestParam String cedula){
         return ResponseEntity.ok().body(listaNegraPersonaService.perMorosa(cedula));
     }
 

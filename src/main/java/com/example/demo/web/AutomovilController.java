@@ -10,44 +10,41 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/concesionario")
+@RequestMapping("/concesionario/automovil")
 
 public class AutomovilController {
 
     @Autowired
     private AutomovilService automovilService;
 
-    @GetMapping("/automovil/listar")
+    @GetMapping("/listar")
     public ResponseEntity<List<AutomovilDTO>> obtener(){
         return ResponseEntity.ok().body(automovilService.obtener());
     }
 
-    @GetMapping ("/automovil/autosPorEstado")
+    @GetMapping ("/autosPorEstado")
     public ResponseEntity<List<AutomovilDTO>> autosPorEstado(@RequestParam Long idEstado){
         return ResponseEntity.ok().body(automovilService.obtenerPorEstado(idEstado));
     }
 
-    @PostMapping("/automovil/adicionar")
+    @PostMapping("/adicionar")
     public ResponseEntity<ResponseDto> adicionar(@Valid @RequestBody AutomovilDTO automovilDTO) {
         return ResponseEntity.ok().body(automovilService.adicionar(automovilDTO));
     }
 
-    @PostMapping("/automovil/modificar")
+    @PostMapping("/modificar")
     public ResponseEntity<ResponseDto> modificar(@Valid @RequestBody AutomovilDTO automovilDTO) {
         return ResponseEntity.ok().body(automovilService.modificar(automovilDTO));
     }
 
-    @DeleteMapping("/automovil/eliminar")
-    public ResponseEntity<ResponseDto> delete(@RequestParam Long idAutomovil) {
-        return ResponseEntity.ok().body(automovilService.eliminar(idAutomovil));
-    }
 
-    @GetMapping("/automovil/buscarPorMatricula")
+
+    @GetMapping("/buscarPorMatricula")
     public ResponseEntity<AutomovilDTO> buscarMatricula(@RequestParam String matricula) {
         return ResponseEntity.ok().body(automovilService.buscarAutomovilMatricula(matricula));
     }
 
-    @GetMapping("/automovil/buscarPorMatriculaLike")
+    @GetMapping("/buscarPorMatriculaLike")
     public ResponseEntity<List<String>> buscarMatriculaLike( @RequestParam String matricula) {
         return ResponseEntity.ok().body(automovilService.buscarAutomovilMatriculaLike(matricula));
     }

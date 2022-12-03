@@ -39,7 +39,7 @@ public class Venta implements Serializable {
     @JoinColumn(name = "id_metodo_pago_FK", referencedColumnName = "id_metodo_pago")
     private MetodoDePago metodoPago;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_pago_fin_FK", referencedColumnName = "id_pago_financiado")
     private PagoFinanciado pagoFinanciado;
 

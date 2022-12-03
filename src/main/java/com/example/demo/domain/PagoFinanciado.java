@@ -30,9 +30,23 @@ public class PagoFinanciado implements Serializable {
     private String tipoFinanciacion;
 
 
-    public PagoFinanciado(Double cuotaInicial, Integer plazoFinanciacion, String tipoFinanciacion) {
+    public PagoFinanciado id(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public PagoFinanciado cuotaInicial(Double cuotaInicial) {
         this.cuotaInicial = cuotaInicial;
+        return this;
+    }
+
+    public PagoFinanciado plazoFinanciacion(Integer plazoFinanciacion) {
         this.plazoFinanciacion = plazoFinanciacion;
+        return this;
+    }
+
+    public PagoFinanciado tipoFinanciacion(String tipoFinanciacion) {
         this.tipoFinanciacion = tipoFinanciacion;
+        return this;
     }
 }

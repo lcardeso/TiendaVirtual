@@ -119,9 +119,16 @@ public class VentaService {
             }
 
             Venta venta = mapperUtils.mapeoObjetoObjeto(ventaDTO, Venta.class);
-            venta.automovil(automovil.get()).estadoVenta("R").persona(persona.get()).metodoPago(metodoPago.get()).fechaVenta(LocalDateTime.now());
+            venta.automovil(automovil.get()).estadoVenta("R").
+                    persona(persona.get()).
+                    metodoPago(metodoPago.get()).
+                    fechaVenta(LocalDateTime.now());
             if (ventaDTO.getFinanciar()) {
-                PagoFinanciado pagoFinanciado = new PagoFinanciado(ventaDTO.getCuotaInicial(), ventaDTO.getPlazoFinanciacion(), "Fija");
+                PagoFinanciado pagoFinanciado = new PagoFinanciado();
+                pagoFinanciado.cuotaInicial(ventaDTO.getCuotaInicial()).
+                        plazoFinanciacion(ventaDTO.getPlazoFinanciacion()).
+                        tipoFinanciacion("Fijo");
+                // PagoFinanciado salvePago = pagoFinanciadoRepository.save(pagoFinanciado);
                 venta.pagoFinanciado(pagoFinanciado);
             }
             Optional<Estado> estadoVendido = estadoRepository.findByCodigo("V");
@@ -134,65 +141,31 @@ public class VentaService {
         }
     }
 
-    /**
-     * ERROR
-     */
- /*   //Modificar Venta
-    public ResponseDto modificar(VentaDTO ventaDTO) {
-        ResponseDto res;
-        try {
-            res = validarVenta(ventaDTO);
-            if (!res.getStatus().equals("200")) {
-                return res;
-            } else {
-                res = validarLogicaVenta(ventaDTO);
-                if (!res.getStatus().equals("200")) {
-                    return res;
-                }
-            }
-            Optional<Automovil> automovil = automovilRepository.findById(ventaDTO.getIdAutomovil());
-            Optional<PagoFinanciado> pago = pagoFinanciadoRepository.findById(ventaDTO.);
-            Optional<MetodoDePago> metodoPago = metodoDePagoRepository.findById(ventaDTO.getIdMetodoPago());
-            if (metodoPago.isEmpty()) {
-                return new ResponseDto().status("400").message("El método de pago no existe.");
-            } else if (pago.isEmpty()) {
-                return new ResponseDto().status("400").message("El tipo de financiación no está especificada.");
-            }
-            Venta venta = mapperUtils.mapeoObjetoObjeto(ventaDTO, Venta.class);
-            venta.automovil(automovil.get()).metodoPago(metodoPago.get());
-            automovilRepository.save(automovil.get());
-            ventaRepository.save(venta);
-            return new ResponseDto().status("200").message("La venta fue modificada exitosamente");
-        } catch (Exception e) {
-            return new ResponseDto().status("500").message("Algo salió mal" + e.getMessage());
-        }
-    }
-*/
-    /**
-     * ERROR
-     */
-    //Ventas por mes
+    //Ventas por mes, el mes actual
     public List<ObtenerVentaDTO> ventasPorMes() {
         Integer mes = LocalDate.now().getMonthValue();
         List<Venta> ventasPorMes = ventaRepository.findByMes(mes);
         return mapperUtils.mapeoListaObjetoObjeto(ventasPorMes, ObtenerVentaDTO.class, MAPPER_TIPO_PAGO_VENTA);
     }
 
-
     //Cancelar venta
     public ResponseDto cancelarVenta(Long id) {
         Optional<Venta> venta = ventaRepository.findById(id);
         if (venta.isPresent() && !venta.get().getEstadoVenta().equals("C")) {
             venta.get().estadoVenta("C");
-            return new ResponseDto().status("200").message("La venta ha sido cancelada");
+            Optional<Automovil> automovil = automovilRepository.findById(venta.get().getAutomovil().getId());
+            if (automovil.isPresent()) {
+                Automovil autoOpt = automovil.get();
+                Optional<Estado> estadoA = estadoRepository.findByCodigo("D");
+                autoOpt.estado(estadoA.get());
+                automovilRepository.save(autoOpt);
+                return new ResponseDto().status("200").message("La venta ha sido cancelada");
+            }
         }
-
         return new ResponseDto().status("200").message("La venta ya esta cancelada");
     }
 
-    /**
-     * ERROR
-     */
+    //Buscar Ventas Realizadas por Mes y Ano
     public AutoVendPorMesDTO buscarAutosVendPorFecha(LocalDate fecha) {
         List<Automovil> autosVendidos = ventaRepository.findByAutosPorMes(fecha);
         Integer cantidad = autosVendidos.size();
@@ -200,83 +173,37 @@ public class VentaService {
         return new AutoVendPorMesDTO().total(cantidad).autos(listaMapper);
     }
 
-
+    //Calcula la cuota mensual que debe pagar el cliente
     public Double cuotaMensual(CalculoCuotaDTO calculoCuotaDTO) {
         Double interesFijo = 0.2;
         return ((calculoCuotaDTO.getPrecioVenta() - calculoCuotaDTO.getCuotaInicial()) / calculoCuotaDTO.getPlazoFinanciacion()) * interesFijo;
 
     }
+
+    //Actualizar metodo de pago a una venta
+    public ResponseDto actualizarMetodoPago(ActualizarMetPagoVentaDTO actualizarMetPagoVentaDTO) {
+        Optional<Venta> ventaOpt = ventaRepository.findById(actualizarMetPagoVentaDTO.getIdVenta());
+        if (ventaOpt.isPresent()) {
+            if (actualizarMetPagoVentaDTO.getIdMetodoPago() == 1) {
+                PagoFinanciado pagoFinVenta = ventaOpt.get().getPagoFinanciado();
+                if (pagoFinVenta == null) {
+                    PagoFinanciado pagoFinanciado = new PagoFinanciado();
+                    pagoFinanciado.cuotaInicial(actualizarMetPagoVentaDTO.getCuotaInicial()).
+                            plazoFinanciacion(actualizarMetPagoVentaDTO.getPlazoFinanciacion()).
+                            tipoFinanciacion("Fijo");
+                    ventaOpt.get().pagoFinanciado(pagoFinanciado);
+                } else {
+                    pagoFinVenta.plazoFinanciacion(actualizarMetPagoVentaDTO.getPlazoFinanciacion()).
+                            cuotaInicial(actualizarMetPagoVentaDTO.getCuotaInicial());
+                    ventaOpt.get().pagoFinanciado(pagoFinVenta);
+                }
+            }
+            Optional<MetodoDePago> metPago = metodoDePagoRepository.findById(actualizarMetPagoVentaDTO.getIdMetodoPago());
+            if (metPago.isPresent()) {
+                ventaOpt.get().metodoPago(metPago.get());
+                return new ResponseDto().status("200").message("El método de pago ha sido actualizado");
+            }
+        }
+        return new ResponseDto().status("400").message("Al ha salido mal");
+    }
 }
-
-
-
-
-
-
-
-/*
-
-    public ResponseDto validarDireccion(DireccionDto direccion) {
-        ResponseDto respuesta = new ResponseDto();
-        if (direccion.getCalle().isEmpty()) {
-            return respuesta.status("400").message("El parámetro calle no es válido.");
-        } else if (direccion.getNumeroApto().isEmpty()) {
-            return respuesta.status("400").message("El parámetro número de apartamento no es válido.");
-        } else if (direccion.getCodigoPostal().isEmpty()) {
-            return respuesta.status("400").message("El parámetro código postal no es válido.");
-        } else if (direccionRepository.findByCalleAndNumeroApto(direccion.getCalle(), direccion.getNumeroApto()).isPresent()) {
-            return respuesta.status("400").message("La dirección ya existe");
-        } else {
-            return adicionar(direccion);
-        }
-    }
-
-    //Adicionar dirección
-    private ResponseDto adicionar(DireccionDto direccion) {
-        Marca dirMapeada = mapperUtils.mapeoObjetoObjeto(direccion, Marca.class);
-        direccionRepository.save(dirMapeada);
-        return new ResponseDto().status("200").message("La dirección fue creada exitosamente");
-    }
-
-    //Obtener Todos
-    public List<Marca> obtenerTodos() {
-        List<Marca> direccionList = direccionRepository.findAll();
-        if (direccionList.isEmpty()) {
-            System.out.println("No hay direcciones para mostrar");
-        }
-        return direccionList;
-    }
-
-
-    // Eliminar a partir del id
-    public ResponseDto eliminar(Long idDireccion) {
-        ResponseDto respuesta = new ResponseDto();
-        direccionRepository.delete(new Marca().id(idDireccion));
-        return respuesta.status("200").message("La dirección ha sido eliminada con éxito");
-    }
-
-
-    //Buscar direccion por código postal
-    public List<Marca> buscar(String codigoPostal) {
-        String nombreNormalizado = Normalizer.normalize(codigoPostal, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "").toUpperCase();
-        List<Marca> direccion = direccionRepository.findByCodigoPostal(nombreNormalizado);
-        if (direccion.isEmpty())
-            System.out.println("No existe la dirección.");
-        return direccion;
-    }
-
-    //Modificar direccion
-    public ResponseDto modificar(DireccionDto direccionDto) {
-        Optional<Marca> direccionOpt = direccionRepository.findById(direccionDto.getId());
-        if (direccionOpt.isPresent()) {
-            Marca direccion = direccionOpt.get();
-            direccion.calle(direccionDto.getCalle()).
-                    numeroApto(direccionDto.getNumeroApto()).
-                    codigoPostal(direccionDto.getCodigoPostal());
-            direccionRepository.save(direccion);
-            return new ResponseDto().status("200").message("La dirección ha sido modificada.");
-        }
-        return new ResponseDto().status("400").message("Dirección no encontrada");
-    }
-
-*/

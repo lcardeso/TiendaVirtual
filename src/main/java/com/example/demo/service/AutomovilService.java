@@ -136,17 +136,6 @@ public class AutomovilService {
         }
     }
 
-    //Eliminar Automovil a partir del ID
-    public ResponseDto eliminar(Long idAutomovil) {
-        try {
-            automovilRepository.delete(new Automovil().id(idAutomovil));
-            return new ResponseDto().status("200").message("Automóvil eliminado correctamente");
-        } catch (
-                Exception e) {
-            return new ResponseDto().status("500").message("Algo salió mal" + e.getMessage());
-        }
-    }
-
     //Buscar Automovil por Matricula
     public AutomovilDTO buscarAutomovilMatricula(String matricula) {
         try {

@@ -124,16 +124,6 @@ public class PersonaService {
         }
     }
 
-    //Eliminar Persona a partir del ID
-    public ResponseDto eliminar(Long idPersona) {
-        try {
-            personaRepository.delete(new Persona().id(idPersona));
-            return new ResponseDto().status("200").message("Persona eliminada correctamente");
-        } catch (Exception e) {
-            return new ResponseDto().status("500").message("Algo salió mal" + e.getMessage());
-        }
-
-    }
 
     //Buscar Persona por Cedula
     public PersonaDTO buscarPorCedula(String cedula) {

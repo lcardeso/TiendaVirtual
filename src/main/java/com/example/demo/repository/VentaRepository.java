@@ -21,11 +21,9 @@ public interface VentaRepository extends JpaRepository<Venta, Long> {
 
     List<Venta> findByEstadoVenta(String codigo);
 
-
     @Query(value = " Select v FROM Venta v where MONTH (fecha_venta) = :mes"
     )
     List<Venta> findByMes(@Param("mes") Integer mes);
-
 
     @Query(value = " Select v.automovil FROM Venta v where MONTH(v.fechaVenta) = MONTH(:fecha) AND YEAR(v.fechaVenta) = YEAR(:fecha) AND v.estadoVenta = 'R' "
     )

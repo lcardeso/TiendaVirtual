@@ -49,55 +49,16 @@ public class VentaController {
         return ResponseEntity.ok().body(ventaService.buscarAutosVendPorFecha(fechaVentaDTO.getFecha()));
     }
 
-
-/*    @PostMapping("/modificar")
-    public ResponseEntity<ResponseDto> modificar(@Valid @RequestBody VentaDTO ventaDTO) {
-        return ResponseEntity.ok().body(ventaService.modificar(ventaDTO));
-    }*/
-
     @PostMapping("/calcularCuota")
     public ResponseEntity<Double> calcularCuota(@Valid @RequestBody CalculoCuotaDTO calculoCuotaDTO) {
         return ResponseEntity.ok().body(ventaService.cuotaMensual(calculoCuotaDTO));
     }
 
-
-
-
-
-
-
-
-
-/*
-    @Autowired
-    private ColorService direccionService;
-
-    @PostMapping(value = "/direccion/adicionar")
-    public ResponseEntity<ResponseDto> adicionar(@RequestBody DireccionDto direccionDto) throws Exception {
-        return ResponseEntity.ok().body(direccionService.validarDireccion(direccionDto));
+    @PostMapping("/actualizarMetodoPago")
+    public ResponseEntity<ResponseDto> actualizarMetodoPago(@Valid @RequestBody ActualizarMetPagoVentaDTO actualizarMetPagoVentaDTO) {
+        return ResponseEntity.ok().body(ventaService.actualizarMetodoPago(actualizarMetPagoVentaDTO));
     }
 
-    @GetMapping("/direccion/obtenerTodos")
-    public List<Marca> obtenerTodos() {
-        return direccionService.obtenerTodos();
-    }
-
-    @DeleteMapping("/direccion/eliminar")
-    public ResponseEntity<ResponseDto> eliminar(@RequestParam Long idDireccion) {
-        return ResponseEntity.ok().body(direccionService.eliminar(idDireccion));
-    }
-
-    @PostMapping(value = "/direccion/buscar/Like/codigoP")
-    public ResponseEntity<List<Marca>> direccionXCodigoP(@Valid @RequestBody BusquedaLikeDireccionCP busquedaLikeDireccion) {
-        return ResponseEntity.ok().body(direccionService.buscar(busquedaLikeDireccion.getCodigoPostal()));
-    }
-
-    @PostMapping("/direccion/modificar")
-    public ResponseEntity<ResponseDto> modificar(@Valid @RequestBody DireccionDto direccionDto) {
-        return ResponseEntity.ok().body(direccionService.modificar(direccionDto));
-    }
-
- */
 }
 
 
