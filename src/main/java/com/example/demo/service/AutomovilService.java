@@ -1,26 +1,13 @@
 package com.example.demo.service;
 
-import com.example.demo.DTO.AutomovilDTO;
-import com.example.demo.DTO.ResponseDto;
-import com.example.demo.domain.Automovil;
-import com.example.demo.domain.Estado;
-import com.example.demo.repository.AutomovilRepository;
-import com.example.demo.repository.EstadoRepository;
-import com.example.demo.utils.MapperUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
-import static com.example.demo.Constantes.Constante.MAPPER_AUTOMOVIL;
 
 @Service
 @Transactional
 public class AutomovilService {
-    @Autowired
+/*    @Autowired
     public MapperUtils mapperUtils;
     @Autowired
     private AutomovilRepository automovilRepository;
@@ -156,52 +143,13 @@ public class AutomovilService {
         } catch (Exception e) {
             return null;
         }
-    }
+    }*/
 
 
 
 }
 
 
-/*
-
-    //Buscar alumno por nombre
-    public List<Automovil> buscar(BusquedaLikePersona nombre) {
-        String nombreNormalizado = Normalizer.normalize(nombre.getNombre(), Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "").toUpperCase();
-        List<Automovil> alumnoList = alumnoRepository.findByNombre(nombreNormalizado);
-        if (alumnoList.isEmpty()) {
-            System.out.println("No hay alumnos que mostrar");
-        }
-        return alumnoList;
-    }
-
-    //Eliminar alumno a partir de un id establecido
-    public ResponseDto eliminar(Long idAlumno) {
-        Optional<Automovil> alumnoO = alumnoRepository.findById(idAlumno);
-        if (alumnoO.isPresent()) {
-            alumnoRepository.delete(alumnoO.get());
-            return new ResponseDto().status("200").message("Alumno eliminado correctamente");
-        }
-        return new ResponseDto().status("400").message("Alumno no encontrado");
-    }
-
-    //Modificar alumno
-    public ResponseDto modificar(AlumnoDTO alumnoDTO) {
-        Optional<Automovil> alumnoO = alumnoRepository.findByDni(alumnoDTO.getDni());
-        if (alumnoO.isPresent()) {
-            Automovil alumno = alumnoO.get();
-            alumno.nombre(alumnoDTO.getNombre()).
-                    primApellido(alumnoDTO.getPrimApellido()).
-                    segApellido(alumnoDTO.getSegApellido()).
-                    sexo(alumnoDTO.getSexo()).
-                    fechNac(alumnoDTO.getFechNac()).
-                    edad(alumnoDTO.getEdad());
-            alumnoRepository.save(alumno);
-            return new ResponseDto().status("200").message("El alumno ha sido modificado.");
-        }
-        return new ResponseDto().status("400").message("Alumno no encontrado");
-    }
-*/
 
 
 

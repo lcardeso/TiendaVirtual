@@ -13,7 +13,8 @@ import java.util.Optional;
 @Repository
 
 public interface AutomovilRepository extends JpaRepository<Automovil, Long> {
-    Optional<Automovil> findByMatricula(String matricula);
+
+/*    Optional<Automovil> findByMatricula(String matricula);
 
     List<Automovil> findByEstado(Estado id);
 
@@ -21,13 +22,6 @@ public interface AutomovilRepository extends JpaRepository<Automovil, Long> {
             " FROM Automovil u where UPPER(REPLACE(u.matricula,'ÁáÉéÍíÓóÚú','AaEeIiOoUu' )) like CONCAT( '%' ,:matricula, '%') "
     )
     List<String> findByMatriculaLike(@Param("matricula") String matricula);
-
-
-
-/*
-    Optional<Automovil> findByMatricula(String matricula);
-
-*/
-
+    */
 
 }

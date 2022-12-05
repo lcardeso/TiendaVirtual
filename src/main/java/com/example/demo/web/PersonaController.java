@@ -14,7 +14,7 @@ import java.util.List;
 
 public class PersonaController {
 
-    @Autowired
+ /*   @Autowired
     private PersonaService personaService;
 
     @GetMapping("/listar")
@@ -32,8 +32,6 @@ public class PersonaController {
         return ResponseEntity.ok().body(personaService.modificar(personaDTO));
     }
 
-
-
     @GetMapping("/buscarPorCedula")
     public ResponseEntity<PersonaDTO> buscarPorCedula(@RequestParam String cedula) {
         return ResponseEntity.ok().body(personaService.buscarPorCedula(cedula));
@@ -43,6 +41,6 @@ public class PersonaController {
     public ResponseEntity<List<String>> buscarCedulaLike( @RequestParam String cedula) {
         return ResponseEntity.ok().body(personaService.buscarPorCedulaLike(cedula));
     }
-
+*/
 
 }

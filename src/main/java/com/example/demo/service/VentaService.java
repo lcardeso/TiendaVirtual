@@ -21,7 +21,7 @@ import static com.example.demo.Constantes.Constante.MAPPER_TIPO_PAGO_VENTA;
 @Transactional
 public class VentaService {
 
-    @Autowired
+ /*   @Autowired
     public MapperUtils mapperUtils;
     @Autowired
     private AutomovilRepository automovilRepository;
@@ -205,5 +205,6 @@ public class VentaService {
             }
         }
         return new ResponseDto().status("400").message("Al ha salido mal");
-    }
+    }*/
+
 }

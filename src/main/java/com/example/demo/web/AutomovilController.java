@@ -14,7 +14,7 @@ import java.util.List;
 
 public class AutomovilController {
 
-    @Autowired
+  /*  @Autowired
     private AutomovilService automovilService;
 
     @GetMapping("/listar")
@@ -37,8 +37,6 @@ public class AutomovilController {
         return ResponseEntity.ok().body(automovilService.modificar(automovilDTO));
     }
 
-
-
     @GetMapping("/buscarPorMatricula")
     public ResponseEntity<AutomovilDTO> buscarMatricula(@RequestParam String matricula) {
         return ResponseEntity.ok().body(automovilService.buscarAutomovilMatricula(matricula));
@@ -48,42 +46,8 @@ public class AutomovilController {
     public ResponseEntity<List<String>> buscarMatriculaLike( @RequestParam String matricula) {
         return ResponseEntity.ok().body(automovilService.buscarAutomovilMatriculaLike(matricula));
     }
+*/
 
 
-
-
-
-
-
-
-
-
-
-/*
-    @Autowired
-    private AutomovilService alumnoService;
-
-    // Busca un Alumno por nombre
-    @PostMapping(value = "/alumno/buscar/Like/nombre")
-    public ResponseEntity<List<Automovil>> usuarioXNombre(@Valid @RequestBody BusquedaLikePersona busquedaLikePersona) {
-        return ResponseEntity.ok().body(alumnoService.buscar(busquedaLikePersona));
-    }
-
-    @PostMapping("/alumno/adicionar")
-    public ResponseEntity<ResponseDto> adicionar(@Valid @RequestBody AlumnoDTO alumnoDTO) {
-        return ResponseEntity.ok().body(alumnoService.adicionar(alumnoDTO));
-    }
-
-    @DeleteMapping("/alumno/eliminar")
-    public ResponseEntity<ResponseDto> delete(@RequestParam Long idAlumno) {
-        return ResponseEntity.ok().body(alumnoService.eliminar(idAlumno));
-    }
-
-    @PostMapping("/alumno/modificar")
-    public ResponseEntity<ResponseDto> modificar(@Valid @RequestBody AlumnoDTO alumnoDTO) {
-        return ResponseEntity.ok().body(alumnoService.modificar(alumnoDTO));
-    }
-
- */
 }
 

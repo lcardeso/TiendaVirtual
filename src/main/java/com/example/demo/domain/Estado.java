@@ -26,18 +26,4 @@ public class Estado implements Serializable {
     private String descripcion;
 
 
-    public Estado id(Long id) {
-        this.id = id;
-        return this;
-    }
-
-    public Estado codigo(String codigo) {
-        this.codigo = codigo;
-        return this;
-    }
-
-    public Estado descripcion(String descripcion) {
-        this.descripcion = descripcion;
-        return this;
-    }
 }

@@ -16,7 +16,7 @@ import java.util.List;
 @RequestMapping("/concesionario/venta")
 public class VentaController {
 
-    @Autowired
+/*    @Autowired
     private VentaService ventaService;
 
     @GetMapping("/listar")
@@ -57,7 +57,7 @@ public class VentaController {
     @PostMapping("/actualizarMetodoPago")
     public ResponseEntity<ResponseDto> actualizarMetodoPago(@Valid @RequestBody ActualizarMetPagoVentaDTO actualizarMetPagoVentaDTO) {
         return ResponseEntity.ok().body(ventaService.actualizarMetodoPago(actualizarMetPagoVentaDTO));
-    }
+    }*/
 
 }
 

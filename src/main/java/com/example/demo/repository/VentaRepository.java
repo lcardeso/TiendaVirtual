@@ -17,7 +17,8 @@ import java.util.Optional;
 @Repository
 
 public interface VentaRepository extends JpaRepository<Venta, Long> {
-    Optional<LocalDateTime> findByFechaVenta(LocalDateTime fechaVenta);
+
+/*    Optional<LocalDateTime> findByFechaVenta(LocalDateTime fechaVenta);
 
     List<Venta> findByEstadoVenta(String codigo);
 
@@ -37,6 +38,6 @@ public interface VentaRepository extends JpaRepository<Venta, Long> {
             "GROUP BY p.id " +
             "HAVING COUNT(v.id) > 2"
     )
-    List<Persona> findByCantPersonasMorosas();
+    List<Persona> findByCantPersonasMorosas();*/
 
 }

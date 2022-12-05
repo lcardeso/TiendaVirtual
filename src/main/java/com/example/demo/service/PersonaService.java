@@ -15,11 +15,11 @@ import java.util.Optional;
 @Service
 @Transactional
 public class PersonaService {
-    @Autowired
+
+  /*  @Autowired
     public MapperUtils mapperUtils;
     @Autowired
     private PersonaRepository personaRepository;
-
 
     //Listar Personas
     public List<PersonaDTO> obtener() {
@@ -154,7 +154,7 @@ public class PersonaService {
         return edad;
 
 
-    }
+    }*/
 
 
 }

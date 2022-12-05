@@ -17,7 +17,7 @@ import static com.example.demo.Constantes.Constante.MAPPER_AUTOMOVIL;
 @Transactional
 public class ListaNegraPersonaService {
 
-    @Autowired
+  /*  @Autowired
     public MapperUtils mapperUtils;
     @Autowired
     private AutomovilRepository automovilRepository;
@@ -48,78 +48,13 @@ public class ListaNegraPersonaService {
         Integer total = perMorosa.size();
         List<PersonaDTO> listaMapper = mapperUtils.mapeoListaObjetoObjeto(perMorosa, PersonaDTO.class);
         return new PersonaMorosaDTO().total(total).personas(listaMapper);
-    }
+    }*/
+
+
+
 }
 
 
 
 
 
-
-
-/*
-
-    public ResponseDto validarDireccion(DireccionDto direccion) {
-        ResponseDto respuesta = new ResponseDto();
-        if (direccion.getCalle().isEmpty()) {
-            return respuesta.status("400").message("El parámetro calle no es válido.");
-        } else if (direccion.getNumeroApto().isEmpty()) {
-            return respuesta.status("400").message("El parámetro número de apartamento no es válido.");
-        } else if (direccion.getCodigoPostal().isEmpty()) {
-            return respuesta.status("400").message("El parámetro código postal no es válido.");
-        } else if (direccionRepository.findByCalleAndNumeroApto(direccion.getCalle(), direccion.getNumeroApto()).isPresent()) {
-            return respuesta.status("400").message("La dirección ya existe");
-        } else {
-            return adicionar(direccion);
-        }
-    }
-
-    //Adicionar dirección
-    private ResponseDto adicionar(DireccionDto direccion) {
-        Marca dirMapeada = mapperUtils.mapeoObjetoObjeto(direccion, Marca.class);
-        direccionRepository.save(dirMapeada);
-        return new ResponseDto().status("200").message("La dirección fue creada exitosamente");
-    }
-
-    //Obtener Todos
-    public List<Marca> obtenerTodos() {
-        List<Marca> direccionList = direccionRepository.findAll();
-        if (direccionList.isEmpty()) {
-            System.out.println("No hay direcciones para mostrar");
-        }
-        return direccionList;
-    }
-
-
-    // Eliminar a partir del id
-    public ResponseDto eliminar(Long idDireccion) {
-        ResponseDto respuesta = new ResponseDto();
-        direccionRepository.delete(new Marca().id(idDireccion));
-        return respuesta.status("200").message("La dirección ha sido eliminada con éxito");
-    }
-
-
-    //Buscar direccion por código postal
-    public List<Marca> buscar(String codigoPostal) {
-        String nombreNormalizado = Normalizer.normalize(codigoPostal, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "").toUpperCase();
-        List<Marca> direccion = direccionRepository.findByCodigoPostal(nombreNormalizado);
-        if (direccion.isEmpty())
-            System.out.println("No existe la dirección.");
-        return direccion;
-    }
-
-    //Modificar direccion
-    public ResponseDto modificar(DireccionDto direccionDto) {
-        Optional<Marca> direccionOpt = direccionRepository.findById(direccionDto.getId());
-        if (direccionOpt.isPresent()) {
-            Marca direccion = direccionOpt.get();
-            direccion.calle(direccionDto.getCalle()).
-                    numeroApto(direccionDto.getNumeroApto()).
-                    codigoPostal(direccionDto.getCodigoPostal());
-            direccionRepository.save(direccion);
-            return new ResponseDto().status("200").message("La dirección ha sido modificada.");
-        }
-        return new ResponseDto().status("400").message("Dirección no encontrada");
-    }
-
-*/

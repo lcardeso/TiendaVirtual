@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/concesionario")
 public class ListaNegraPersonaController {
 
-    @Autowired
+  /*  @Autowired
     private ListaNegraPersonaService listaNegraPersonaService;
 
     @GetMapping("/listaNegra")
@@ -26,7 +26,7 @@ public class ListaNegraPersonaController {
     @GetMapping("/obtenerListaNegra")
     public ResponseEntity<PersonaMorosaDTO> obtenerListaNegra(){
         return ResponseEntity.ok().body(listaNegraPersonaService.obtener());
-    }
+    }*/
 
 }
 
