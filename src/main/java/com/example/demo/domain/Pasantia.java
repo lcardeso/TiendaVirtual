@@ -9,21 +9,21 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "estado", schema = "concesionario")
-public class Estado implements Serializable {
+@Table(name = "pasantia", schema = "farmacia")
+public class Pasantia implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_estado")
+    @Column(name = "id_pasantia")
     private Long id;
 
     @NotNull
-    @Column(name = "codigo", length = 1, unique = true)
-    private String codigo;
+    @Column(name = "institucion")
+    private String institucion;
 
     @NotNull
-    @Column(name = "descripcion")
-    private String descripcion;
+    @Column(name = "fecha_fin")
+    private LocalDateTime fechaFin;
 
-
+                             
 }

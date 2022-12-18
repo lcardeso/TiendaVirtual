@@ -1,18 +1,16 @@
 package com.example.demo.DTO;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class AutoVendPorMesDTO implements Serializable {
+public  class AutoVendPorMesDTO implements Serializable {
 
     Integer total = 0;
-    List<AutomovilDTO> autos = new ArrayList<>();
+    List<MedicamentoDTO> autos = new ArrayList<>();
 
 
     public AutoVendPorMesDTO total(Integer total) {
@@ -20,7 +18,7 @@ public class AutoVendPorMesDTO implements Serializable {
         return this;
     }
 
-    public AutoVendPorMesDTO autos(List<AutomovilDTO> autos) {
+    public AutoVendPorMesDTO autos(List<MedicamentoDTO> autos) {
         this.autos = autos;
         return this;
     }

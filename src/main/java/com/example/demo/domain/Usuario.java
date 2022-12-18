@@ -1,0 +1,43 @@
+package com.example.demo.domain;
+
+import lombok.Data;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
+@Data
+@Entity
+@Table(name = "usuario", schema = "farmacia")
+public class Usuario implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_usuario")
+    private Long id;
+
+    @NotNull
+    @OneToOne
+    @JoinColumn(name = "id_empleado_FK", referencedColumnName = "id_empleado")
+    private Empleado empleado;
+
+    @NotNull
+    @OneToOne
+    @JoinColumn(name = "id_rol_FK", referencedColumnName = "id_rol")
+    private Rol rol;
+
+    @NotNull
+    @Column(name = "nombre")
+    private String nombre;
+
+    @NotNull
+    @Column(name = "contrasenna")
+    private String contrasenna;
+
+    @NotNull
+    @Column(name = "activo")
+    private Boolean activo;
+
+
+}
