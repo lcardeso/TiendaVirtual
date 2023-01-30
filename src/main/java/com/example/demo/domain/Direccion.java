@@ -27,6 +27,9 @@ public class Direccion implements Serializable {
     @Column(name = "piso")
     private Integer piso;
 
+    @Column(name = "numero_puerta")
+    private String puerta;
+
     @NotNull
     @Column(name = "codigo_postal")
     private Integer codigoPostal;
@@ -39,6 +42,9 @@ public class Direccion implements Serializable {
     @Column(name = "provincia")
     private String provincia;
 
+    @NotNull
+    @Column(name = "tipo")
+    private String tipo;
 
     public Direccion id(Long id) {
         this.id = id;
@@ -57,6 +63,11 @@ public class Direccion implements Serializable {
 
     public Direccion piso(Integer piso) {
         this.piso = piso;
+        return this;
+    }
+
+    public Direccion puerta(String puerta) {
+        this.puerta = puerta;
         return this;
     }
 

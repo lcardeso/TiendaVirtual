@@ -13,8 +13,8 @@ import java.util.List;
 @Table(name = "farmacia", schema = "farmacia")
 public class Farmacia implements Serializable {
 
-    @OneToMany(mappedBy = "farmacia")
-    private List<Empleado> empleados;
+    @OneToMany
+    private List<Persona> personas;
 
     @OneToMany
     private List<SolicitudCompra> solicitudes;
@@ -22,6 +22,7 @@ public class Farmacia implements Serializable {
     @OneToMany
     private List<LugarStock> lugarStocks;
 
+    @NotNull
     @OneToOne
     @JoinColumn(name = "id_direccion_FK", referencedColumnName = "id_direccion")
     private Direccion direccion;
@@ -43,17 +44,6 @@ public class Farmacia implements Serializable {
     @Column(name = "telefono", length = 9)
     private Integer telefono;
 
-    @NotNull
-    @Column(name = "calle")
-    private String calle;
-
-    @NotNull
-    @Column(name = "numero")
-    private Integer numero;
-
-    @NotNull
-    @Column(name = "codigo_postal")
-    private Integer codigoPostal;
 
 
 }

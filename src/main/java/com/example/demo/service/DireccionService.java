@@ -15,43 +15,32 @@ import javax.transaction.Transactional;
 @Transactional
 public class DireccionService {
 
-  /*  @Autowired
+    @Autowired
     public MapperUtils mapperUtils;
     @Autowired
     private DireccionRepository direccionRepository;
 
 
     //Validar Direccion
-    public ResponseDto validarDireccion(Direccion direccion) {
-        try {
-            ResponseDto respuesta = new ResponseDto();
-            if (direccion.getCalle().isEmpty()) {
-                return respuesta.status("400").message("La calle no es válida.");
-            } else if (direccion.getNumero() == null) {
-                return respuesta.status("400").message("El número de la calle no es válido.");
-            } else if (direccion.getCodigoPostal() == null) {
-                return respuesta.status("400").message("El código postal no es válido.");
-            } else if (direccion.getMunicipio().isEmpty()) {
-                return respuesta.status("400").message("El municipio no es válido.");
-            } else if (direccion.getProvincia().isEmpty()) {
-                return respuesta.status("400").message("La provincia no es válida.");
-            } else {
-                return respuesta.status("200").message("La direccion ha sido validada correctamente");
-            }
-        } catch (Exception e) {
-            return new ResponseDto().status("500").message("Algo salió mal" + e.getMessage());
+    public ResponseDto validarDireccion(DireccionDTO direccion) {
+        ResponseDto respuesta = new ResponseDto();
+        if (direccion.getCalle().isEmpty()) {
+            return respuesta.status("400").message("La calle no es válida.");
+        } else if (direccion.getNumero() == null) {
+            return respuesta.status("400").message("El número de la calle no es válido.");
+        } else if (direccion.getCodigoPostal() == null) {
+            return respuesta.status("400").message("El código postal no es válido.");
+        } else if (direccion.getMunicipio().isEmpty()) {
+            return respuesta.status("400").message("El municipio no es válido.");
+        } else if (direccion.getProvincia().isEmpty()) {
+            return respuesta.status("400").message("La provincia no es válida.");
+        } else {
+            return respuesta.status("200").message("La direccion ha sido validada correctamente");
         }
+
     }
 
     //Adicionar Direccion
-
-
-*/
-
-
-
-
-
 
 
 }

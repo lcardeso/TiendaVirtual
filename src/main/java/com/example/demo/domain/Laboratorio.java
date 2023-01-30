@@ -13,7 +13,7 @@ import java.util.List;
 public class Laboratorio implements Serializable {
 
     @OneToMany
-    private List<Medicamento> medicamentos;
+    private List<Medicamento> medicamento;
 
     @OneToOne
     @JoinColumn(name = "id_direccion_FK", referencedColumnName = "id_direccion")
@@ -23,6 +23,10 @@ public class Laboratorio implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_laboratorio")
     private Long id;
+
+    @NotNull
+    @Column(name = "nombre_lab")
+    private String nombre;
 
     @NotNull
     @Column(name = "telefono", length = 9)

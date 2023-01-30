@@ -1,26 +1,21 @@
 package com.example.demo.service;
 
-import com.example.demo.DTO.EmpleadoDTO;
-import com.example.demo.DTO.ResponseDto;
-import com.example.demo.domain.Direccion;
-import com.example.demo.domain.Empleado;
-import com.example.demo.domain.Titulo;
-import com.example.demo.repository.DireccionRepository;
-import com.example.demo.repository.EmpleadoRepository;
-import com.example.demo.repository.TituloRepository;
+import com.example.demo.DTO.*;
+import com.example.demo.domain.*;
+import com.example.demo.repository.*;
 import com.example.demo.utils.MapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.example.demo.Constantes.Constante.MAPPER_EMPLEADO;
 
 @Service
 @Transactional
 public class EmpleadoService {
-/*
 
     @Autowired
     public MapperUtils mapperUtils;
@@ -34,11 +29,162 @@ public class EmpleadoService {
     private TituloRepository tituloRepository;
     @Autowired
     private TituloService tituloService;
+    @Autowired
+    private PersonaRepository personaRepository;
+    @Autowired
+    private PersonaService personaService;
+    @Autowired
+    private FarmaciaRepository farmaciaRepository;
 
-    //Listar Empleados
-    public List<EmpleadoDTO> obtener() {
-        List<Empleado> listaEmpleados = empleadoRepository.findAll();
-        return mapperUtils.mapeoListaObjetoObjeto(listaEmpleados, EmpleadoDTO.class);
+    //Listar empleados
+    public List<EmpleadoDTO> listarEmpleados() {
+        List<Empleado> empleados = empleadoRepository.findAll();
+        return mapperUtils.mapeoListaObjetoObjeto(empleados, EmpleadoDTO.class, MAPPER_EMPLEADO);
+    }
+
+    //Validar Empleados
+    public ResponseDto validarEmpleado(EmpleadoDTO empleadoDTO) {
+        ResponseDto resp;
+        ResponseDto respuesta = new ResponseDto();
+        if (empleadoDTO.getSalario() == null) {
+            return respuesta.status("400").message("El salario no es válido.");
+        } else if (empleadoDTO.getCargo().isEmpty()) {
+            return respuesta.status("400").message("El cargo no es válido.");
+        } else {
+            return respuesta.status("200").message("El empleado ha sido validado correctamente");
+        }
+    }
+
+    //Adicionar Empleado
+    public ResponseDto adicionar(EmpleadoDTO empleadoDTO) {
+        ResponseDto res;
+        try {
+            res = personaService.validar(empleadoDTO);
+            if (!res.getStatus().equals("200")) {
+                return res;
+            }
+            res = validarEmpleado(empleadoDTO);
+            if (!res.getStatus().equals("200")) {
+                return res;
+            }
+            if (empleadoRepository.findByCedula(empleadoDTO.getCedula()).isPresent()) {
+                return res.status("400").message("El empleado ya exisite");
+            }
+            Optional<Farmacia> farmacia = farmaciaRepository.findById(empleadoDTO.getIdFarmacia());
+            if (farmacia.isEmpty()) {
+                return res.status("400").message("La farmacia no esta especificada");
+            }
+            DireccionDTO dirDTO = empleadoDTO.getDireccion();
+            ResponseDto respDir = direccionService.validarDireccion(dirDTO);
+            if (!respDir.getStatus().equals("200")) {
+                return respDir;
+            }
+            Direccion direccion = mapperUtils.mapeoObjetoObjeto(dirDTO, Direccion.class);
+            Direccion dirSalve = direccionRepository.save(direccion);
+            List<TituloDTO> titulosDTO = empleadoDTO.getTitulo();
+            List<Titulo> titulos = new ArrayList<>();
+            for (TituloDTO tituloDTO : titulosDTO) {
+                ResponseDto respTit = tituloService.validarTitulo(tituloDTO);
+                if (!respTit.getStatus().equals("200")) {
+                    return respTit;
+                }
+                if (tituloRepository.findByNumRegistro(tituloDTO.getNumRegistro()).isPresent()) {
+                    return new ResponseDto().status("400").message("El titulo ya existe");
+                }
+                Titulo titulo = mapperUtils.mapeoObjetoObjeto(tituloDTO, Titulo.class);
+                titulos.add(titulo);
+            }
+            Empleado empleado = mapperUtils.mapeoObjetoObjeto(empleadoDTO, Empleado.class);
+            empleado.direccion(dirSalve);
+            empleado.titulos(titulos);
+            empleado.farmacia(farmacia.get());
+            empleadoRepository.save(empleado);
+            return new ResponseDto().status("200").message("El empleado fue creado exitosamente");
+        } catch (Exception e) {
+            return new ResponseDto().status("500").message("Algo salió mal " + e.getMessage());
+        }
+    }
+
+    //Modificar Direccion
+    public ResponseDto modDireccion(ModDireccionDTO modDireccionDTO) {
+        ResponseDto resp = new ResponseDto();
+        try {
+            Optional<Empleado> emplOpt = empleadoRepository.findByCedula(modDireccionDTO.getCedula());
+            if (emplOpt.isEmpty()) {
+                return resp.status("400").message("El empleado no existe");
+            }
+            DireccionDTO direccionDTO = modDireccionDTO.getDireccionDTO();
+            ResponseDto respDir = direccionService.validarDireccion(direccionDTO);
+            if (!respDir.getStatus().equals("200")) {
+                return respDir;
+            }
+            Empleado empleado = emplOpt.get();
+           // Direccion dirEmpleado = empleado.getDireccion();
+            Direccion direccion = mapperUtils.mapeoObjetoObjeto(direccionDTO, Direccion.class);
+            Direccion dirSalve = direccionRepository.save(direccion);
+            empleado.direccion(dirSalve);
+            return resp.status("200").message("Direccion modificada con exito");
+        } catch (Exception e) {
+            return new ResponseDto().status("400").message("Algo salio mal " + e.getMessage());
+        }
+    }
+
+    //Modificar titulo
+    public ResponseDto modTitulo(ModTituloDTO modTituloDTO) {
+        ResponseDto resp = new ResponseDto();
+        Titulo tituloSalve;
+        try {
+            Optional<Empleado> emplOpt = empleadoRepository.findByCedula(modTituloDTO.getCedula());
+            if (emplOpt.isEmpty()) {
+                return resp.status("400").message("El empleado no existe");
+            }
+            TituloDTO tituloDTO = modTituloDTO.getTitulo();
+            ResponseDto respTit = tituloService.validarTitulo(tituloDTO);
+            if (!respTit.getStatus().equals("200")) {
+                return respTit;
+            }
+            Optional<Titulo> tituloOptional = tituloRepository.findByNumRegistro(tituloDTO.getNumRegistro());
+            if (tituloOptional.isEmpty()) {
+                return resp.status("400").message("El titulo no existe");
+            }
+            tituloSalve = mapperUtils.mapeoObjetoObjeto(tituloDTO, Titulo.class);
+            tituloRepository.save(tituloSalve);
+            return resp.status("200").message("Titulo modificado con exito");
+        } catch (
+                Exception e) {
+            return new ResponseDto().status("400").message("Algo salio mal " + e.getMessage());
+        }
+    }
+
+    //Adicionar titulo
+    public ResponseDto adicTitulo(AdicTituloDTO adicTituloDTO) {
+        ResponseDto resp = new ResponseDto();
+        try {
+            Optional<Empleado> emplOpt = empleadoRepository.findByCedula(adicTituloDTO.getCedula());
+            if (emplOpt.isEmpty()) {
+                return resp.status("400").message("El empleado no existe");
+            }
+            List<Titulo> listaTitulos = new ArrayList<>();
+            List<TituloDTO> titulosDTO = adicTituloDTO.getTitulos();
+            for (TituloDTO titulo1 : titulosDTO) {
+                ResponseDto respTit = tituloService.validarTitulo(titulo1);
+                if (!respTit.getStatus().equals("200")) {
+                    return respTit;
+                }
+                if (tituloRepository.findByNumRegistro(titulo1.getNumRegistro()).isPresent()) {
+                    return resp.status("400").message("El titulo ya existe" + titulo1);
+                }
+                Titulo titulo = mapperUtils.mapeoObjetoObjeto(titulosDTO, Titulo.class);
+                listaTitulos.add(titulo);
+            }
+            Empleado empleado = emplOpt.get();
+            empleado.titulos(listaTitulos);
+            empleadoRepository.save(empleado);
+            return resp.status("200").message("Titulos adicionado con exito");
+
+        } catch (Exception e) {
+            return new ResponseDto().status("400").message("Algo salio mal " + e.getMessage());
+        }
     }
 
     //Buscar Empleados por Cedula
@@ -46,7 +192,7 @@ public class EmpleadoService {
         try {
             Optional<Empleado> empleadoOpt = empleadoRepository.findByCedula(cedula);
             if (empleadoOpt.isPresent()) {
-                return mapperUtils.mapeoObjetoObjeto(empleadoOpt.get(), EmpleadoDTO.class);
+                return mapperUtils.mapeoObjetoObjeto(empleadoOpt.get(), EmpleadoDTO.class, MAPPER_EMPLEADO);
             }
         } catch (Exception e) {
             return null;
@@ -63,188 +209,33 @@ public class EmpleadoService {
         }
     }
 
-    //Buscar Empleados por Cargo
-    public List<EmpleadoDTO> buscarPorCargo(String cargo) {
+    //Buscar por Cargo
+    public List<EmpleadoDTO> buscarCargo(String cargo) {
+        List<Empleado> empleados = empleadoRepository.findByCargo(cargo);
+        return mapperUtils.mapeoListaObjetoObjeto(empleados, EmpleadoDTO.class, MAPPER_EMPLEADO);
+    }
+
+    //Buscar Empleados por Nombre
+    public EmpleadoDTO buscarPorNombre(String nombre) {
         try {
-            List<Empleado> empleadoOpt = empleadoRepository.findByCargo(cargo);
-            return mapperUtils.mapeoListaObjetoObjeto(empleadoOpt, EmpleadoDTO.class);
+            Optional<Empleado> empleadoOpt = empleadoRepository.findByNombre(nombre);
+            if (empleadoOpt.isPresent()) {
+                return mapperUtils.mapeoObjetoObjeto(empleadoOpt.get(), EmpleadoDTO.class, MAPPER_EMPLEADO);
+            }
+        } catch (Exception e) {
+            return null;
+        }
+        return null;
+    }
+
+    //Buscar Empleados por Nombre
+    public List<String> buscarPorNombreLike(String nombre) {
+        try {
+            return empleadoRepository.findByNombreLike(nombre);
         } catch (Exception e) {
             return null;
         }
     }
-
-    //Validar Empleados
-    public ResponseDto validarEmpleado(EmpleadoDTO empleadoDTO) {
-        try {
-            ResponseDto respuesta = new ResponseDto();
-            if (empleadoDTO.getCedula().isEmpty()) {
-                return respuesta.status("400").message("La cédula no es válida.");
-            } else if (empleadoDTO.getNombre().isEmpty()) {
-                return respuesta.status("400").message("El nombre no es válido.");
-            } else if (empleadoDTO.getPrimApellido().isEmpty()) {
-                return respuesta.status("400").message("El primer apellido no es válido.");
-            } else if (empleadoDTO.getSegApellido().isEmpty()) {
-                return respuesta.status("400").message("El segundo apellido no es válido.");
-            } else if (empleadoDTO.getSexo().isEmpty()) {
-                return respuesta.status("400").message("El sexo no es válido.");
-            } else if (empleadoDTO.getFechaNacimiento() == null) {
-                return respuesta.status("400").message("La fecha de nacimiento no es válida.");
-            } else if (empleadoDTO.getTelefono() == null) {
-                return respuesta.status("400").message("La teléfono no es válida.");
-            } else if (empleadoDTO.getFechaIngreso() == null) {
-                return respuesta.status("400").message("La fecha de ingreso no es válida.");
-            } else if (empleadoDTO.getSalario() == null) {
-                return respuesta.status("400").message("El salario no es válida.");
-            } else if (empleadoDTO.getCargoEmpleado().isEmpty()) {
-                return respuesta.status("400").message("El cargo no es válida.");
-            } else if (empleadoDTO.getDireccion().getId() == null) {
-                return respuesta.status("400").message("La direccion no es válido.");
-            } else if (empleadoDTO.getTitulo().getId() == null) {
-                return respuesta.status("400").message("La titulo no es válido.");
-            } else {
-                return respuesta.status("200").message("El empleado ha sido validada correctamente");
-            }
-        } catch (Exception e) {
-            return new ResponseDto().status("500").message("Algo salió mal" + e.getMessage());
-        }
-    }
-
-    //Validar Logica Empleado
-    public ResponseDto validarLogicaEmpleado(EmpleadoDTO empleadoDTO) {
-        try {
-            ResponseDto respuesta = new ResponseDto();
-            if (empleadoDTO.getCedula().length() != 9) {
-                return respuesta.status("400").message("La cédula no es válida, debe contener 9 caracteres.");
-            } else if (String.valueOf(empleadoDTO.getTelefono()).length() != 9) {
-                return respuesta.status("400").message("El teléfono no es válido, debe contener 9 caracteres.");
-            } else if (empleadoDTO.getFechaNacimiento().isAfter(LocalDateTime.now())) {
-                return respuesta.status("400").message("La fecha de nacimiento no es válida.");
-            } else if (edad(empleadoDTO.getFechaNacimiento()) < 18) {
-                return respuesta.status("400").message("El empleado no tiene la mayoria de edad.");
-            } else if (empleadoDTO.getFechaIngreso().isAfter(LocalDateTime.now())) {
-                return respuesta.status("400").message("La fecha de ingreso no es válida.");
-            } else if (empleadoDTO.getSexo().length() != 1) {
-                return respuesta.status("400").message("La sexo debe contener un sólo caracter.");
-            } else {
-                return respuesta.status("200").message("El empleado ha sido validado correctamente");
-            }
-        } catch (Exception e) {
-            return new ResponseDto().status("500").message("Algo salió mal" + e.getMessage());
-        }
-    }
-
-    //Adicionar Empleado
-    public ResponseDto adicionar(EmpleadoDTO empleadoDTO) {
-        ResponseDto res;
-        try {
-            res = validarEmpleado(empleadoDTO);
-            if (!res.getStatus().equals("200")) {
-                return res;
-            } else {
-                res = validarLogicaEmpleado(empleadoDTO);
-                if (!res.getStatus().equals("200")) {
-                    return res;
-                }
-            }
-            if (empleadoRepository.findByCedula(empleadoDTO.getCedula()).isPresent()) {
-                return new ResponseDto().status("400").message("La persona ya existe.");
-            }
-            Direccion dir = empleadoDTO.getDireccion();
-            Direccion direccion = new Direccion();
-            if (!direccionService.validarDireccion(dir).getStatus().equals("200")) {
-                return direccionService.validarDireccion(dir);
-            }
-            direccion.calle(dir.getCalle()).
-                    numero(dir.getNumero()).
-                    municipio(dir.getMunicipio()).
-                    provincia(dir.getProvincia());
-            if (dir.getPiso() != null) {
-                direccion.piso(dir.getPiso());
-            }
-            direccionRepository.save(direccion);
-            Titulo titulo = empleadoDTO.getTitulo();
-            Titulo tituloNew = new Titulo();
-            if (!tituloService.validarTitulo(titulo).getStatus().equals("200")) {
-                return tituloService.validarTitulo(titulo);
-            }
-            if (tituloRepository.findByNumRegistro(titulo.getNumRegistro()).isPresent()) {
-                return new ResponseDto().status("400").message("El titulo ya existe");
-            }
-            tituloNew.nombre(titulo.getNombre()).fecha(titulo.getFecha()).institucion(titulo.getInstitucion()).numRegistro(titulo.getNumRegistro()).especialidad(titulo.getEspecialidad());
-            tituloRepository.save(tituloNew);
-            Empleado empleado = mapperUtils.mapeoObjetoObjeto(empleadoDTO, Empleado.class);
-            empleadoRepository.save(empleado);
-            return new ResponseDto().status("200").message("El empleado fue creado exitosamente");
-        } catch (Exception e) {
-            return new ResponseDto().status("500").message("Algo salió mal" + e.getMessage());
-        }
-    }
-
-    //Modificar Empleado
-    public ResponseDto modificar(EmpleadoDTO empleadoDTO) {
-        try {
-            Optional<Empleado> emplOpt = empleadoRepository.findByCedula(empleadoDTO.getCedula());
-            ResponseDto res;
-            res = validarEmpleado(empleadoDTO);
-            if (!res.getStatus().equals("200")) {
-                return res;
-            } else {
-                res = validarLogicaEmpleado(empleadoDTO);
-                if (res.getStatus().equals("200")) {
-                    Empleado empleado = emplOpt.get();
-                    Direccion emplDir = empleado.getDireccion();
-                    Direccion dir = new Direccion();
-                    if (!direccionService.validarDireccion(emplDir).getStatus().equals("200")) {
-                        return direccionService.validarDireccion(emplDir);
-                    }
-                    dir.calle(emplDir.getCalle()).
-                            numero(emplDir.getNumero()).
-                            municipio(emplDir.getMunicipio()).
-                            provincia(emplDir.getProvincia());
-                    if (emplDir.getPiso() != null) {
-                        dir.piso(emplDir.getPiso());
-                    }
-                    direccionRepository.save(dir);
-                    Titulo titulo = empleadoDTO.getTitulo();
-                    Titulo tituloNew = new Titulo();
-                    if (!tituloService.validarTitulo(titulo).getStatus().equals("200")) {
-                        return tituloService.validarTitulo(titulo);
-                    }
-                    if (tituloRepository.findByNumRegistro(titulo.getNumRegistro()).isPresent()) {
-                        tituloNew.nombre(titulo.getNombre()).
-                                fecha(titulo.getFecha()).
-                                institucion(titulo.getInstitucion()).
-                                especialidad(titulo.getEspecialidad());
-                        tituloRepository.save(tituloNew);
-                    } else {
-                        tituloNew.nombre(titulo.getNombre()).
-                                fecha(titulo.getFecha()).
-                                institucion(titulo.getInstitucion()).
-                                numRegistro(titulo.getNumRegistro()).
-                                especialidad(titulo.getEspecialidad());
-                        tituloRepository.save(tituloNew);
-                    }
-
-                }
-                Empleado emplMapp = mapperUtils.mapeoObjetoObjeto(empleadoDTO, Empleado.class);
-                empleadoRepository.save(emplMapp);
-                return new ResponseDto().status("200").message("El empleado ha sido modificado");
-            }
-        } catch (
-                Exception e) {
-            return new ResponseDto().status("500").message("Algo salió mal" + e.getMessage());
-        }
-    }
-
-    //Validar edad a partir de la fecha de nacimiento
-    public Integer edad(LocalDateTime fechaNac) {
-        Integer edad = LocalDateTime.now().getYear() - fechaNac.getYear();
-        return edad;
-
-    }
-
-*/
-
 }
 
 

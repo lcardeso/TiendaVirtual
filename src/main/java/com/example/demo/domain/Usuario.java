@@ -19,8 +19,8 @@ public class Usuario implements Serializable {
 
     @NotNull
     @OneToOne
-    @JoinColumn(name = "id_empleado_FK", referencedColumnName = "id_empleado")
-    private Empleado empleado;
+    @JoinColumn(name = "id_persona_FK", referencedColumnName = "id_persona")
+    private Persona persona;
 
     @NotNull
     @OneToOne

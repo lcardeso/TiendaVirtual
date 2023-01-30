@@ -3,7 +3,7 @@ package com.example.demo.web;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/concesionario/venta")
+@RequestMapping("/farmacia/medicamento")
 public class MedicamentoController {
 
 
