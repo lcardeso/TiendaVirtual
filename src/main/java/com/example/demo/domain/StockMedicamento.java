@@ -23,6 +23,21 @@ public class StockMedicamento implements Serializable {
 
     @NotNull
     @Column(name = "cantidad")
-    private String cantidad;
+    private Integer cantidad;
 
-   }
+
+    public StockMedicamento medicamento(Medicamento medicamento) {
+        this.medicamento = medicamento;
+        return this;
+    }
+
+    public StockMedicamento id(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public StockMedicamento cantidad(Integer cantidad) {
+        this.cantidad = cantidad;
+        return this;
+    }
+}

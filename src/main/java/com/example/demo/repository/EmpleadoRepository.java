@@ -19,7 +19,7 @@ public interface EmpleadoRepository extends JpaRepository<Empleado, Long> {
     Optional<Empleado> findByCedula(String cedula);
 
     @Query("Select u.cedula" +
-            " FROM Empleado u where UPPER(REPLACE(u.cedula,'ÁáÉéÍíÓóÚú','AaEeIiOoUu' )) like CONCAT( '%' ,:cedula, '%') "
+            " FROM Empleado u where UPPER(REPLACE(u.cedula,'ÁáÉéÍíÓóÚú','AaEeIiOoUu' )) like CONCAT( '%' ,:cedula, '%') AND u.permanencia = 'A' "
     )
     List<String> findByCedulaLike(@Param("cedula") String cedula);
 
@@ -31,7 +31,9 @@ public interface EmpleadoRepository extends JpaRepository<Empleado, Long> {
     Optional<Empleado> findByNombre(String nombre);
 
     @Query("Select u.nombre" +
-            " FROM Empleado u where UPPER(REPLACE(u.nombre,'ÁáÉéÍíÓóÚú','AaEeIiOoUu' )) like CONCAT( '%' ,:nombre, '%') "
+            " FROM Empleado u where UPPER(REPLACE(u.nombre,'ÁáÉéÍíÓóÚú','AaEeIiOoUu' )) like CONCAT( '%' ,:nombre, '%') AND u.permanencia = 'A' "
     )
     List<String> findByNombreLike(@Param("nombre") String nombre);
+
+    List<Empleado> findByPermanencia(String estado);
 }

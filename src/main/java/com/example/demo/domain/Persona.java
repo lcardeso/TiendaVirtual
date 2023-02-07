@@ -20,7 +20,7 @@ public abstract class Persona {
     private Long id;
 
     @NotNull
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "persona", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Titulo> titulos;
 
     @NotNull
@@ -65,6 +65,9 @@ public abstract class Persona {
     @Column(name = "fecha_ingreso")
     private LocalDateTime fechaIngreso;
 
+    @NotNull
+    @Column(name = "permanencia", length = 1)
+    private String permanencia;
 
     public Persona id(Long id) {
         this.id = id;
@@ -123,6 +126,11 @@ public abstract class Persona {
 
     public Persona fechaIngreso(LocalDateTime fechaIngreso) {
         this.fechaIngreso = fechaIngreso;
+        return this;
+    }
+
+    public Persona permanencia(String permanencia) {
+        this.permanencia = permanencia;
         return this;
     }
 }

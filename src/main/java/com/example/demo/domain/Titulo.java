@@ -12,6 +12,10 @@ import java.time.LocalDateTime;
 @Table(name = "titulo", schema = "farmacia")
 public class Titulo implements Serializable {
 
+    @ManyToOne
+    @JoinColumn(name = "id_persona_FK", referencedColumnName = "id_persona")
+    private Persona persona;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_titulo")

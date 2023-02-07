@@ -13,7 +13,7 @@ import java.util.List;
 @Table(name = "farmacia", schema = "farmacia")
 public class Farmacia implements Serializable {
 
-    @OneToMany
+    @OneToMany(mappedBy = "farmacia")
     private List<Persona> personas;
 
     @OneToMany
@@ -44,6 +44,14 @@ public class Farmacia implements Serializable {
     @Column(name = "telefono", length = 9)
     private Integer telefono;
 
-
-
+    @Override
+    public String toString() {
+        return "Farmacia{" +
+                "direccion=" + direccion +
+                ", id=" + id +
+                ", numSucursal=" + numSucursal +
+                ", nombre='" + nombre + '\'' +
+                ", telefono=" + telefono +
+                '}';
+    }
 }

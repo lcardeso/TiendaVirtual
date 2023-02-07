@@ -19,4 +19,5 @@ public class SolicitudCompraDTO implements Serializable {
     private String nombreMedicamento;
     private Long idMedicamento;
     private Integer cantidad;
+
 }

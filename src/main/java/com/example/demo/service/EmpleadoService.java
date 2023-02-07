@@ -6,7 +6,9 @@ import com.example.demo.repository.*;
 import com.example.demo.utils.MapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,9 +38,16 @@ public class EmpleadoService {
     @Autowired
     private FarmaciaRepository farmaciaRepository;
 
+
     //Listar empleados
     public List<EmpleadoDTO> listarEmpleados() {
         List<Empleado> empleados = empleadoRepository.findAll();
+        return mapperUtils.mapeoListaObjetoObjeto(empleados, EmpleadoDTO.class, MAPPER_EMPLEADO);
+    }
+
+    //Listar empleados activos
+    public List<EmpleadoDTO> listarEmpleadosPorEstado(String estado) {
+        List<Empleado> empleados = empleadoRepository.findByPermanencia(estado);
         return mapperUtils.mapeoListaObjetoObjeto(empleados, EmpleadoDTO.class, MAPPER_EMPLEADO);
     }
 
@@ -55,6 +64,9 @@ public class EmpleadoService {
         }
     }
 
+    /**
+     * ERROR
+     */
     //Adicionar Empleado
     public ResponseDto adicionar(EmpleadoDTO empleadoDTO) {
         ResponseDto res;
@@ -68,7 +80,7 @@ public class EmpleadoService {
                 return res;
             }
             if (empleadoRepository.findByCedula(empleadoDTO.getCedula()).isPresent()) {
-                return res.status("400").message("El empleado ya exisite");
+                return res.status("400").message("El empleado ya existe");
             }
             Optional<Farmacia> farmacia = farmaciaRepository.findById(empleadoDTO.getIdFarmacia());
             if (farmacia.isEmpty()) {
@@ -81,7 +93,7 @@ public class EmpleadoService {
             }
             Direccion direccion = mapperUtils.mapeoObjetoObjeto(dirDTO, Direccion.class);
             Direccion dirSalve = direccionRepository.save(direccion);
-            List<TituloDTO> titulosDTO = empleadoDTO.getTitulo();
+            List<TituloDTO> titulosDTO = empleadoDTO.getTitulos();
             List<Titulo> titulos = new ArrayList<>();
             for (TituloDTO tituloDTO : titulosDTO) {
                 ResponseDto respTit = tituloService.validarTitulo(tituloDTO);
@@ -98,6 +110,8 @@ public class EmpleadoService {
             empleado.direccion(dirSalve);
             empleado.titulos(titulos);
             empleado.farmacia(farmacia.get());
+            empleado.permanencia("A");
+            empleado.fechaIngreso(LocalDateTime.now());
             empleadoRepository.save(empleado);
             return new ResponseDto().status("200").message("El empleado fue creado exitosamente");
         } catch (Exception e) {
@@ -105,21 +119,24 @@ public class EmpleadoService {
         }
     }
 
+    /**
+     * DUDA
+     */
     //Modificar Direccion
     public ResponseDto modDireccion(ModDireccionDTO modDireccionDTO) {
         ResponseDto resp = new ResponseDto();
         try {
             Optional<Empleado> emplOpt = empleadoRepository.findByCedula(modDireccionDTO.getCedula());
-            if (emplOpt.isEmpty()) {
-                return resp.status("400").message("El empleado no existe");
+            Empleado empleado = emplOpt.get();
+            if (emplOpt.isEmpty() || empleado.getPermanencia().equals("B")) {
+                return resp.status("400").message("El empleado no existe o ha causado baja");
             }
             DireccionDTO direccionDTO = modDireccionDTO.getDireccionDTO();
             ResponseDto respDir = direccionService.validarDireccion(direccionDTO);
             if (!respDir.getStatus().equals("200")) {
                 return respDir;
             }
-            Empleado empleado = emplOpt.get();
-           // Direccion dirEmpleado = empleado.getDireccion();
+            // Optional<Direccion> direccionOptional = direccionRepository.findById(empleado.getDireccion().getId());
             Direccion direccion = mapperUtils.mapeoObjetoObjeto(direccionDTO, Direccion.class);
             Direccion dirSalve = direccionRepository.save(direccion);
             empleado.direccion(dirSalve);
@@ -129,14 +146,15 @@ public class EmpleadoService {
         }
     }
 
+    /**ERROR*/
     //Modificar titulo
     public ResponseDto modTitulo(ModTituloDTO modTituloDTO) {
         ResponseDto resp = new ResponseDto();
         Titulo tituloSalve;
         try {
             Optional<Empleado> emplOpt = empleadoRepository.findByCedula(modTituloDTO.getCedula());
-            if (emplOpt.isEmpty()) {
-                return resp.status("400").message("El empleado no existe");
+            if (emplOpt.isEmpty() || emplOpt.get().getPermanencia().equals("B")) {
+                return resp.status("400").message("El empleado no existe o ha causado baja");
             }
             TituloDTO tituloDTO = modTituloDTO.getTitulo();
             ResponseDto respTit = tituloService.validarTitulo(tituloDTO);
@@ -148,11 +166,27 @@ public class EmpleadoService {
                 return resp.status("400").message("El titulo no existe");
             }
             tituloSalve = mapperUtils.mapeoObjetoObjeto(tituloDTO, Titulo.class);
-            tituloRepository.save(tituloSalve);
+
             return resp.status("200").message("Titulo modificado con exito");
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             return new ResponseDto().status("400").message("Algo salio mal " + e.getMessage());
+        }
+    }
+
+    //Modificar Salario
+    public ResponseDto modSalario(ModSalarioDTO modSalarioDTO) {
+        ResponseDto resp = new ResponseDto();
+        try {
+            Optional<Empleado> empleadoOptional = empleadoRepository.findById(modSalarioDTO.getIdEmpleado());
+            Empleado empleado = empleadoOptional.get();
+            if (empleadoOptional.isEmpty() || empleado.getPermanencia().equals("B")) {
+                return resp.status("400").message("El empleado no existe");
+            }
+            empleado.salario(empleado.getSalario()).resolucion(empleado.getResolucion());
+            empleadoRepository.save(empleado);
+            return resp.status("200").message("El salario del empleado con cedula " + empleado.getCedula() + " fue modificado con exito");
+        } catch (Exception e) {
+            return resp.status("400").message("Algo salio mal " + e.getMessage());
         }
     }
 
@@ -161,7 +195,8 @@ public class EmpleadoService {
         ResponseDto resp = new ResponseDto();
         try {
             Optional<Empleado> emplOpt = empleadoRepository.findByCedula(adicTituloDTO.getCedula());
-            if (emplOpt.isEmpty()) {
+            Empleado empleado = emplOpt.get();
+            if (emplOpt.isEmpty() || empleado.getPermanencia().equals("B")) {
                 return resp.status("400").message("El empleado no existe");
             }
             List<Titulo> listaTitulos = new ArrayList<>();
@@ -177,7 +212,6 @@ public class EmpleadoService {
                 Titulo titulo = mapperUtils.mapeoObjetoObjeto(titulosDTO, Titulo.class);
                 listaTitulos.add(titulo);
             }
-            Empleado empleado = emplOpt.get();
             empleado.titulos(listaTitulos);
             empleadoRepository.save(empleado);
             return resp.status("200").message("Titulos adicionado con exito");
@@ -191,7 +225,7 @@ public class EmpleadoService {
     public EmpleadoDTO buscarPorCedula(String cedula) {
         try {
             Optional<Empleado> empleadoOpt = empleadoRepository.findByCedula(cedula);
-            if (empleadoOpt.isPresent()) {
+            if (empleadoOpt.isPresent() && !empleadoOpt.get().getPermanencia().equals("B")) {
                 return mapperUtils.mapeoObjetoObjeto(empleadoOpt.get(), EmpleadoDTO.class, MAPPER_EMPLEADO);
             }
         } catch (Exception e) {
@@ -212,14 +246,20 @@ public class EmpleadoService {
     //Buscar por Cargo
     public List<EmpleadoDTO> buscarCargo(String cargo) {
         List<Empleado> empleados = empleadoRepository.findByCargo(cargo);
-        return mapperUtils.mapeoListaObjetoObjeto(empleados, EmpleadoDTO.class, MAPPER_EMPLEADO);
+        List<Empleado> empleadoList = new ArrayList<>();
+        empleados.forEach(empleado -> {
+            if (empleado.getPermanencia().equals("A")) {
+                empleadoList.add(empleado);
+            }
+        });
+        return mapperUtils.mapeoListaObjetoObjeto(empleadoList, EmpleadoDTO.class, MAPPER_EMPLEADO);
     }
 
     //Buscar Empleados por Nombre
     public EmpleadoDTO buscarPorNombre(String nombre) {
         try {
             Optional<Empleado> empleadoOpt = empleadoRepository.findByNombre(nombre);
-            if (empleadoOpt.isPresent()) {
+            if (empleadoOpt.isPresent() || empleadoOpt.get().getPermanencia().equals("A")) {
                 return mapperUtils.mapeoObjetoObjeto(empleadoOpt.get(), EmpleadoDTO.class, MAPPER_EMPLEADO);
             }
         } catch (Exception e) {
@@ -234,6 +274,20 @@ public class EmpleadoService {
             return empleadoRepository.findByNombreLike(nombre);
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    //Dar de baja
+    public ResponseDto darBaja(Long idEmpleado) {
+        ResponseDto resp = new ResponseDto();
+        Optional<Empleado> empleadoOptional = empleadoRepository.findById(idEmpleado);
+        Empleado empleado = empleadoOptional.get();
+        if (empleado.getPermanencia().equals("B") || empleadoOptional.isEmpty()) {
+            return resp.status("400").message("El empleado no existe o ya fue dado de baja");
+        } else {
+            empleado.permanencia("B");
+            empleadoRepository.save(empleado);
+            return resp.status("200").message("El empleado fue dado de baja exitosamente");
         }
     }
 }

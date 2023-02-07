@@ -2,9 +2,9 @@
 <mappings xmlns="http://dozermapper.github.io/schema/bean-mapping"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://dozermapper.github.io/schema/bean-mapping http://dozermapper.github.io/schema/bean-mapping.xsd">
-    <mapping map-id="com.example.demo.MapperEmpleadoToDTO">
-        <class-a>com.example.demo.domain.Empleado</class-a>
-        <class-b>com.example.demo.DTO.EmpleadoDTO</class-b>
+    <mapping map-id="com.example.demo.MapperPasanteToDTO">
+        <class-a>com.example.demo.domain.Pasante</class-a>
+        <class-b>com.example.demo.DTO.PasanteDTO</class-b>
         <field>
             <a>farmacia.nombre</a>
             <b>nombFarmacia</b>
@@ -13,7 +13,7 @@
             <a>farmacia.id</a>
             <b>idFarmacia</b>
         </field>
-    <!--   <field>
+       <!-- <field>
             <a>titulo.nombre</a>
             <b>titulo</b>
         </field>-->

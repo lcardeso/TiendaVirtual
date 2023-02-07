@@ -63,10 +63,8 @@ public class PersonaService {
             return respuesta.status("400").message("El telefono no es valido");
         } else if (personaDTO.getDireccion() == null) {
             return respuesta.status("400").message("La direccion no es valido");
-        } else if (personaDTO.getTitulo() == null) {
+        } else if (personaDTO.getTitulos().isEmpty()) {
             return respuesta.status("400").message("El titulo no es valido");
-        } else if (personaDTO.getFechaIngreso().isAfter(LocalDateTime.now())) {
-            return respuesta.status("400").message("La fecha de ingreso no es válida.");
         } else {
             return respuesta.status("200").message("La persona ha sido validada correctamente");
         }
@@ -76,7 +74,6 @@ public class PersonaService {
         Integer resp = LocalDateTime.now().getYear() - edad.getYear();
         return resp;
     }
-
 
 }
 

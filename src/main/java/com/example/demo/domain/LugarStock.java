@@ -15,10 +15,6 @@ public class LugarStock implements Serializable {
     @OneToMany
     private List<StockMedicamento> stockMedicamentos;
 
-   /* @ManyToOne
-    @JoinColumn(name = "id_farmacia_FK", referencedColumnName = "id_farmacia")
-    private Farmacia farmacia;*/
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_lugar_stock")

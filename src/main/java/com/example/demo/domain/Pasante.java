@@ -26,5 +26,22 @@ public class Pasante extends Persona implements Serializable {
     @Column(name = "fecha_fin")
     private LocalDateTime fechaFin;
 
+    @Column(name = "motivo")
+    private String motivo;
 
+
+    public Pasante institucion(String institucion) {
+        this.institucion = institucion;
+        return this;
+    }
+
+    public Pasante fechaFin(LocalDateTime fechaFin) {
+        this.fechaFin = fechaFin;
+        return this;
+    }
+
+    public Pasante motivo(String motivo) {
+        this.motivo = motivo;
+        return this;
+    }
 }

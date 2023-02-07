@@ -17,11 +17,7 @@ public class FarmaciaController {
     @Autowired
     FarmaciaService farmaciaService;
 
-    /**ERROR */ //Como listo solo empleados
-    @GetMapping("/listarEmpleados")
-    public ResponseEntity<List<PersonaDTO>> listarEmpleados(@RequestParam Long idFarmacia) {
-        return ResponseEntity.ok().body(farmaciaService.listarEmpleados(idFarmacia));
-    }
+
 
 
 

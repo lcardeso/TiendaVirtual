@@ -21,7 +21,7 @@ public class PersonaDTO implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime fechaIngreso;
     private DireccionDTO direccion;
-    private List<TituloDTO> titulo;
+    private List<TituloDTO> titulos;
     private String nombFarmacia;
     private Long idFarmacia;
 

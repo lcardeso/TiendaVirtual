@@ -72,15 +72,12 @@ public class SolicitudCompraService {
                     fecha(LocalDateTime.now()).
                     estado("Pendiente");
             SolicitudCompra solicitudC = solicitudCompraRepository.save(solicitud);
-            if (solicitudC != null) {
-                return resp.status("200").message("Solicitud creada correctamente");
-            }
+            if (solicitudC != null) return resp.status("200").message("Solicitud creada correctamente");
         } catch (Exception e) {
             return new ResponseDto().status("400").message("Algo salio mal" + e.getMessage());
         }
         return resp;
     }
-
 
     //Cambiar estado a la solicitud
     public ResponseDto cambiarEstado(Long idSolicitud, String estadoNew) {
@@ -100,6 +97,8 @@ public class SolicitudCompraService {
         List<SolicitudCompra> listaSolicitudes = solicitudCompraRepository.findByEstado(estado);
         return mapperUtils.mapeoListaObjetoObjeto(listaSolicitudes, SolicitudCompraDTO.class, MAPPER_SOLICITUD_COMPRA);
     }
+
+
 
 }
 

@@ -42,7 +42,7 @@ public class SolicitudCompra implements Serializable {
     private LocalDateTime fecha;
 
     @NotNull
-@Column(name = "estado")
+    @Column(name = "estado")
     private String estado;
 
 

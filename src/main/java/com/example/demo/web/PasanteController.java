@@ -1,8 +1,6 @@
 package com.example.demo.web;
 
-import com.example.demo.DTO.EmpleadoDTO;
-import com.example.demo.DTO.PasanteDTO;
-import com.example.demo.DTO.ResponseDto;
+import com.example.demo.DTO.*;
 import com.example.demo.service.EmpleadoService;
 import com.example.demo.service.PasantiaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,21 +8,27 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
 @RequestMapping("/farmacia/pasante")
 
 public class PasanteController {
-/*
+
 
     @Autowired
     public PasantiaService pasantiaService;
 
 
     @GetMapping("/listar")
-    public ResponseEntity<List<EmpleadoDTO>> listar() {
-        return ResponseEntity.ok().body(PasantiaService.listarPasantes());
+    public ResponseEntity<List<PasanteDTO>> listar() {
+        return ResponseEntity.ok().body(pasantiaService.listarPasantes());
+    }
+
+    @GetMapping("/listarPasantesPorEstado")
+    public ResponseEntity<List<PasanteDTO>> listarPasantesPorEstado(@RequestParam String estado) {
+        return ResponseEntity.ok().body(pasantiaService.listarPasantesPorEstado(estado));
     }
 
     @PostMapping("/adicionar")
@@ -33,35 +37,49 @@ public class PasanteController {
     }
 
     @GetMapping("/buscarCedula")
-    public ResponseEntity<EmpleadoDTO> buscarPorCedula(String cedula) {
-        return ResponseEntity.ok().body(empleadoService.buscarPorCedula(cedula));
+    public ResponseEntity<PasanteDTO> buscarPorCedula(@RequestParam String cedula) {
+        return ResponseEntity.ok().body(pasantiaService.buscarPorCedula(cedula));
     }
 
     @GetMapping("/buscarCedulaLike")
-    public ResponseEntity<List<String>> buscarPorCedulaLike(String cedula) {
-        return ResponseEntity.ok().body(empleadoService.buscarPorCedulaLike(cedula));
+    public ResponseEntity<List<String>> buscarPorCedulaLike(@RequestParam String cedula) {
+        return ResponseEntity.ok().body(pasantiaService.buscarPorCedulaLike(cedula));
     }
 
-    @GetMapping("/buscarCargo")
-    public ResponseEntity<List<EmpleadoDTO>> buscarCargo(@Valid @RequestParam String cargo) {
-        return ResponseEntity.ok().body(empleadoService.buscarCargo(cargo));
+
+    @PostMapping("/modDireccion")
+    public ResponseEntity<ResponseDto> modDireccion(@Valid @RequestBody ModDireccionDTO modDireccionDTO) {
+        return ResponseEntity.ok().body(pasantiaService.modDireccion(modDireccionDTO));
     }
 
-    @PostMapping("/modificar")
-    public ResponseEntity<ResponseDto> modificar(@Valid @RequestBody EmpleadoDTO empleadoDTO) {
-        return ResponseEntity.ok().body(empleadoService.modificar(empleadoDTO));
+    @PostMapping("/modTitulo")
+    public ResponseEntity<ResponseDto> modTitulo(@Valid @RequestBody ModTituloDTO modTituloDTO) {
+        return ResponseEntity.ok().body(pasantiaService.modTitulo(modTituloDTO));
+    }
+
+    @PostMapping("/adicTitulo")
+    public ResponseEntity<ResponseDto> adicTitulo(@Valid @RequestBody AdicTituloDTO adicTituloDTO) {
+        return ResponseEntity.ok().body(pasantiaService.adicTitulo(adicTituloDTO));
     }
 
     @GetMapping("/buscarNombre")
-    public ResponseEntity<EmpleadoDTO> buscarPorNombre(String nombre) {
-        return ResponseEntity.ok().body(empleadoService.buscarPorNombre(nombre));
+    public ResponseEntity<PasanteDTO> buscarPorNombre(@RequestParam String nombre) {
+        return ResponseEntity.ok().body(pasantiaService.buscarPorNombre(nombre));
     }
 
     @GetMapping("/buscarNombreLike")
-    public ResponseEntity<List<String>> buscarPorNombreLike(String nombre) {
-        return ResponseEntity.ok().body(empleadoService.buscarPorNombreLike(nombre));
+    public ResponseEntity<List<String>> buscarPorNombreLike(@RequestParam String nombre) {
+        return ResponseEntity.ok().body(pasantiaService.buscarPorNombreLike(nombre));
     }
-*/
+
+    @PostMapping("/modFechaFin")
+    public  ResponseEntity<ResponseDto> modFechaFin(@Valid @RequestBody ModFechaFinPasanteDTO modFechaFinPasanteDTO){
+        return ResponseEntity.ok().body(pasantiaService.modFechaFin(modFechaFinPasanteDTO));
+    }
+    @GetMapping("/darBaja")
+    public ResponseEntity<ResponseDto> darBaja(@RequestParam Long idPasante) {
+        return ResponseEntity.ok().body(pasantiaService.darBaja(idPasante));
+    }
 
 
 }

@@ -28,6 +28,7 @@ public class SolicitudCompraController {
         return ResponseEntity.ok().body(solicitudCompraService.crearSolicitud(solicitudCompraDTO));
     }
 
+    /**DUDA, creo que esto lo deberia hacer el Laboratorio*/
     @GetMapping("/cambiarEstado")
     public ResponseEntity<ResponseDto> cambiarEstado(@RequestParam Long idSolicitud, @RequestParam String estadoNew) {
         return ResponseEntity.ok().body(solicitudCompraService.cambiarEstado(idSolicitud, estadoNew));

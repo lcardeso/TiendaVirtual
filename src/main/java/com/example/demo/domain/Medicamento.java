@@ -13,7 +13,6 @@ import java.util.List;
 @Table(name = "medicamento", schema = "farmacia")
 public class Medicamento implements Serializable {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_medicamento")
@@ -30,6 +29,7 @@ public class Medicamento implements Serializable {
     @NotNull
     @Column(name = "precio")
     private Double precio;
+
 
 
 }

@@ -23,6 +23,11 @@ public class EmpleadoController {
         return ResponseEntity.ok().body(empleadoService.listarEmpleados());
     }
 
+    @GetMapping("/listarEmpleadosPorEstado")
+    public ResponseEntity<List<EmpleadoDTO>> listarEmpleadosPorEstado(String estado) {
+        return ResponseEntity.ok().body(empleadoService.listarEmpleadosPorEstado(estado));
+    }
+
     @PostMapping("/adicionar")
     public ResponseEntity<ResponseDto> adicionar(@Valid @RequestBody EmpleadoDTO empleadoDTO) {
         return ResponseEntity.ok().body(empleadoService.adicionar(empleadoDTO));
@@ -34,7 +39,7 @@ public class EmpleadoController {
     }
 
     @GetMapping("/buscarCedulaLike")
-    public ResponseEntity<List<String>> buscarPorCedulaLike(@RequestParam  String cedula) {
+    public ResponseEntity<List<String>> buscarPorCedulaLike(@RequestParam String cedula) {
         return ResponseEntity.ok().body(empleadoService.buscarPorCedulaLike(cedula));
     }
 
@@ -53,6 +58,11 @@ public class EmpleadoController {
         return ResponseEntity.ok().body(empleadoService.modTitulo(modTituloDTO));
     }
 
+    @PostMapping("/modSalario")
+    public ResponseEntity<ResponseDto> modSalario(@Valid @RequestBody ModSalarioDTO modSalarioDTO) {
+        return ResponseEntity.ok().body(empleadoService.modSalario(modSalarioDTO));
+    }
+
     @PostMapping("/adicTitulo")
     public ResponseEntity<ResponseDto> adicTitulo(@Valid @RequestBody AdicTituloDTO adicTituloDTO) {
         return ResponseEntity.ok().body(empleadoService.adicTitulo(adicTituloDTO));
@@ -64,9 +74,13 @@ public class EmpleadoController {
     }
 
     @GetMapping("/buscarNombreLike")
-    public ResponseEntity<List<String>> buscarPorNombreLike(String nombre) {
+    public ResponseEntity<List<String>> buscarPorNombreLike(@RequestParam String nombre) {
         return ResponseEntity.ok().body(empleadoService.buscarPorNombreLike(nombre));
     }
 
+    @GetMapping("/darBaja")
+    public ResponseEntity<ResponseDto> darBaja(Long idEmpleado) {
+        return ResponseEntity.ok().body(empleadoService.darBaja(idEmpleado));
+    }
 
 }
