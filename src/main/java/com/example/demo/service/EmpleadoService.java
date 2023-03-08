@@ -38,7 +38,6 @@ public class EmpleadoService {
     @Autowired
     private FarmaciaRepository farmaciaRepository;
 
-
     //Listar empleados
     public List<EmpleadoDTO> listarEmpleados() {
         List<Empleado> empleados = empleadoRepository.findAll();
@@ -53,7 +52,6 @@ public class EmpleadoService {
 
     //Validar Empleados
     public ResponseDto validarEmpleado(EmpleadoDTO empleadoDTO) {
-        ResponseDto resp;
         ResponseDto respuesta = new ResponseDto();
         if (empleadoDTO.getSalario() == null) {
             return respuesta.status("400").message("El salario no es válido.");
@@ -64,9 +62,6 @@ public class EmpleadoService {
         }
     }
 
-    /**
-     * ERROR
-     */
     //Adicionar Empleado
     public ResponseDto adicionar(EmpleadoDTO empleadoDTO) {
         ResponseDto res;
@@ -93,6 +88,12 @@ public class EmpleadoService {
             }
             Direccion direccion = mapperUtils.mapeoObjetoObjeto(dirDTO, Direccion.class);
             Direccion dirSalve = direccionRepository.save(direccion);
+            Empleado empleado = mapperUtils.mapeoObjetoObjeto(empleadoDTO, Empleado.class);
+            empleado.direccion(dirSalve);
+            empleado.farmacia(farmacia.get());
+            empleado.permanencia("A");
+            empleado.fechaIngreso(LocalDateTime.now());
+            Empleado persona = empleadoRepository.save(empleado);
             List<TituloDTO> titulosDTO = empleadoDTO.getTitulos();
             List<Titulo> titulos = new ArrayList<>();
             for (TituloDTO tituloDTO : titulosDTO) {
@@ -104,58 +105,61 @@ public class EmpleadoService {
                     return new ResponseDto().status("400").message("El titulo ya existe");
                 }
                 Titulo titulo = mapperUtils.mapeoObjetoObjeto(tituloDTO, Titulo.class);
+                titulo.setPersona(persona);
                 titulos.add(titulo);
             }
-            Empleado empleado = mapperUtils.mapeoObjetoObjeto(empleadoDTO, Empleado.class);
-            empleado.direccion(dirSalve);
-            empleado.titulos(titulos);
-            empleado.farmacia(farmacia.get());
-            empleado.permanencia("A");
-            empleado.fechaIngreso(LocalDateTime.now());
-            empleadoRepository.save(empleado);
+            tituloRepository.saveAll(titulos);
             return new ResponseDto().status("200").message("El empleado fue creado exitosamente");
         } catch (Exception e) {
             return new ResponseDto().status("500").message("Algo salió mal " + e.getMessage());
         }
     }
 
-    /**
-     * DUDA
-     */
     //Modificar Direccion
     public ResponseDto modDireccion(ModDireccionDTO modDireccionDTO) {
         ResponseDto resp = new ResponseDto();
         try {
-            Optional<Empleado> emplOpt = empleadoRepository.findByCedula(modDireccionDTO.getCedula());
-            Empleado empleado = emplOpt.get();
-            if (emplOpt.isEmpty() || empleado.getPermanencia().equals("B")) {
-                return resp.status("400").message("El empleado no existe o ha causado baja");
+            Optional<Empleado> empleadoOpt = empleadoRepository.findByCedula(modDireccionDTO.getCedula());
+            if (empleadoOpt.isEmpty()) {
+                return resp.status("400").message("El empleado no existe ");
             }
             DireccionDTO direccionDTO = modDireccionDTO.getDireccionDTO();
             ResponseDto respDir = direccionService.validarDireccion(direccionDTO);
             if (!respDir.getStatus().equals("200")) {
                 return respDir;
             }
-            // Optional<Direccion> direccionOptional = direccionRepository.findById(empleado.getDireccion().getId());
-            Direccion direccion = mapperUtils.mapeoObjetoObjeto(direccionDTO, Direccion.class);
-            Direccion dirSalve = direccionRepository.save(direccion);
-            empleado.direccion(dirSalve);
-            return resp.status("200").message("Direccion modificada con exito");
+            Empleado empleado = empleadoOpt.get();
+            if (empleado.getPermanencia().equals("B")) {
+                return resp.status("400").message("El empleado ha causado baja");
+            }
+            Optional<Direccion> direccionOpt = direccionRepository.findByRefCastral(direccionDTO.getRefCastral());
+            if (direccionOpt.isPresent()) {
+                empleado.direccion(direccionOpt.get());
+            } else {
+                //   Direccion dirExistente = empleado.getDireccion(); *****ME MODIFICA LA DIRECCION QUE TIENE EL EMPLEADO PUDIENDO MODIFICAR ASI LA DE ALGUN OTRO EMPLEADO
+                Direccion dirExistente = new Direccion();
+                dirExistente.refCastral(direccionDTO.getRefCastral()).
+                        calle(direccionDTO.getCalle()).
+                        numero(direccionDTO.getNumero()).
+                        codigoPostal(direccionDTO.getCodigoPostal()).
+                        municipio(direccionDTO.getMunicipio()).
+                        provincia(direccionDTO.getProvincia()).
+                        tipo(direccionDTO.getTipo()).
+                        puerta(direccionDTO.getPuerta()).
+                        piso(direccionDTO.getPiso());
+                direccionRepository.save(dirExistente);
+                empleado.direccion(dirExistente);
+            }
+            return resp.status("200").message("Direccion modificada con éxito");
         } catch (Exception e) {
             return new ResponseDto().status("400").message("Algo salio mal " + e.getMessage());
         }
     }
 
-    /**ERROR*/
     //Modificar titulo
     public ResponseDto modTitulo(ModTituloDTO modTituloDTO) {
         ResponseDto resp = new ResponseDto();
-        Titulo tituloSalve;
         try {
-            Optional<Empleado> emplOpt = empleadoRepository.findByCedula(modTituloDTO.getCedula());
-            if (emplOpt.isEmpty() || emplOpt.get().getPermanencia().equals("B")) {
-                return resp.status("400").message("El empleado no existe o ha causado baja");
-            }
             TituloDTO tituloDTO = modTituloDTO.getTitulo();
             ResponseDto respTit = tituloService.validarTitulo(tituloDTO);
             if (!respTit.getStatus().equals("200")) {
@@ -163,11 +167,13 @@ public class EmpleadoService {
             }
             Optional<Titulo> tituloOptional = tituloRepository.findByNumRegistro(tituloDTO.getNumRegistro());
             if (tituloOptional.isEmpty()) {
-                return resp.status("400").message("El titulo no existe");
+                return resp.status("400").message("El título  no existe");
             }
-            tituloSalve = mapperUtils.mapeoObjetoObjeto(tituloDTO, Titulo.class);
-
-            return resp.status("200").message("Titulo modificado con exito");
+            tituloOptional.get().nombre(tituloDTO.getNombre()).
+                    fecha(tituloDTO.getFecha()).
+                    especialidad(tituloDTO.getEspecialidad()).
+                    institucion(tituloDTO.getInstitucion());
+            return resp.status("200").message("Título  modificado con exito");
         } catch (Exception e) {
             return new ResponseDto().status("400").message("Algo salio mal " + e.getMessage());
         }
@@ -195,24 +201,27 @@ public class EmpleadoService {
         ResponseDto resp = new ResponseDto();
         try {
             Optional<Empleado> emplOpt = empleadoRepository.findByCedula(adicTituloDTO.getCedula());
-            Empleado empleado = emplOpt.get();
-            if (emplOpt.isEmpty() || empleado.getPermanencia().equals("B")) {
+            if (emplOpt.isEmpty()) {
                 return resp.status("400").message("El empleado no existe");
             }
-            List<Titulo> listaTitulos = new ArrayList<>();
+            Empleado empleado = emplOpt.get();
+            if (empleado.getPermanencia().equals("B")) {
+                return resp.status("400").message("El empleado esta dado de baja");
+            }
+            List<Titulo> titulos = new ArrayList<>();
             List<TituloDTO> titulosDTO = adicTituloDTO.getTitulos();
-            for (TituloDTO titulo1 : titulosDTO) {
-                ResponseDto respTit = tituloService.validarTitulo(titulo1);
+            for (TituloDTO tituloDTO : titulosDTO) {
+                ResponseDto respTit = tituloService.validarTitulo(tituloDTO);
                 if (!respTit.getStatus().equals("200")) {
                     return respTit;
                 }
-                if (tituloRepository.findByNumRegistro(titulo1.getNumRegistro()).isPresent()) {
-                    return resp.status("400").message("El titulo ya existe" + titulo1);
+                if (tituloRepository.findByNumRegistro(tituloDTO.getNumRegistro()).isPresent()) {
+                    return resp.status("400").message("El titulo ya existe" + tituloDTO);
                 }
-                Titulo titulo = mapperUtils.mapeoObjetoObjeto(titulosDTO, Titulo.class);
-                listaTitulos.add(titulo);
+                Titulo titulo = mapperUtils.mapeoObjetoObjeto(tituloDTO, Titulo.class);
+                titulos.add(titulo);
             }
-            empleado.titulos(listaTitulos);
+            empleado.titulos(titulos);
             empleadoRepository.save(empleado);
             return resp.status("200").message("Titulos adicionado con exito");
 
@@ -281,11 +290,15 @@ public class EmpleadoService {
     public ResponseDto darBaja(Long idEmpleado) {
         ResponseDto resp = new ResponseDto();
         Optional<Empleado> empleadoOptional = empleadoRepository.findById(idEmpleado);
+        if (empleadoOptional.isEmpty()) {
+            return resp.status("400").message("El empleado no existe ");
+        }
         Empleado empleado = empleadoOptional.get();
-        if (empleado.getPermanencia().equals("B") || empleadoOptional.isEmpty()) {
-            return resp.status("400").message("El empleado no existe o ya fue dado de baja");
+        if (empleado.getPermanencia().equals("B")) {
+            return resp.status("400").message("El empleado ya fue dado de baja");
         } else {
             empleado.permanencia("B");
+
             empleadoRepository.save(empleado);
             return resp.status("200").message("El empleado fue dado de baja exitosamente");
         }

@@ -56,17 +56,14 @@ public class PasantiaService {
         ResponseDto resp;
         ResponseDto respuesta = new ResponseDto();
         if (pasanteDTO.getFechaFin() == null) {
-            return respuesta.status("400").message("La fecha de finalizacion no es válida.");
+            return respuesta.status("400").message("La fecha de finalización no es válida.");
         } else if (pasanteDTO.getInstitucion().isEmpty()) {
-            return respuesta.status("400").message("La institucion no es válida.");
+            return respuesta.status("400").message("La institución no es válida.");
         } else {
-            return respuesta.status("200").message("El pasante ha sido validado correctamente");
+            return respuesta.status("200").message("El pasante ha sido validado correctamente.");
         }
     }
 
-    /**
-     * ERROR
-     */
     //Adicionar Pasante
     public ResponseDto adicionar(PasanteDTO pasanteDTO) {
         ResponseDto res;
@@ -80,11 +77,11 @@ public class PasantiaService {
                 return res;
             }
             if (pasantiaRepository.findByCedula(pasanteDTO.getCedula()).isPresent()) {
-                return res.status("400").message("El pasante ya exisite");
+                return res.status("400").message("El pasante ya existe.");
             }
             Optional<Farmacia> farmacia = farmaciaRepository.findById(pasanteDTO.getIdFarmacia());
             if (farmacia.isEmpty()) {
-                return res.status("400").message("La farmacia no esta especificada");
+                return res.status("400").message("La farmacia no existe..");
             }
             DireccionDTO dirDTO = pasanteDTO.getDireccion();
             ResponseDto respDir = direccionService.validarDireccion(dirDTO);
@@ -101,7 +98,7 @@ public class PasantiaService {
                     return respTit;
                 }
                 if (tituloRepository.findByNumRegistro(tituloDTO.getNumRegistro()).isPresent()) {
-                    return new ResponseDto().status("400").message("El titulo ya existe");
+                    return new ResponseDto().status("400").message("El título ya existe.");
                 }
                 Titulo titulo = mapperUtils.mapeoObjetoObjeto(tituloDTO, Titulo.class);
                 titulos.add(titulo);
@@ -111,22 +108,19 @@ public class PasantiaService {
             pasante.titulos(titulos);
             pasante.farmacia(farmacia.get());
             pasantiaRepository.save(pasante);
-            return new ResponseDto().status("200").message("El pasante fue creado exitosamente");
+            return new ResponseDto().status("200").message("El pasante ha sido creado correctamente.");
         } catch (Exception e) {
             return new ResponseDto().status("500").message("Algo salió mal " + e.getMessage());
         }
     }
 
-    /**
-     * ERROR
-     */
     //Modificar Direccion
     public ResponseDto modDireccion(ModDireccionDTO modDireccionDTO) {
         ResponseDto resp = new ResponseDto();
         try {
             Optional<Pasante> pasanteOpt = pasantiaRepository.findByCedula(modDireccionDTO.getCedula());
             if (pasanteOpt.isEmpty()) {
-                return resp.status("400").message("El pasante no existe");
+                return resp.status("400").message("El pasante no existe.");
             }
             DireccionDTO direccionDTO = modDireccionDTO.getDireccionDTO();
             ResponseDto respDir = direccionService.validarDireccion(direccionDTO);
@@ -134,27 +128,27 @@ public class PasantiaService {
                 return respDir;
             }
             Pasante pasante = pasanteOpt.get();
-            Direccion direccion = mapperUtils.mapeoObjetoObjeto(direccionDTO, Direccion.class);
-            Direccion dirSalve = direccionRepository.save(direccion);
-            pasante.direccion(dirSalve);
-            return resp.status("200").message("Direccion modificada con exito");
+            if (pasante.getPermanencia().equals("B")) {
+                return resp.status("400").message("El pasante ha causado baja.");
+            }
+            Optional<Direccion> direccionOpt = direccionRepository.findByRefCastral(direccionDTO.getRefCastral());
+            if (direccionOpt.isPresent()) {
+                pasante.direccion(direccionOpt.get());
+            } else {
+                Direccion direccion = mapperUtils.mapeoObjetoObjeto(direccionDTO, Direccion.class);
+                Direccion dirSalve = direccionRepository.save(direccion);
+                pasante.direccion(dirSalve);
+            }
+            return resp.status("200").message("La dirección ha sido modificada correctamente.");
         } catch (Exception e) {
             return new ResponseDto().status("400").message("Algo salio mal " + e.getMessage());
         }
     }
 
-    /**
-     * ERROR
-     */
     //Modificar titulo
     public ResponseDto modTitulo(ModTituloDTO modTituloDTO) {
         ResponseDto resp = new ResponseDto();
-        Titulo tituloSalve;
         try {
-            Optional<Pasante> emplOpt = pasantiaRepository.findByCedula(modTituloDTO.getCedula());
-            if (emplOpt.isEmpty()) {
-                return resp.status("400").message("El pasante no existe");
-            }
             TituloDTO tituloDTO = modTituloDTO.getTitulo();
             ResponseDto respTit = tituloService.validarTitulo(tituloDTO);
             if (!respTit.getStatus().equals("200")) {
@@ -162,27 +156,25 @@ public class PasantiaService {
             }
             Optional<Titulo> tituloOptional = tituloRepository.findByNumRegistro(tituloDTO.getNumRegistro());
             if (tituloOptional.isEmpty()) {
-                return resp.status("400").message("El titulo no existe");
+                return resp.status("400").message("El título  no existe.");
             }
-            tituloSalve = mapperUtils.mapeoObjetoObjeto(tituloDTO, Titulo.class);
-            tituloRepository.save(tituloSalve);
-            return resp.status("200").message("Titulo modificado con exito");
-        } catch (
-                Exception e) {
+            tituloOptional.get().nombre(tituloDTO.getNombre()).
+                    fecha(tituloDTO.getFecha()).
+                    especialidad(tituloDTO.getEspecialidad()).
+                    institucion(tituloDTO.getInstitucion());
+            return resp.status("200").message("El título  ha sido modificado correctamente.");
+        } catch (Exception e) {
             return new ResponseDto().status("400").message("Algo salio mal " + e.getMessage());
         }
     }
 
-    /**
-     * ERROR, tengo duda si realmente debe ir
-     */
     //Adicionar titulo
     public ResponseDto adicTitulo(AdicTituloDTO adicTituloDTO) {
         ResponseDto resp = new ResponseDto();
         try {
             Optional<Pasante> pasanteOpt = pasantiaRepository.findByCedula(adicTituloDTO.getCedula());
             if (pasanteOpt.isEmpty()) {
-                return resp.status("400").message("El pasante no existe");
+                return resp.status("400").message("El pasante no existe.");
             }
             List<Titulo> listaTitulos = new ArrayList<>();
             List<TituloDTO> titulosDTO = adicTituloDTO.getTitulos();
@@ -192,7 +184,7 @@ public class PasantiaService {
                     return respTit;
                 }
                 if (tituloRepository.findByNumRegistro(titulo1.getNumRegistro()).isPresent()) {
-                    return resp.status("400").message("El titulo ya existe" + titulo1);
+                    return resp.status("400").message("El título ya existe" + titulo1);
                 }
                 Titulo titulo = mapperUtils.mapeoObjetoObjeto(titulosDTO, Titulo.class);
                 listaTitulos.add(titulo);
@@ -200,7 +192,7 @@ public class PasantiaService {
             Pasante pasante = pasanteOpt.get();
             pasante.titulos(listaTitulos);
             pasantiaRepository.save(pasante);
-            return resp.status("200").message("Titulos adicionado con exito");
+            return resp.status("200").message("Los títulos han sido creado correctamente.");
 
         } catch (Exception e) {
             return new ResponseDto().status("400").message("Algo salio mal " + e.getMessage());
@@ -254,33 +246,36 @@ public class PasantiaService {
     //Modificar Fecha Fin
     public ResponseDto modFechaFin(ModFechaFinPasanteDTO modFechaFinPasanteDTO) {
         ResponseDto resp = new ResponseDto();
-        Optional<Pasante> pasanteOptional = pasantiaRepository.findById(modFechaFinPasanteDTO.getId());
-        Pasante pasante = pasanteOptional.get();
-        if (pasante.getPermanencia().equals("B") || pasanteOptional.isEmpty()) {
-            return resp.status("400").message("El pasante no existe o ya fue dado de baja");
+        Optional<Pasante> pasanteOpt = pasantiaRepository.findById(modFechaFinPasanteDTO.getId());
+        if (pasanteOpt.isEmpty()) {
+            return resp.status("400").message("El pasante no existe.");
+        }
+        Pasante pasante = pasanteOpt.get();
+        if (pasante.getPermanencia().equals("B")) {
+            return resp.status("400").message("El pasante ha causado baja.");
         }
         if (modFechaFinPasanteDTO.getFechaFin().isBefore(LocalDateTime.now())) {
-            return resp.status("400").message("La fecha no es valida");
+            return resp.status("400").message("La fecha no es válida.");
         }
         pasante.fechaFin(modFechaFinPasanteDTO.getFechaFin()).motivo(modFechaFinPasanteDTO.getMotivo());
         pasantiaRepository.save(pasante);
-        return resp.status("200").message("La fecha fina del pasante ha sido modificada correctamente");
+        return resp.status("200").message("La fecha fin del pasante ha sido modificada correctamente.");
     }
 
-    /**
-     * DUDA, no entra al  primer if()
-     */
     //Dar de baja
     public ResponseDto darBaja(Long idPasante) {
         ResponseDto resp = new ResponseDto();
-        Optional<Pasante> pasanteOptional = pasantiaRepository.findById(idPasante);
-        Pasante pasante = pasanteOptional.get();
-        if (pasante.getPermanencia().equals("B") || pasanteOptional.isEmpty()) {
-            return resp.status("400").message("El pasante no existe o ya fue dado de baja");
+        Optional<Pasante> pasanteOpt = pasantiaRepository.findById(idPasante);
+        if (pasanteOpt.isEmpty()) {
+            return resp.status("400").message("El pasante no existe.");
+        }
+        Pasante pasante = pasanteOpt.get();
+        if (pasante.getPermanencia().equals("B")) {
+            return resp.status("400").message("El pasante ha causado baja.");
         } else {
             pasante.permanencia("B");
             pasantiaRepository.save(pasante);
-            return resp.status("200").message("El pasante fue dado de baja exitosamente");
+            return resp.status("200").message("El pasante ha sido dado de baja correctamente.");
         }
     }
 }

@@ -28,8 +28,8 @@ public class Usuario implements Serializable {
     private Rol rol;
 
     @NotNull
-    @Column(name = "nombre")
-    private String nombre;
+    @Column(name = "usuario")
+    private String usuario;
 
     @NotNull
     @Column(name = "contrasenna")
@@ -40,4 +40,29 @@ public class Usuario implements Serializable {
     private Boolean activo;
 
 
+    public Usuario id(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public Usuario persona(Persona persona) {
+        this.persona = persona;
+        return this;
+    }
+
+    public Usuario rol(Rol rol) {
+        this.rol = rol;
+        return this;
+    }
+
+
+    public Usuario contrasenna(String contrasenna) {
+        this.contrasenna = contrasenna;
+        return this;
+    }
+
+    public Usuario activo(Boolean activo) {
+        this.activo = activo;
+        return this;
+    }
 }

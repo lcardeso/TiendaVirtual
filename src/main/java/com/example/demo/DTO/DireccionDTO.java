@@ -7,6 +7,7 @@ import java.io.Serializable;
 @Data
 public class DireccionDTO implements Serializable {
 
+    private Integer refCastral;
     private String calle;
     private Integer numero;
     private Integer piso;

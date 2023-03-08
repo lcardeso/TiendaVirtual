@@ -12,9 +12,6 @@ import java.util.List;
 @Table(name = "laboratorio", schema = "farmacia")
 public class Laboratorio implements Serializable {
 
-    @OneToMany
-    private List<Medicamento> medicamento;
-
     @OneToOne
     @JoinColumn(name = "id_direccion_FK", referencedColumnName = "id_direccion")
     private Direccion direccion;
@@ -33,4 +30,23 @@ public class Laboratorio implements Serializable {
     private Integer telefono;
 
 
+    public Laboratorio direccion(Direccion direccion) {
+        this.direccion = direccion;
+        return this;
+    }
+
+    public Laboratorio id(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public Laboratorio nombre(String nombre) {
+        this.nombre = nombre;
+        return this;
+    }
+
+    public Laboratorio telefono(Integer telefono) {
+        this.telefono = telefono;
+        return this;
+    }
 }

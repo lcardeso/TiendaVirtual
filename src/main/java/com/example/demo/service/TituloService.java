@@ -27,7 +27,7 @@ public class TituloService {
 
         ResponseDto respuesta = new ResponseDto();
         if (titulo.getNombre().isEmpty()) {
-            return respuesta.status("400").message("El nombre no es válida.");
+            return respuesta.status("400").message("El nombre no es válido.");
         } else if (titulo.getFecha() == null) {
             return respuesta.status("400").message("la fecha no es válida.");
         } else if (titulo.getInstitucion().isEmpty()) {

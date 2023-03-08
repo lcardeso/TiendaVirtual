@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozermapper.github.io/schema/bean-mapping"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://dozermapper.github.io/schema/bean-mapping http://dozermapper.github.io/schema/bean-mapping.xsd">
+    <mapping map-id="com.example.demo.MapperLaboratorioToDTO">
+        <class-a>com.example.demo.domain.Laboratorio</class-a>
+        <class-b>com.example.demo.DTO.ListarLaboratorioDTO</class-b>
+        <field>
+            <a>direccion.refCastral</a>
+            <b>refCastralDir</b>
+        </field>
+        <field>
+            <a>direccion.calle</a>
+            <b>calleDir</b>
+        </field>
+        <field>
+            <a>direccion.numero</a>
+            <b>numDir</b>
+        </field>
+       <!-- <field>
+            <a>titulo.nombre</a>
+            <b>titulo</b>
+        </field>-->
+    </mapping>
+</mappings>

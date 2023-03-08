@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozermapper.github.io/schema/bean-mapping"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://dozermapper.github.io/schema/bean-mapping http://dozermapper.github.io/schema/bean-mapping.xsd">
+    <mapping map-id="com.example.demo.MapperUsuarioToDTO">
+        <class-a>com.example.demo.domain.Usuario</class-a>
+        <class-b>com.example.demo.DTO.UsuarioDTO</class-b>
+        <field>
+            <a>persona.cedula</a>
+            <b>cedula</b>
+        </field>
+        <field>
+            <a>rol.descripcion</a>
+            <b>rolDescripcion</b>
+        </field>
+    </mapping>
+</mappings>

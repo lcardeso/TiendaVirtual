@@ -24,7 +24,11 @@ public class DireccionService {
     //Validar Direccion
     public ResponseDto validarDireccion(DireccionDTO direccion) {
         ResponseDto respuesta = new ResponseDto();
-        if (direccion.getCalle().isEmpty()) {
+        if (direccion.getRefCastral() == null) {
+            return respuesta.status("400").message("La referencia castral no esta especificada.");
+        } else if (String.valueOf(direccion.getRefCastral()).length() != 9) {
+            return respuesta.status("400").message("La referencia castral es válida.");
+        } else if (direccion.getCalle().isEmpty()) {
             return respuesta.status("400").message("La calle no es válida.");
         } else if (direccion.getNumero() == null) {
             return respuesta.status("400").message("El número de la calle no es válido.");
@@ -37,7 +41,6 @@ public class DireccionService {
         } else {
             return respuesta.status("200").message("La direccion ha sido validada correctamente");
         }
-
     }
 
     //Adicionar Direccion

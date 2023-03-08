@@ -20,7 +20,7 @@ public abstract class Persona {
     private Long id;
 
     @NotNull
-    @OneToMany(mappedBy = "persona", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "persona")
     private List<Titulo> titulos;
 
     @NotNull

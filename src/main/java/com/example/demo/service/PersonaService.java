@@ -43,28 +43,27 @@ public class PersonaService {
         return mapperUtils.mapeoListaObjetoObjeto(lista, PersonaDTO.class);
     }
 
-
     //Validar persona
     public ResponseDto validar(PersonaDTO personaDTO) {
         ResponseDto respuesta = new ResponseDto();
         if (personaDTO.getCedula().length() != 9) {
-            return respuesta.status("400").message("La cedula no es valida");
+            return respuesta.status("400").message("La cedula no es válida.");
         } else if (personaDTO.getNombre().isEmpty()) {
-            return respuesta.status("400").message("El nombre no es valido");
+            return respuesta.status("400").message("El nombre no es válido.");
         } else if (personaDTO.getPrimApellido().isEmpty()) {
-            return respuesta.status("400").message("El primer apellido no es valido");
+            return respuesta.status("400").message("El primer apellido no es válido.");
         } else if (personaDTO.getSegApellido().isEmpty()) {
-            return respuesta.status("400").message("El segundo apellido no es valido");
+            return respuesta.status("400").message("El segundo apellido no es válido.");
         } else if (personaDTO.getSexo().length() != 1) {
-            return respuesta.status("400").message("El sexo no es valido");
+            return respuesta.status("400").message("El sexo no es válido.");
         } else if (personaDTO.getFechaNacimiento() == null || personaDTO.getFechaNacimiento().isAfter(now()) || edad(personaDTO.getFechaNacimiento()) < 18) {
-            return respuesta.status("400").message("La fecha de nacimiento no es valida");
+            return respuesta.status("400").message("La fecha de nacimiento no es válida.");
         } else if (personaDTO.getTelefono() == null || String.valueOf(personaDTO.getTelefono()).length() != 9) {
-            return respuesta.status("400").message("El telefono no es valido");
+            return respuesta.status("400").message("El teléfono no es válido.");
         } else if (personaDTO.getDireccion() == null) {
-            return respuesta.status("400").message("La direccion no es valido");
+            return respuesta.status("400").message("La dirección no es válida.");
         } else if (personaDTO.getTitulos().isEmpty()) {
-            return respuesta.status("400").message("El titulo no es valido");
+            return respuesta.status("400").message("El título no es válido.");
         } else {
             return respuesta.status("200").message("La persona ha sido validada correctamente");
         }

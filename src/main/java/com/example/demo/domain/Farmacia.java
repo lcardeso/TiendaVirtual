@@ -16,10 +16,10 @@ public class Farmacia implements Serializable {
     @OneToMany(mappedBy = "farmacia")
     private List<Persona> personas;
 
-    @OneToMany
+    @OneToMany(mappedBy = "farmacia")
     private List<SolicitudCompra> solicitudes;
 
-    @OneToMany
+    @OneToMany(mappedBy = "farmacia")
     private List<LugarStock> lugarStocks;
 
     @NotNull

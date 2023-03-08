@@ -50,19 +50,19 @@ public class SolicitudCompraService {
         try {
             Optional<Farmacia> farmaciaOpt = farmaciaRepository.findById(solicitudCompraDTO.getIdFarmacia());
             if (farmaciaOpt.isEmpty()) {
-                return resp.status("400").message("La farmacia no existe");
+                return resp.status("400").message("La farmacia no existe.");
             }
             Optional<Medicamento> medicamOpt = medicamentoRepository.findById(solicitudCompraDTO.getIdMedicamento());
             if (medicamOpt.isEmpty()) {
-                return resp.status("400").message("El medicamento no existe");
+                return resp.status("400").message("El medicamento no existe.");
             }
             Optional<Laboratorio> labOpt = laboratorioRepository.findById(solicitudCompraDTO.getIdLaboratorio());
             if (labOpt.isEmpty()) {
-                return resp.status("400").message("El laboratorio no existe");
+                return resp.status("400").message("El laboratorio no existe.");
             }
             Integer cantidad = solicitudCompraDTO.getCantidad();
             if (cantidad < 0 && cantidad > 100) {
-                return resp.status("400").message("Rectifique la cantidad de medicamento que solicita");
+                return resp.status("400").message("Rectifique la cantidad de medicamento que solicita.");
             }
             SolicitudCompra solicitud = new SolicitudCompra();
             solicitud.medicamento(medicamOpt.get()).
@@ -72,7 +72,7 @@ public class SolicitudCompraService {
                     fecha(LocalDateTime.now()).
                     estado("Pendiente");
             SolicitudCompra solicitudC = solicitudCompraRepository.save(solicitud);
-            if (solicitudC != null) return resp.status("200").message("Solicitud creada correctamente");
+            if (solicitudC != null) return resp.status("200").message("La solicitud ha sido creada correctamente.");
         } catch (Exception e) {
             return new ResponseDto().status("400").message("Algo salio mal" + e.getMessage());
         }
@@ -84,9 +84,9 @@ public class SolicitudCompraService {
         ResponseDto resp = new ResponseDto();
         Optional<SolicitudCompra> solOpt = solicitudCompraRepository.findById(idSolicitud);
         if (solOpt.isEmpty()) {
-            return resp.status("400").message("La solicitud no existe");
+            return resp.status("400").message("La solicitud no existe.");
         } else if (!solOpt.get().getEstado().equals("Pendiente")) {
-            return resp.status("400").message("Ya le han dado respuesta a la solicitud");
+            return resp.status("400").message("Ya han dado respuesta a la solicitud.");
         }
         solicitudCompraRepository.save(solOpt.get().estado(estadoNew));
         return resp.status("200").message("La solicitud de compra ha sido " + estadoNew);

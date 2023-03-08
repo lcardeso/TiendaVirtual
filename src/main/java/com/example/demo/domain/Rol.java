@@ -5,11 +5,16 @@ import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @Entity
-@Table(name = "roles", schema = "farmacia")
+@Table(name = "rol", schema = "farmacia")
 public class Rol implements Serializable {
+
+    @NotNull
+    @OneToMany(mappedBy = "rol")
+    private List<PermisosAsociados> permisosAsociados;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,14 +24,6 @@ public class Rol implements Serializable {
     @NotNull
     @Column(name = "descripcion")
     private String descripcion;
-
-    @NotNull
-    @Column(name = "contrasenna")
-    private String contrasenna;
-
-    @NotNull
-    @Column(name = "activo")
-    private Boolean activo;
 
 
 }

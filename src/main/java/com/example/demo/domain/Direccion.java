@@ -17,6 +17,10 @@ public class Direccion implements Serializable {
     private Long id;
 
     @NotNull
+    @Column(name = "ref_castral", unique = true, length = 9)
+    private Integer refCastral;
+
+    @NotNull
     @Column(name = "calle")
     private String calle;
 
@@ -46,8 +50,14 @@ public class Direccion implements Serializable {
     @Column(name = "tipo")
     private String tipo;
 
+
     public Direccion id(Long id) {
         this.id = id;
+        return this;
+    }
+
+    public Direccion refCastral(Integer refCastral) {
+        this.refCastral = refCastral;
         return this;
     }
 
@@ -83,6 +93,11 @@ public class Direccion implements Serializable {
 
     public Direccion provincia(String provincia) {
         this.provincia = provincia;
+        return this;
+    }
+
+    public Direccion tipo(String tipo) {
+        this.tipo = tipo;
         return this;
     }
 }

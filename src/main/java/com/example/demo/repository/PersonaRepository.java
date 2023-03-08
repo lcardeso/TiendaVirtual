@@ -20,23 +20,4 @@ public interface PersonaRepository extends JpaRepository<Persona, Long> {
 
 
 
-
-
-/*    @Query("Select u.nombre" +
-            " FROM Empleado u where UPPER(REPLACE(u.cedula,'ÁáÉéÍíÓóÚú','AaEeIiOoUu' )) like CONCAT( '%' ,:cedula, '%') "
-    )
-    List<String> findByCedulaLike(@Param("cedula") String cedula);*/
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

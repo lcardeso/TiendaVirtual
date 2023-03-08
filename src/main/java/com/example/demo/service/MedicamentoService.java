@@ -1,5 +1,8 @@
 package com.example.demo.service;
 
+import com.example.demo.Constantes.Constante;
+import com.example.demo.DTO.BajaStockPorMotivoDTO;
+import com.example.demo.DTO.DispensarMedDTO;
 import com.example.demo.DTO.MedicamentoDTO;
 import com.example.demo.DTO.ResponseDto;
 import com.example.demo.domain.Medicamento;
@@ -11,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,23 +27,23 @@ public class MedicamentoService {
     MapperUtils mapperUtils;
     @Autowired
     StockMedicamentoRepository stockMedicamentoRepository;
+    @Autowired
+    StockMedicamentoService stockMedicamentoService;
 
 
-    /**
-     * SI no me quedan medicamentos para vender, la cantidad total es menos que la venta....dodne hago esa validacion???
-     */
-    //Vender medicamento
-    public ResponseDto venderMed(MedicamentoDTO medicamentoDTO) {
-        ResponseDto resp = new ResponseDto();
+    //Vender medicamento Baja Stock
+    public ResponseDto dispensar(DispensarMedDTO dispensarMedDTO) {
         try {
-            stockMedicamentoRepository.updateCantidad(medicamentoDTO.getNombre(), medicamentoDTO.getCantidad());
-            return resp.status("200").message("Medicamento vendido");
+            return stockMedicamentoService.bajaPorMotivo(new BajaStockPorMotivoDTO(dispensarMedDTO.getIdLugarStock(), dispensarMedDTO.getCantidad(), Constante.DP));
         } catch (Exception e) {
-            return resp.status("400").message("Algo salio mal " + e.getMessage());
+            return new ResponseDto().status("400").message("Algo salio mal " + e.getMessage());
         }
     }
 
-
+    public List<MedicamentoDTO> listar() {
+        List<Medicamento> medicamentos = medicamentoRepository.findAll();
+        return mapperUtils.mapeoListaObjetoObjeto(medicamentos, MedicamentoDTO.class);
+    }
 
 /*    //Comprar medicamento
     public ResponseDto comprarMed(){
@@ -52,7 +56,6 @@ public class MedicamentoService {
             return resp.status("400").message("Algo salio mal " + e.getMessage());
         }
     }*/
-
 
 
 }
