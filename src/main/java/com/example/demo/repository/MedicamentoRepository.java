@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -23,4 +24,10 @@ public interface MedicamentoRepository extends JpaRepository<Medicamento, Long> 
             "from medicamento m " +
             "where m.nombre = :nombre);", nativeQuery = true)
     void updateCantidad(@Param("nombre") String nombre, @Param("cant") Integer cant);
+
+    @Query("Select m.nombre" +
+            " FROM Medicamento m where UPPER(REPLACE(m.nombre,'ÁáÉéÍíÓóÚú','AaEeIiOoUu' )) like CONCAT( '%' ,:nombre, '%')  "
+    )
+    List<String> findByNombreLike(@Param("nombre") String nombre);
+
 }

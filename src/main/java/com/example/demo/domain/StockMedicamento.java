@@ -5,7 +5,6 @@ import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.List;
 
 @Data
 @Entity
@@ -22,7 +21,7 @@ public class StockMedicamento implements Serializable {
 
     @OneToOne
     @JoinColumn(name = "id_motivo_FK", referencedColumnName = "id_motivo")
-    private MotivoBajaStock motivoBajaStock;
+    private MotivoStock motivoStock;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,8 +43,8 @@ public class StockMedicamento implements Serializable {
         return this;
     }
 
-    public StockMedicamento motivoBajaStock(MotivoBajaStock motivoBajaStock) {
-        this.motivoBajaStock = motivoBajaStock;
+    public StockMedicamento motivoBajaStock(MotivoStock motivoStock) {
+        this.motivoStock = motivoStock;
         return this;
     }
 

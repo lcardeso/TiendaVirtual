@@ -10,11 +10,7 @@
             <b>nombre</b>
         </field>
         <field>
-            <a>motivoBajaStock.estado</a>
-            <b>estado</b>
-        </field>
-        <field>
-            <a>motivoBajaStock.codigo</a>
+            <a>motivoStock.codigo</a>
             <b>motivo</b>
         </field>
     </mapping>

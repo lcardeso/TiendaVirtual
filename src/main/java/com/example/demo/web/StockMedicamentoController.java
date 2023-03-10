@@ -30,9 +30,6 @@ public class StockMedicamentoController {
     public ResponseEntity<ResponseDto> bajaPorMotivo(@RequestBody BajaStockPorMotivoDTO bajaStockPorMotivoDTO) {
         return ResponseEntity.ok().body(stockMedicamentoService.bajaPorMotivo(bajaStockPorMotivoDTO));
     }
-
-
-
 }
 
 

@@ -3,6 +3,7 @@ package com.example.demo.web;
 import com.example.demo.DTO.DispensarMedDTO;
 import com.example.demo.DTO.MedicamentoDTO;
 import com.example.demo.DTO.ResponseDto;
+import com.example.demo.repository.MedicamentoRepository;
 import com.example.demo.service.MedicamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,8 @@ public class MedicamentoController {
 
     @Autowired
     MedicamentoService medicamentoService;
+    @Autowired
+    MedicamentoRepository medicamentoRepository;
 
     @GetMapping("/listar")
     public ResponseEntity<List<MedicamentoDTO>> listar() {
@@ -28,10 +31,15 @@ public class MedicamentoController {
         return ResponseEntity.ok().body(medicamentoService.dispensar(dispensarMedDTO));
     }
 
+    @GetMapping("/buscarNombreLike")
+    public ResponseEntity<List<String>> buscarPorNombreLike(@RequestParam String nombre) {
+        return ResponseEntity.ok().body(medicamentoService.buscarPorNombreLike(nombre));
+    }
 
-    /*@PostMapping("/comprarMedicamento")
-    public ResponseEntity<ResponseDto> compMedicamento(@Valid @RequestBody )*/
-
+    @GetMapping("/buscarNombre")
+    public ResponseEntity<MedicamentoDTO> buscarPorNombre(@RequestParam String nombre) {
+        return ResponseEntity.ok().body(medicamentoService.buscarPorNombre(nombre));
+    }
 
 }
 

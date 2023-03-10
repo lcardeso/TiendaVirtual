@@ -1,14 +1,13 @@
 package com.example.demo.service;
 
-import com.example.demo.Constantes.Constante;
 import com.example.demo.DTO.*;
 import com.example.demo.domain.LugarStock;
 import com.example.demo.domain.Medicamento;
-import com.example.demo.domain.MotivoBajaStock;
+import com.example.demo.domain.MotivoStock;
 import com.example.demo.domain.StockMedicamento;
 import com.example.demo.repository.LugarStockRepository;
 import com.example.demo.repository.MedicamentoRepository;
-import com.example.demo.repository.MotivoBajaStockRepository;
+import com.example.demo.repository.MotivoStockRepository;
 import com.example.demo.repository.StockMedicamentoRepository;
 import com.example.demo.utils.MapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,9 @@ public class StockMedicamentoService {
     @Autowired
     LugarStockRepository lugarStockRepository;
     @Autowired
-    MotivoBajaStockRepository motivoBajaStockRepository;
+    MotivoStockRepository motivoBajaStockRepository;
+    @Autowired
+    MedicamentoService medicamentoService;
 
 
     public List<StockMedicamentoDTO> listar() {
@@ -65,11 +66,12 @@ public class StockMedicamentoService {
             if (cantExistente + reposicionStockMedDTO.getCantidad() > 30) {
                 return resp.status("400").message("La cantidad supera los límites.");
             }
-            Optional<MotivoBajaStock> bajaPorRP = motivoBajaStockRepository.findByCodigo(RP);
+            Optional<MotivoStock> bajaPorRP = motivoBajaStockRepository.findByCodigo(RP);
             StockMedicamento stockMedicamento = new StockMedicamento().
                     medicamento(medicamento).
                     lugarStock(lugarStock).
-                    cantidad(reposicionStockMedDTO.getCantidad()).motivoBajaStock(bajaPorRP.get());
+                    cantidad(reposicionStockMedDTO.getCantidad()).
+                    motivoBajaStock(bajaPorRP.get());
             stockMedicamentoRepository.save(stockMedicamento);
             return resp.status("200").message("La reposición ha sido realizada correctamente.");
         } catch (Exception e) {
@@ -90,7 +92,7 @@ public class StockMedicamentoService {
             if (catidadDisponible < bajaStockPorMotivoDTO.getCantidad()) {
                 return resp.status("400").message("No se puede dar de baja a la cantidad solicitada.");
             }
-            Optional<MotivoBajaStock> bajaPorMotivo = motivoBajaStockRepository.findByCodigo(bajaStockPorMotivoDTO.getCodigoMotivo());
+            Optional<MotivoStock> bajaPorMotivo = motivoBajaStockRepository.findByCodigo(bajaStockPorMotivoDTO.getCodigoMotivo());
             stockMed.motivoBajaStock(bajaPorMotivo.get()).
                     cantidad(catidadDisponible - bajaStockPorMotivoDTO.getCantidad());
             return resp.status("200").message("La baja ha sido realizada correctamente.");
@@ -98,6 +100,7 @@ public class StockMedicamentoService {
             return resp.status("400").message("Algo salio mal " + e.getMessage());
         }
     }
+
 
 }
 

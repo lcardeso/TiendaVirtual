@@ -45,19 +45,22 @@ public class MedicamentoService {
         return mapperUtils.mapeoListaObjetoObjeto(medicamentos, MedicamentoDTO.class);
     }
 
-/*    //Comprar medicamento
-    public ResponseDto comprarMed(){
-        ResponseDto resp = new ResponseDto();
+    public List<String> buscarPorNombreLike(String nombre) {
         try {
-
-
-            return resp.status("200").message("Medicamento vendido");
+            return medicamentoRepository.findByNombreLike(nombre);
         } catch (Exception e) {
-            return resp.status("400").message("Algo salio mal " + e.getMessage());
+            return null;
         }
-    }*/
+    }
 
-
+    public MedicamentoDTO buscarPorNombre(String nombre) {
+        try {
+            Optional<Medicamento> medicamento = medicamentoRepository.findByNombre(nombre);
+            return mapperUtils.mapeoObjetoObjeto(medicamento, MedicamentoDTO.class);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }
 
 

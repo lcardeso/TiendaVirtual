@@ -16,7 +16,6 @@ public class StockMedicamentoDTO implements Serializable {
 
     private String nombre;
     private Integer cantidad;
-    private Boolean estado;
     private String motivo;
 
 }
