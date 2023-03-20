@@ -6,11 +6,12 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity
 @Table(name = "usuario", schema = "farmacia")
-public class Usuario implements Serializable {
+public class Usuario extends  Domain implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +27,13 @@ public class Usuario implements Serializable {
     @OneToOne
     @JoinColumn(name = "id_rol_FK", referencedColumnName = "id_rol")
     private Rol rol;
+  /*  @NotNull
+    @OneToMany
+    @JoinTable(name = "usuarios_roles",
+            joinColumns = @JoinColumn(name = "id_usuario_FK", referencedColumnName = "id_usuario"),
+            inverseJoinColumns = @JoinColumn(name = "id_rol_FK", referencedColumnName = "id_rol")
+    )
+    private List<Rol> roles;*/
 
     @NotNull
     @Column(name = "usuario")

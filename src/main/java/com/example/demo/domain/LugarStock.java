@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "lugar_stock", schema = "farmacia")
-public class LugarStock implements Serializable {
+public class LugarStock extends  Domain implements Serializable {
 
     @OneToMany(mappedBy = "lugarStock")
     private List<StockMedicamento> stockMedicamentos;

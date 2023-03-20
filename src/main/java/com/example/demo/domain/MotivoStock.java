@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Data
 @Entity
 @Table(name = "motivo", schema = "farmacia")
-public class MotivoStock implements Serializable {
+public class MotivoStock extends Domain implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

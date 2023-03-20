@@ -5,6 +5,7 @@ import com.example.demo.domain.*;
 import com.example.demo.repository.*;
 import com.example.demo.utils.MapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -31,6 +32,8 @@ public class UsuarioService {
     private RolRepository rolRepository;
     @Autowired
     PersonaRepository personaRepository;
+    @Autowired
+    BCryptPasswordEncoder passwordEncoder;
 
 
     //Listar
@@ -82,11 +85,10 @@ public class UsuarioService {
             }
             Usuario usuario = mapperUtils.mapeoObjetoObjeto(usuarioDTO, Usuario.class);
             Persona persona = personaOpt.get();
-
-            usuario.persona(persona).
-                    rol(rolOpt.get()).
-                    contrasenna("12345678").
-                    activo(true);
+            usuario.persona(persona)
+                    .rol(rolOpt.get())
+                    .contrasenna(passwordEncoder.encode(usuarioDTO.getContrasenna()))
+                    .activo(true);
             usuarioRepository.save(usuario);
             return new ResponseDto().status("200").message("El usuario ha sido creado correctamente.");
         } catch (Exception e) {
@@ -151,6 +153,7 @@ public class UsuarioService {
             String nombreCompleto = persona.getNombre() + " " + persona.getPrimApellido() + " " + persona.getSegApellido();
             List<PermisosAsociados> permisosAsociados = usuario.getRol().getPermisosAsociados();
             loginUsuarioDTO.setCedula(persona.getCedula());
+            loginUsuarioDTO.setUsername(usuario.getUsuario());
             loginUsuarioDTO.setRolDescripcion(usuario.getRol().getDescripcion());
             loginUsuarioDTO.setNombreCompleto(nombreCompleto);
             List<PermisosAsociadosDTO> permisosAsociadosDTO = mapperUtils.mapeoListaObjetoObjeto(permisosAsociados, PermisosAsociadosDTO.class);

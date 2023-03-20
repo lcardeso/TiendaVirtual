@@ -9,6 +9,7 @@ import java.util.List;
 public class LoginUsuarioDTO implements Serializable {
 
     private String cedula;
+    private String username;
     private String nombreCompleto;
     private String rolDescripcion;
     private List<PermisosAsociadosDTO> permisosAsociadosDTOS;

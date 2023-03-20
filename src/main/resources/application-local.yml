@@ -28,7 +28,7 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:mysql://localhost:3382/farmacia?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC
-    username: farmacia
+    username: root
     password: farmacia123
     hikari:
       poolName: Hikari

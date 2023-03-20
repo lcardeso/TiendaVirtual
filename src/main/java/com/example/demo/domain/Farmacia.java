@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "farmacia", schema = "farmacia")
-public class Farmacia implements Serializable {
+public class Farmacia extends Domain implements Serializable {
 
     @OneToMany(mappedBy = "farmacia")
     private List<Persona> personas;

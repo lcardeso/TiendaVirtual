@@ -24,7 +24,6 @@ public class Empleado extends Persona implements Serializable {
     @Column(name = "cargo")
     private String cargo;
 
-
     public Empleado salario(Double salario) {
         this.salario = salario;
         return this;

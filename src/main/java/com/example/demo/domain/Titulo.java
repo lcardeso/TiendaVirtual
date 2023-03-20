@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(name = "titulo", schema = "farmacia")
-public class Titulo implements Serializable {
+public class Titulo extends  Domain implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

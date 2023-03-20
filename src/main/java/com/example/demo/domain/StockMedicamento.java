@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Data
 @Entity
 @Table(name = "stock_medicamento", schema = "farmacia")
-public class StockMedicamento implements Serializable {
+public class StockMedicamento extends  Domain implements Serializable {
 
     @OneToOne
     @JoinColumn(name = "id_medicamento_FK", referencedColumnName = "id_medicamento")

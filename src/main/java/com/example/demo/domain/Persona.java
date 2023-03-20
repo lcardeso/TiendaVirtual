@@ -12,7 +12,7 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "tipo")
 @Table(name = "persona", schema = "farmacia")
-public abstract class Persona {
+public abstract class Persona extends Domain {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

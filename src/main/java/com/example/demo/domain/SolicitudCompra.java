@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "solicitud_compra", schema = "farmacia")
-public class SolicitudCompra implements Serializable {
+public class SolicitudCompra extends  Domain implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

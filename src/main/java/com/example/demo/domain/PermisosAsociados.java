@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "permisos_asociados", schema = "farmacia")
-public class PermisosAsociados implements Serializable {
+public class PermisosAsociados extends  Domain implements Serializable {
 
     @NotNull
     @ManyToOne

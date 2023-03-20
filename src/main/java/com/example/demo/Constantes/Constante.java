@@ -12,6 +12,7 @@ public class Constante {
     public static final String MAPPER_USUARIO = "com.example.demo.MapperUsuarioToDTO";
 
     public static final String MAPPER_STOCK_MED = "com.example.demo.MapperStockMedicamentoToDTO";
+
     public static final String MAPPER_FARMACIA = "com.example.demo.MapperFarmaciaToDTO";
 
     public static final String RP = "RP";

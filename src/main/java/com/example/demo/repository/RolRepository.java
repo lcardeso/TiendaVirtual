@@ -14,4 +14,6 @@ public interface RolRepository extends JpaRepository<Rol, Long> {
 
 
     Optional<Rol> findByDescripcion(String rolDescripcion);
+    //Optional<List<Rol>> findByDescripcion(String rolDescripcion);
+
 }

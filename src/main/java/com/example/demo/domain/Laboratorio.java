@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "laboratorio", schema = "farmacia")
-public class Laboratorio implements Serializable {
+public class Laboratorio extends  Domain implements Serializable {
 
     @OneToOne
     @JoinColumn(name = "id_direccion_FK", referencedColumnName = "id_direccion")
