@@ -9,11 +9,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-
 
 @Configuration
 @EnableWebSecurity
@@ -31,27 +29,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return bCryptPasswordEncoder;
     }
 
-
-    @Bean
+/*    @Bean
     public UserDetailsService detailsService() {
         var user = User.withUsername("lis")
                 .password("123")
                 .roles("Admin")
                 .build();
         return new InMemoryUserDetailsManager(user);
-    }
+    }*/
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
-                .userDetailsService(userDetailsService())
+                .userDetailsService(userDetailsService)
                 .passwordEncoder(bcrypt);
     }
 
+    /**
+     * Este  metodo le he puesto parametros en dependencia de los roles sin cargarlos de la entidad roles
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests()
+                .authorizeRequests().antMatchers("/admin").hasRole("ADMIN")
+                .antMatchers("/home").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -59,5 +60,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
-}
 
+  /*  public static void main(String[] args) {
+        System.out.println("pass:  " + new BCryptPasswordEncoder().encode("123"));
+    }*/
+}

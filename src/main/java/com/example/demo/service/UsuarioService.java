@@ -5,7 +5,7 @@ import com.example.demo.domain.*;
 import com.example.demo.repository.*;
 import com.example.demo.utils.MapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -32,8 +32,8 @@ public class UsuarioService {
     private RolRepository rolRepository;
     @Autowired
     PersonaRepository personaRepository;
-    @Autowired
-    BCryptPasswordEncoder passwordEncoder;
+    /*@Autowired
+    BCryptPasswordEncoder passwordEncoder;*/
 
 
     //Listar
@@ -87,7 +87,8 @@ public class UsuarioService {
             Persona persona = personaOpt.get();
             usuario.persona(persona)
                     .rol(rolOpt.get())
-                    .contrasenna(passwordEncoder.encode(usuarioDTO.getContrasenna()))
+                   // .contrasenna(passwordEncoder.encode(usuarioDTO.getContrasenna()))
+                    .contrasenna(usuarioDTO.getContrasenna())
                     .activo(true);
             usuarioRepository.save(usuario);
             return new ResponseDto().status("200").message("El usuario ha sido creado correctamente.");

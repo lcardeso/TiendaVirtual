@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @ComponentScan({"com.example.demo"})
 @EntityScan("com.example.demo.domain")
 @EnableJpaRepositories("com.example.demo.repository")
+
 public class UsuarioApplication {
     public static void main(String[] args) {
         SpringApplication.run(UsuarioApplication.class, args);
