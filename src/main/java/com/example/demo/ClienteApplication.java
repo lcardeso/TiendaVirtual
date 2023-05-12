@@ -7,10 +7,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+
 
 @SpringBootApplication
 @EnableConfigurationProperties({ApplicationProperties.class})
@@ -18,9 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 @EntityScan("com.example.demo.domain")
 @EnableJpaRepositories("com.example.demo.repository")
 
-public class UsuarioApplication {
+
+public class ClienteApplication {
     public static void main(String[] args) {
-        SpringApplication.run(UsuarioApplication.class, args);
+        SpringApplication.run(ClienteApplication.class, args);
 
     }
 

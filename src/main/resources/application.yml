@@ -67,7 +67,7 @@ management:
 
 spring:
   application:
-    name: concesionario
+    name: cliente
   jmx:
     enabled: false
   data:
@@ -92,13 +92,13 @@ spring:
       enabled: false
   task:
     execution:
-      thread-name-prefix: concesionario-task-
+      thread-name-prefix: cliente-task-
       pool:
         core-size: 2
         max-size: 50
         queue-capacity: 10000
     scheduling:
-      thread-name-prefix: concesionario-scheduling-
+      thread-name-prefix: cliente-scheduling-
       pool:
         size: 2
   thymeleaf:

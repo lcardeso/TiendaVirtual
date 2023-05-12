@@ -10,11 +10,11 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/farmacia/usuario")
+@RequestMapping("/usuario/cliente")
 
 public class UsuarioController {
 
-    @Autowired
+   /* @Autowired
     public UsuarioService usuarioService;
 
 
@@ -52,5 +52,5 @@ public class UsuarioController {
     @PostMapping("/login")
     public ResponseEntity<LoginUsuarioDTO> login(@Valid @RequestBody LoginDTO loginDTO) {
         return ResponseEntity.ok().body(usuarioService.login(loginDTO));
-    }
+    }*/
 }

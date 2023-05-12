@@ -24,17 +24,10 @@ public class UsuarioService {
 
     @Autowired
     public MapperUtils mapperUtils;
-    @Autowired
-    private UsuarioRepository usuarioRepository;
-    @Autowired
-    private EmpleadoRepository empleadoRepository;
-    @Autowired
-    private RolRepository rolRepository;
-    @Autowired
-    PersonaRepository personaRepository;
-    /*@Autowired
+        /*@Autowired
     BCryptPasswordEncoder passwordEncoder;*/
 
+/*
 
     //Listar
     public List<UsuarioDTO> listar() {
@@ -87,7 +80,7 @@ public class UsuarioService {
             Persona persona = personaOpt.get();
             usuario.persona(persona)
                     .rol(rolOpt.get())
-                   // .contrasenna(passwordEncoder.encode(usuarioDTO.getContrasenna()))
+                    // .contrasenna(passwordEncoder.encode(usuarioDTO.getContrasenna()))
                     .contrasenna(usuarioDTO.getContrasenna())
                     .activo(true);
             usuarioRepository.save(usuario);
@@ -166,6 +159,7 @@ public class UsuarioService {
         return loginUsuarioDTO;
     }
 
+*/
 
 }
 
